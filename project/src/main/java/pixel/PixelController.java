@@ -2,8 +2,10 @@ package pixel;
 
 import java.util.List;
 
+import javafx.beans.property.SimpleDoubleProperty;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
+import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -16,6 +18,7 @@ import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
+import javafx.scene.image.PixelWriter;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -46,7 +49,6 @@ public class PixelController {
 		// Projects
 		addTab(projectCurrent.getFileName());
 		
-		
 		// Tools
 		ToggleGroup toggleGroup = new ToggleGroup();
 		
@@ -75,57 +77,48 @@ public class PixelController {
 		tab.setText(name);
 		tabPane.getTabs().add(tab);
 		
-		ScrollPane scrollPane = new ScrollPane();
-		scrollPane.setOnScroll(event -> {
-			if (event.isControlDown()) {
-				double delta = event.getDeltaY() > 0 ? 0.1 : -0.1;
-				scrollPane.getContent().setScaleX(clamp(scrollPane.getContent().getScaleX() + delta, 0.1, 10));
-				scrollPane.getContent().setScaleY(clamp(scrollPane.getContent().getScaleY() + delta, 0.1, 10));
-			}
-	    });
-		scrollPane.setHbarPolicy(ScrollBarPolicy.ALWAYS);
-		scrollPane.setVbarPolicy(ScrollBarPolicy.ALWAYS);
-
-		tab.setContent(scrollPane);
-		
-		StackPane pane = new StackPane();
-		pane.setPrefHeight(1000);
-		pane.setPrefWidth(1000);
-		scrollPane.setContent(pane);
-		
 		Canvas canvas = createCanvas();
+		StackPane pane = new StackPane();
+		pane.setPrefHeight(canvas.getWidth()*2);
+		pane.setPrefWidth(canvas.getHeight()*2);
 		pane.getChildren().add(canvas);
 		StackPane.setAlignment(canvas, Pos.CENTER);
 		
+		ScrollPane scrollPane = new ZoomableScrollPane(pane); // Source: Daniel Hári
+		tab.setContent(scrollPane);
 		return tab;
 	}
 	
 	private Canvas createCanvas() {
-		Canvas canvas = new Canvas(600, 600);
+		Canvas canvas = new Canvas(640, 640);
 		GraphicsContext graphicsContext = canvas.getGraphicsContext2D();
 		graphicsContext.setImageSmoothing(false);
 		graphicsContext.setFill(Color.WHITE);
-		graphicsContext.fillRect(0, 0, 600, 600);
+		graphicsContext.fillRect(0, 0, 640, 640);
+		canvas.setCursor(Cursor.CROSSHAIR);
 		
-		canvas.setOnMouseDragged(event -> {
-			switch (toolSelected) {
-				case "Pencil": 
-					graphicsContext.setFill(colorPicker.getValue());
-					graphicsContext.fillRect((int) event.getX(), (int) event.getY(), toolSlider.getValue(), toolSlider.getValue());
-				break;
-				case "Eraser":
-					//graphicsContext.clearRect((int) event.getX(), (int) event.getY(), toolSlider.getValue(), toolSlider.getValue());
-					graphicsContext.setFill(Color.WHITE);
-					graphicsContext.fillRect((int) event.getX(), (int) event.getY(), toolSlider.getValue(), toolSlider.getValue());
-				break;
+		canvas.setOnMousePressed(event -> {
+			int scale = 32; // Pixels are 32x32, canvas is blurry otherwise.
+			if (event.isPrimaryButtonDown()) {
+				switch (toolSelected) {
+					case "Pencil":
+						graphicsContext.setFill(colorPicker.getValue());
+						graphicsContext.fillRect(((int) event.getX() / scale) * scale, ((int) event.getY() / scale) * scale, scale, scale);
+					break;
+					case "Eraser":
+						graphicsContext.setFill(Color.WHITE);
+						graphicsContext.fillRect(((int) event.getX() / scale) * scale, ((int) event.getY() / scale) * scale, scale, scale);
+					break;
+				}
+			}
+			else if (event.isSecondaryButtonDown()) {
+				graphicsContext.setFill(Color.WHITE);
+				graphicsContext.fillRect(((int) event.getX() / scale) * scale, ((int) event.getY() / scale) * scale, scale, scale);
 			}
 	    });
+		canvas.setOnMouseDragged(canvas.getOnMousePressed());
 		
 		return canvas;
-	}
-	
-	private double clamp(double value, double min, double max) {
-		return Math.max(min, Math.min(value, max));
 	}
 }
 
