@@ -1,5 +1,6 @@
 package pixel;
 
+import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 
 public class PencilTool implements Tool {
@@ -27,8 +28,8 @@ public class PencilTool implements Tool {
 	}
 	
 	@Override
-	public void use(Sprite sprite, double x, double y) {
+	public void use(Sprite sprite, MouseEvent event) {
 		sprite.getGraphicsContext2D().setFill(color);
-		sprite.fillPixel(x, y);
+		sprite.fillPixel(event.getX(), event.getY());
 	}
 }

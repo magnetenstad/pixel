@@ -1,5 +1,7 @@
 package pixel;
 
+import javafx.scene.input.MouseEvent;
+
 public interface Tool {
 	
 	public void setName(String name);
@@ -8,6 +10,6 @@ public interface Tool {
 	
 	public void setSize(double size);
 	
-	public void use(Sprite sprite, double x, double y);
+	public void use(Sprite sprite, MouseEvent event);
 	
 }

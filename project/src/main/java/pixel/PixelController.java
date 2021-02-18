@@ -21,6 +21,7 @@ import javafx.scene.control.TabPane;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.image.PixelWriter;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -57,15 +58,15 @@ public class PixelController {
 		SpriteTab spriteTab = new SpriteTab(tabPane, "untitled");
 		Sprite sprite = spriteTab.getSprite();
 		sprite.setOnMousePressed(event -> {
-			useTool(event.getX(), event.getY());
+			useTool(event);
 		});
 		sprite.setOnMouseDragged(sprite.getOnMousePressed());
 	}
 	
-	public void useTool(double x, double y) {
+	public void useTool(MouseEvent event) {
 		Tool tool = toolbar.getToolSelected();
 		Sprite sprite = ((SpriteTab) tabPane.getSelectionModel().getSelectedItem()).getSprite();
-		tool.use(sprite, x, y);
+		tool.use(sprite, event);
 	}
 }
 
