@@ -39,11 +39,11 @@
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
-<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.SeparatorMenuItem?>
 <?import javafx.scene.control.Slider?>
 <?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TitledPane?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
@@ -110,12 +110,31 @@
           </children>
         </AnchorPane>
             <TabPane fx:id="tabPane" tabClosingPolicy="UNAVAILABLE" />
-        <AnchorPane fx:id="rightSplitPane">
+        <AnchorPane fx:id="rightSplitPane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308">
           <children>
-                  <VBox prefHeight="200.0" prefWidth="100.0">
+                  <VBox fx:id="rightVBox" alignment="TOP_CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                      <children>
-                        <Button fx:id="setFileRootButton" mnemonicParsing="false" text="Choose workspace" />
-                        <ScrollPane fx:id="fileViewPane" prefHeight="200.0" prefWidth="200.0" />
+                      <TitledPane animated="false" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Workspace">
+                           <content>
+                              <VBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308">
+                                 <children>
+                                    <Button fx:id="setFileRootButton" mnemonicParsing="false" text="Choose Workspace" />
+                                    <AnchorPane fx:id="fileViewPane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" />
+                                 </children>
+                              </VBox>
+                           </content>
+                        </TitledPane>
+                      <TitledPane animated="false" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Layers" VBox.vgrow="SOMETIMES">
+                           <content>
+                              <VBox>
+                                 <children>
+                                    <Button fx:id="newLayerButton" mnemonicParsing="false" text="+ New Layer" />
+                                    <Button fx:id="removeLayerButton" mnemonicParsing="false" text="x Remove Current Layer" />
+                                    <VBox fx:id="layersVBox" prefHeight="200.0" prefWidth="100.0" />
+                                 </children>
+                              </VBox>
+                           </content>
+                        </TitledPane>
                      </children>
                   </VBox>
           </children>

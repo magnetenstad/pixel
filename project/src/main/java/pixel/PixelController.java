@@ -1,6 +1,6 @@
 package pixel;
 
-import pixel.lib.SimpleFileTreeItem;
+import pixel.ext.SimpleFileTreeItem;
 import pixel.tool.EraserTool;
 import pixel.tool.PencilTool;
 import pixel.tool.Tool;
@@ -15,14 +15,11 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.control.Button;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.MenuItem;
-import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Slider;
-import javafx.scene.control.SplitPane;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TreeView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.DirectoryChooser;
 
@@ -35,7 +32,7 @@ public class PixelController {
 	@FXML
 	Button setFileRootButton;
 	@FXML
-	ScrollPane fileViewPane;
+	AnchorPane fileViewPane;
 	@FXML
 	TabPane tabPane;
 	@FXML
@@ -47,29 +44,17 @@ public class PixelController {
 	@FXML
 	Slider toolSlider;
 	@FXML
-	AnchorPane rightSplitPane;
-	
-	public File getRootFile() {
-		return rootFile;
-	}
-	
-	public void askForDirectory() {
-		DirectoryChooser directoryChooser = new DirectoryChooser();
-		File selectedDirectory = directoryChooser.showDialog(rightSplitPane.getScene().getWindow());
-		if (selectedDirectory != null) {
-			setRootFile(selectedDirectory);
-		}
-	}
-	
-	public void setRootFile(File rootFile) {
-		this.rootFile = rootFile;
-		fileView = new TreeView<File>(new SimpleFileTreeItem(rootFile));
-		fileViewPane.setContent(fileView);
-	}
+	VBox rightVBox;
+	@FXML
+	VBox layersVBox;
+	@FXML
+	Button newLayerButton;
+	@FXML
+	Button removeLayerButton;
 	
 	@FXML
 	void initialize() {
-		// Create Toolbar
+		// Init Toolbar
 		ArrayList<Tool> tools = new ArrayList<Tool>(Arrays.asList(new PencilTool(), new EraserTool()));
 		toolbar = new Toolbar(toolBarVBox, tools);
 		
@@ -78,15 +63,45 @@ public class PixelController {
 		newTab.setOnAction(event -> {
 			newSpriteTab();
 		});
-
+		
+		// Init setFileRootButton
 		setFileRootButton.setOnAction(event -> {
 			askForDirectory();
 		});
 		
-		// File tree
-		/*
-		 * Adding a TreeView to the very left of the application window.
-		 */
+		// Init layerButtons
+		newLayerButton.setOnAction(event -> {
+			Sprite sprite = getSpriteCurrent();
+			sprite.addCanvasLayer(layersVBox, "Layer " + sprite.getCanvasLayerCount());
+		});
+		
+		removeLayerButton.setOnAction(event -> {
+			Sprite sprite = getSpriteCurrent();
+			CanvasLayer canvasLayerCurrent = sprite.getCanvasLayerCurrent();
+			if (canvasLayerCurrent != null) {
+				canvasLayerCurrent.removeGuiFromParent();
+				sprite.removeCanvasLayer(canvasLayerCurrent);
+			}
+		});
+	}
+	
+	public File getRootFile() {
+		return rootFile;
+	}
+	
+	public void askForDirectory() {
+		DirectoryChooser directoryChooser = new DirectoryChooser();
+		File selectedDirectory = directoryChooser.showDialog(setFileRootButton.getScene().getWindow());
+		if (selectedDirectory != null) {
+			setRootFile(selectedDirectory);
+		}
+	}
+	
+	public void setRootFile(File rootFile) {
+		this.rootFile = rootFile;
+		fileView = new TreeView<File>(new SimpleFileTreeItem(rootFile));
+		fileViewPane.getChildren().clear();
+		fileViewPane.getChildren().add(fileView);
 	}
 	
 	public void newSpriteTab() {
@@ -100,7 +115,12 @@ public class PixelController {
 	
 	public void useTool(MouseEvent event) {
 		Tool tool = toolbar.getToolSelected();
-		Sprite sprite = ((SpriteTab) tabPane.getSelectionModel().getSelectedItem()).getSprite();
+		Sprite sprite = getSpriteCurrent();
 		tool.use(sprite, event);
 	}
+	
+	public Sprite getSpriteCurrent() {
+		return ((SpriteTab) tabPane.getSelectionModel().getSelectedItem()).getSprite();
+	}
+	
 }

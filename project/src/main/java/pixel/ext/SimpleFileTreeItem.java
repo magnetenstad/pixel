@@ -1,4 +1,4 @@
-package pixel.lib;
+package pixel.ext;
 
 import java.io.File;
 
