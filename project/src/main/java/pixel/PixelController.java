@@ -1,26 +1,41 @@
 package pixel;
 
-import pixel.tools.EraserTool;
-import pixel.tools.PencilTool;
-import pixel.tools.Toolbar;
-import pixel.tools.Tool;
+import pixel.lib.SimpleFileTreeItem;
+import pixel.tool.EraserTool;
+import pixel.tool.PencilTool;
+import pixel.tool.Tool;
+import pixel.tool.Toolbar;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 
 import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
+import javafx.scene.control.Button;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Slider;
+import javafx.scene.control.SplitPane;
 import javafx.scene.control.TabPane;
+import javafx.scene.control.TreeView;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import javafx.stage.DirectoryChooser;
 
 public class PixelController {
-	Project projectCurrent;
-	Toolbar toolbar;
-
+	private Project projectCurrent;
+	private Toolbar toolbar;
+	private File rootFile;
+	private TreeView<File> fileView = new TreeView<File>();
+	
+	@FXML
+	Button setFileRootButton;
+	@FXML
+	ScrollPane fileViewPane;
 	@FXML
 	TabPane tabPane;
 	@FXML
@@ -31,6 +46,26 @@ public class PixelController {
 	MenuItem newTab;
 	@FXML
 	Slider toolSlider;
+	@FXML
+	AnchorPane rightSplitPane;
+	
+	public File getRootFile() {
+		return rootFile;
+	}
+	
+	public void askForDirectory() {
+		DirectoryChooser directoryChooser = new DirectoryChooser();
+		File selectedDirectory = directoryChooser.showDialog(rightSplitPane.getScene().getWindow());
+		if (selectedDirectory != null) {
+			setRootFile(selectedDirectory);
+		}
+	}
+	
+	public void setRootFile(File rootFile) {
+		this.rootFile = rootFile;
+		fileView = new TreeView<File>(new SimpleFileTreeItem(rootFile));
+		fileViewPane.setContent(fileView);
+	}
 	
 	@FXML
 	void initialize() {
@@ -43,6 +78,15 @@ public class PixelController {
 		newTab.setOnAction(event -> {
 			newSpriteTab();
 		});
+
+		setFileRootButton.setOnAction(event -> {
+			askForDirectory();
+		});
+		
+		// File tree
+		/*
+		 * Adding a TreeView to the very left of the application window.
+		 */
 	}
 	
 	public void newSpriteTab() {

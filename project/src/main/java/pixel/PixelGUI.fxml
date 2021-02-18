@@ -33,11 +33,13 @@
 -->
 
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ColorPicker?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.SeparatorMenuItem?>
 <?import javafx.scene.control.Slider?>
 <?import javafx.scene.control.SplitPane?>
@@ -108,15 +110,14 @@
           </children>
         </AnchorPane>
             <TabPane fx:id="tabPane" tabClosingPolicy="UNAVAILABLE" />
-        <AnchorPane>
+        <AnchorPane fx:id="rightSplitPane">
           <children>
-            <Label alignment="CENTER" layoutX="14.0" layoutY="14.0" style="&#10;" text="Details" textAlignment="CENTER" wrapText="false">
-                     <font>
-                <Font size="18.0" fx:id="x1" />
-                     </font>
-                     <textFill>
-                <Color red="0.624" green="0.624" blue="0.624" fx:id="x2" />
-                     </textFill></Label>
+                  <VBox prefHeight="200.0" prefWidth="100.0">
+                     <children>
+                        <Button fx:id="setFileRootButton" mnemonicParsing="false" text="Choose workspace" />
+                        <ScrollPane fx:id="fileViewPane" prefHeight="200.0" prefWidth="200.0" />
+                     </children>
+                  </VBox>
           </children>
         </AnchorPane>
       </items>

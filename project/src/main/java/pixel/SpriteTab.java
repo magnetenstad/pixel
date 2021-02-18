@@ -4,17 +4,22 @@ import javafx.geometry.Pos;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.layout.StackPane;
+import pixel.lib.ZoomableScrollPane;
 
 public class SpriteTab extends Tab {
 	private Sprite sprite;
 	private StackPane pane;
 	
 	public SpriteTab(TabPane parent, String name) {
+		this(parent, name, new Sprite(640, 640));
+	}
+	
+	public SpriteTab(TabPane parent, String name, Sprite sprite) {
 		parent.getTabs().add(this);
 		pane = new StackPane();
-		setText(name);
 		setContent(new ZoomableScrollPane(pane));
-		setSprite(new Sprite(640, 640));
+		setText(name);
+		setSprite(sprite);
 	}
 	
 	public Sprite getSprite() {

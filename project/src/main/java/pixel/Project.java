@@ -1,11 +1,13 @@
 package pixel;
 
+import java.util.ArrayList;
 import java.util.Date;
 
 public class Project {
 	private String fileName;
 	private String filePath;
 	private Date lastEdited;
+	private ArrayList<Sprite> sprites = new ArrayList<Sprite>();
 	
 	public Project(String fileName, String filePath) {
 		this.fileName = fileName;
@@ -29,4 +31,7 @@ public class Project {
 		lastEdited = new Date();
 	}
 	
+	public void addSprite(Sprite sprite) {
+		sprites.add(sprite);
+	}
 }
