@@ -56,11 +56,11 @@ public class PixelController {
 	
 	public void newSpriteTab() {
 		SpriteTab spriteTab = new SpriteTab(tabPane, "untitled");
-		Sprite sprite = spriteTab.getSprite();
-		sprite.setOnMousePressed(event -> {
+		Canvas canvas = spriteTab.getSprite().getVisibleCanvas();
+		canvas.setOnMousePressed(event -> {
 			useTool(event);
 		});
-		sprite.setOnMouseDragged(sprite.getOnMousePressed());
+		canvas.setOnMouseDragged(canvas.getOnMousePressed());
 	}
 	
 	public void useTool(MouseEvent event) {
@@ -69,4 +69,3 @@ public class PixelController {
 		tool.use(sprite, event);
 	}
 }
-

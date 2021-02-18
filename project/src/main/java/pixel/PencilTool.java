@@ -29,7 +29,11 @@ public class PencilTool implements Tool {
 	
 	@Override
 	public void use(Sprite sprite, MouseEvent event) {
-		sprite.getGraphicsContext2D().setFill(color);
-		sprite.fillPixel(event.getX(), event.getY());
+		if (event.isPrimaryButtonDown()) {
+			sprite.setPixel(event.getX(), event.getY(), color);
+		}
+		else if (event.isSecondaryButtonDown()) {
+			sprite.clearPixel(event.getX(), event.getY());
+		}
 	}
 }

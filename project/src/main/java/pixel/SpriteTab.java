@@ -14,7 +14,7 @@ public class SpriteTab extends Tab {
 		pane = new StackPane();
 		setText(name);
 		setContent(new ZoomableScrollPane(pane));
-		setSprite(new Sprite());
+		setSprite(new Sprite(640, 640));
 	}
 	
 	public Sprite getSprite() {
@@ -26,7 +26,7 @@ public class SpriteTab extends Tab {
 		pane.setPrefHeight(sprite.getWidth()*2);
 		pane.setPrefWidth(sprite.getHeight()*2);
 		pane.getChildren().clear();
-		pane.getChildren().add(sprite);
-		StackPane.setAlignment(sprite, Pos.CENTER);
+		pane.getChildren().add(sprite.getVisibleCanvas());
+		StackPane.setAlignment(sprite.getVisibleCanvas(), Pos.CENTER);
 	}
 }
