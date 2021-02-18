@@ -1,6 +1,7 @@
-package pixel;
+package pixel.tools;
 
 import javafx.scene.input.MouseEvent;
+import pixel.Sprite;
 
 public class EraserTool implements Tool {
 	private String name = "Eraser";

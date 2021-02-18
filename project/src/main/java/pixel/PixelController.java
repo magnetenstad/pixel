@@ -1,30 +1,21 @@
 package pixel;
 
+import pixel.tools.EraserTool;
+import pixel.tools.PencilTool;
+import pixel.tools.Toolbar;
+import pixel.tools.Tool;
+
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
-import javafx.beans.property.SimpleDoubleProperty;
 import javafx.fxml.FXML;
-import javafx.geometry.Pos;
-import javafx.scene.Cursor;
-import javafx.scene.Node;
 import javafx.scene.canvas.Canvas;
-import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.MenuItem;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.control.ScrollPane.ScrollBarPolicy;
 import javafx.scene.control.Slider;
-import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
-import javafx.scene.control.ToggleButton;
-import javafx.scene.control.ToggleGroup;
-import javafx.scene.image.PixelWriter;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
 
 public class PixelController {
 	Project projectCurrent;

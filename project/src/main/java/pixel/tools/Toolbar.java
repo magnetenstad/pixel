@@ -1,4 +1,4 @@
-package pixel;
+package pixel.tools;
 
 import java.util.ArrayList;
 import javafx.scene.control.ToggleButton;
