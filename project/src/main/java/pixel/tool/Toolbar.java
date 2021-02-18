@@ -1,4 +1,4 @@
-package pixel.tools;
+package pixel.tool;
 
 import java.util.ArrayList;
 import javafx.scene.control.ToggleButton;
@@ -12,7 +12,7 @@ public class Toolbar {
 	private ToggleGroup toggleGroup = new ToggleGroup();
 	
 	public Toolbar(Pane parent, ArrayList<Tool> tools) {
-		setParent(parent);
+		this.parent = parent;
 		checkToolsNotEmpty(tools);
 		for (Tool tool : tools) {
 			addTool(tool);
@@ -30,16 +30,12 @@ public class Toolbar {
 		return toolSelected;
 	}
 	
-	private void addTool(Tool tool) {
+	public void addTool(Tool tool) {
 		tools.add(tool);
 		newToolButton(tool);
 	}
 	
-	private void setParent(Pane parent) {
-		this.parent = parent;
-	}
-	
-	private void setToolSelected(Tool toolSelected) {
+	public void setToolSelected(Tool toolSelected) {
 		this.toolSelected = toolSelected;
 	}
 	

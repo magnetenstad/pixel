@@ -1,4 +1,4 @@
-package pixel.tools;
+package pixel.tool;
 
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
