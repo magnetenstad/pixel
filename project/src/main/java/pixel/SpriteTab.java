@@ -32,8 +32,8 @@ public class SpriteTab extends Tab {
 		pane.setPrefHeight(sprite.getWidth()*2);
 		pane.setPrefWidth(sprite.getHeight()*2);
 		pane.getChildren().clear();
-		pane.getChildren().add(sprite.getVisibleCanvas());
-		StackPane.setAlignment(sprite.getVisibleCanvas(), Pos.CENTER);
+		pane.getChildren().add(sprite.getImageView());
+		StackPane.setAlignment(sprite.getImageView(), Pos.CENTER);
 		
 		setOnSelectionChanged(event -> {
 			if (sprite.getCanvasLayerCount() > 0) {

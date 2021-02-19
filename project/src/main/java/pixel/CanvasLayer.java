@@ -7,10 +7,10 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 
 public class CanvasLayer extends Canvas {
-	Pane guiParent;
-	HBox gui;
-	Sprite spriteParent;
-	String name;
+	private Pane guiParent;
+	private HBox gui;
+	private Sprite spriteParent;
+	private String name;
 	
 	public CanvasLayer(Sprite spriteParent, Pane guiParent, String name, int width, int height) {
 		super(width, width);
@@ -21,6 +21,8 @@ public class CanvasLayer extends Canvas {
 		
 		gui = newGui();
 		addGuiToParent();
+		
+		getGraphicsContext2D().setImageSmoothing(false);
 	}
 	
 	public HBox newGui() {

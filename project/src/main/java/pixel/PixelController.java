@@ -18,6 +18,7 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TreeView;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
@@ -106,11 +107,11 @@ public class PixelController {
 	
 	public void newSpriteTab() {
 		SpriteTab spriteTab = new SpriteTab(tabPane, "untitled");
-		Canvas canvas = spriteTab.getSprite().getVisibleCanvas();
-		canvas.setOnMousePressed(event -> {
+		ImageView imageView = spriteTab.getSprite().getImageView();
+		imageView.setOnMousePressed(event -> {
 			useTool(event);
 		});
-		canvas.setOnMouseDragged(canvas.getOnMousePressed());
+		imageView.setOnMouseDragged(imageView.getOnMousePressed());
 	}
 	
 	public void useTool(MouseEvent event) {
