@@ -56,8 +56,7 @@ public class Sprite {
 			return;
 		}
 		SpriteLayer canvasLayer = getCanvasLayerCurrent();
-		canvasLayer.setFill(color);
-		canvasLayer.fillPixel(((int) x / scale), ((int) y / scale));
+		canvasLayer.fillPixel(((int) x / scale), ((int) y / scale), color);
 		updateImageView();
 	}
 	
@@ -79,8 +78,7 @@ public class Sprite {
 			return;
 		}
 		SpriteLayer canvasLayer = getCanvasLayerCurrent();
-		canvasLayer.setFill(color);
-		canvasLayer.fillRect(x, y, width, height);
+		canvasLayer.fillRect(x, y, width, height, color);
 		updateImageView();
 	}
 	

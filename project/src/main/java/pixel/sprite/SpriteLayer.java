@@ -12,7 +12,6 @@ public class SpriteLayer {
 	private Pane guiParent;
 	private String name;
 	private Boolean visible = true;
-	private Color fill = Color.TRANSPARENT;
 	private HBox gui;
 	private int width;
 	private int height;
@@ -58,14 +57,10 @@ public class SpriteLayer {
 		return height;
 	}
 	
-	public void setFill(Color fill) {
-		this.fill = fill;
-	}
-	
-	public void fillRect(int x0, int y0, int width, int height) {
+	public void fillRect(int x0, int y0, int width, int height, Color color) {
 		for (int x = x0; x < x0 + width; x++) {
 			for (int y = y0; y < y0 + height; y++) {
-				fillPixel(x, y);
+				fillPixel(x, y, color);
 			}
 		}
 	}
@@ -78,11 +73,11 @@ public class SpriteLayer {
 		}
 	}
 	
-	public void fillPixel(int x, int y) {
+	public void fillPixel(int x, int y, Color color) {
 		if (!isPointInCanvas(x, y)) {
 			return;
 		}
-		canvas[x][y] = fill;
+		canvas[x][y] = color;
 	}
 	
 	public void clearPixel(int x, int y) {
