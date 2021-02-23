@@ -6,7 +6,7 @@ import pixel.sprite.Sprite;
 
 public class EraserTool implements Tool {
 	private String name = "Eraser";
-	private double size = 1.0;
+	private int size = 1;
 	
 	@Override
 	public void setName(String name) {
@@ -19,13 +19,13 @@ public class EraserTool implements Tool {
 	}
 	
 	@Override
-	public void setSize(double size) {
+	public void setSize(int size) {
 		this.size = size;
 	}
 
 	@Override
 	public void use(Sprite sprite, MouseEvent event) {
-		sprite.clearPixel(event.getX(), event.getY());
+		sprite.clearRect(event.getX(), event.getY(), size, size);
 	}
 
 	@Override

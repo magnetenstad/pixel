@@ -23,12 +23,10 @@ import javafx.scene.control.TreeView;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.DirectoryChooser;
 
 public class PixelController {
-	private Project projectCurrent;
 	private Toolbar toolbar;
 	private File rootFile;
 	private TreeView<File> fileView = new TreeView<File>();
@@ -91,6 +89,10 @@ public class PixelController {
 		
 		colorPicker.setOnAction(event -> {
 			toolbar.updateToolColor(colorPicker.getValue());
+		});
+		
+		toolSlider.setOnMouseClicked(event -> {
+			toolbar.updateToolSize((int) toolSlider.getValue());
 		});
 	}
 	

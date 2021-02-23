@@ -1,6 +1,5 @@
 package pixel.sprite;
 
-import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.layout.HBox;
@@ -65,7 +64,7 @@ public class SpriteLayer {
 	
 	public void fillRect(int x0, int y0, int width, int height) {
 		for (int x = x0; x < x0 + width; x++) {
-			for (int y = y0; x < y0 + height; y++) {
+			for (int y = y0; y < y0 + height; y++) {
 				fillPixel(x, y);
 			}
 		}

@@ -27,32 +27,40 @@ public class Toolbar {
 		}
 	}
 	
-	public Tool getToolSelected() {
-		return toolSelected;
-	}
-	
 	public void addTool(Tool tool) {
 		tools.add(tool);
 		newToolButton(tool);
-	}
-	
-	public void setToolSelected(Tool toolSelected) {
-		this.toolSelected = toolSelected;
 	}
 	
 	private ToggleButton newToolButton(Tool tool) {
 		ToggleButton toolButton = new ToggleButton(tool.getName());
 		toolButton.setToggleGroup(toggleGroup);
 		toolButton.setOnAction(event -> {
-			toolSelected = tool; 
+			toolSelected = tool;
+			
 		});
 		parent.getChildren().add(toolButton);
 		return toolButton;
 	}
 	
+	public void setToolSelected(Tool toolSelected) {
+		this.toolSelected = toolSelected;
+	}
+	
+	public Tool getToolSelected() {
+		return toolSelected;
+	}
+	
+	
 	public void updateToolColor(Color color) {
 		for (Tool tool : tools) {
 			tool.setColor(color);
+		}
+	}
+	
+	public void updateToolSize(int size) {
+		for (Tool tool : tools) {
+			tool.setSize(size);
 		}
 	}
 }

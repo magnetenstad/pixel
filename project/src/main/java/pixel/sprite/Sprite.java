@@ -4,7 +4,6 @@ import java.util.ArrayList;
 
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.WritableImage;
@@ -52,7 +51,7 @@ public class Sprite {
 		combinedCanvas.snapshot(null, writableImage);
 	}
 	
-	public void setPixel(double x, double y, Color color) {
+	public void fillPixel(double x, double y, Color color) {
 		if (!canvasLayerCurrentIsEditable()) {
 			return;
 		}
@@ -68,6 +67,33 @@ public class Sprite {
 		}
 		SpriteLayer canvasLayer = getCanvasLayerCurrent();
 		canvasLayer.clearPixel(((int) x / scale), ((int) y / scale));
+		updateImageView();
+	}
+	
+	public void fillRect(double x, double y, int width, int height, Color color) {
+		fillRect((int) x / scale, (int) y / scale, width, height, color);
+	}
+	
+	public void fillRect(int x, int y, int width, int height, Color color) {
+		if (!canvasLayerCurrentIsEditable()) {
+			return;
+		}
+		SpriteLayer canvasLayer = getCanvasLayerCurrent();
+		canvasLayer.setFill(color);
+		canvasLayer.fillRect(x, y, width, height);
+		updateImageView();
+	}
+	
+	public void clearRect(double x, double y, int width, int height) {
+		clearRect((int) x / scale, (int) y / scale, width, height);
+	}
+	
+	public void clearRect(int x, int y, int width, int height) {
+		if (!canvasLayerCurrentIsEditable()) {
+			return;
+		}
+		SpriteLayer canvasLayer = getCanvasLayerCurrent();
+		canvasLayer.clearRect(x, y, width, height);
 		updateImageView();
 	}
 	

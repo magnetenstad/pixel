@@ -6,7 +6,7 @@ import pixel.sprite.Sprite;
 
 public class PencilTool implements Tool {
 	private String name = "Pencil";
-	private double size = 1.0;
+	private int size = 1;
 	private Color color = Color.BLACK;
 	
 	@Override
@@ -20,7 +20,7 @@ public class PencilTool implements Tool {
 	}
 	
 	@Override
-	public void setSize(double size) {
+	public void setSize(int size) {
 		this.size = size;
 	}
 	
@@ -31,10 +31,10 @@ public class PencilTool implements Tool {
 	@Override
 	public void use(Sprite sprite, MouseEvent event) {
 		if (event.isPrimaryButtonDown()) {
-			sprite.setPixel(event.getX(), event.getY(), color);
+			sprite.fillRect(event.getX(), event.getY(), size, size, color);
 		}
 		else if (event.isSecondaryButtonDown()) {
-			sprite.clearPixel(event.getX(), event.getY());
+			sprite.clearRect(event.getX(), event.getY(), size, size);
 		}
 	}	
 }
