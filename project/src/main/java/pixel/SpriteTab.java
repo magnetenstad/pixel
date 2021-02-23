@@ -26,11 +26,11 @@ public class SpriteTab extends Tab {
 	public Sprite getSprite() {
 		return sprite;
 	}
-
+	
 	public void setSprite(Sprite sprite) {
 		this.sprite = sprite;
-		pane.setPrefHeight(sprite.getWidth()*2);
-		pane.setPrefWidth(sprite.getHeight()*2);
+		pane.setPrefHeight(sprite.getImageWidth()*2);
+		pane.setPrefWidth(sprite.getImageHeight()*2);
 		pane.getChildren().clear();
 		pane.getChildren().add(sprite.getImageView());
 		StackPane.setAlignment(sprite.getImageView(), Pos.CENTER);

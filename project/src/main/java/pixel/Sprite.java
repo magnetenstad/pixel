@@ -17,28 +17,32 @@ public class Sprite {
 	private ImageView imageView = new ImageView();
 	private WritableImage writableImage;
 	private CanvasLayer canvasLayerCurrent;
-	private SnapshotParameters snapshotParameters = new SnapshotParameters();
 	private int width;
 	private int height;
-	private int scale = 16;
+	private int scale = 32;
 	
 	public Sprite(int width, int height) {
-		width = width * scale;
-		height = height * scale;
-		setWidth(width);
-		setHeight(height);
+		this.width = width;
+		this.height = height;
 		imageView.setSmooth(false);
-		writableImage = new WritableImage(width, height);
-		snapshotParameters.setFill(Color.TRANSPARENT);
+		writableImage = new WritableImage(width * scale, height * scale);
 		imageView.setImage(writableImage);
 		updateVisibleCanvas();
 	}
 	
 	public void updateVisibleCanvas() {
-		Canvas combinedCanvas = new Canvas(width, height);
-		combinedCanvas.getGraphicsContext2D().setImageSmoothing(false);
+		Canvas combinedCanvas = new Canvas(getImageWidth(), getImageHeight());
+		GraphicsContext graphics = combinedCanvas.getGraphicsContext2D();
+		graphics.setImageSmoothing(false);
 		for (CanvasLayer canvasLayer : canvasLayers) {
-			combinedCanvas.getGraphicsContext2D().drawImage(canvasLayer.snapshot(snapshotParameters, null), 0, 0);
+			if (canvasLayer.isVisible()) {
+				for (int x = 0; x < canvasLayer.getWidth(); x++) {
+					for (int y = 0; y < canvasLayer.getHeight(); y++) {
+						graphics.setFill(canvasLayer.getPixel(x, y));
+						graphics.fillRect(x * scale, y * scale, scale, scale);
+					}
+				}
+			}
 		}
 		combinedCanvas.snapshot(null, writableImage);
 	}
@@ -47,9 +51,9 @@ public class Sprite {
 		if (!canvasLayerCurrentIsEditable()) {
 			return;
 		}
-		GraphicsContext graphics = getCanvasLayerCurrent().getGraphicsContext2D();
-		graphics.setFill(color);
-		graphics.fillRect(((int) x / scale) * scale, ((int) y / scale) * scale, scale, scale);
+		CanvasLayer canvasLayer = getCanvasLayerCurrent();
+		canvasLayer.setFill(color);
+		canvasLayer.fillPixel(((int) x / scale), ((int) y / scale));
 		updateVisibleCanvas();
 	}
 	
@@ -57,32 +61,33 @@ public class Sprite {
 		if (!canvasLayerCurrentIsEditable()) {
 			return;
 		}
-		GraphicsContext graphics = getCanvasLayerCurrent().getGraphicsContext2D();
-		graphics.clearRect(((int) x / scale) * scale, ((int) y / scale) * scale, scale, scale);
+		CanvasLayer canvasLayer = getCanvasLayerCurrent();
+		canvasLayer.clearPixel(((int) x / scale), ((int) y / scale));
 		updateVisibleCanvas();
 	}
 	
 	public boolean canvasLayerCurrentIsEditable() {
-		Canvas canvas = getCanvasLayerCurrent();
+		CanvasLayer canvas = getCanvasLayerCurrent();
 		return (canvas != null && canvas.isVisible());
 	}
 	
-	public Canvas addCanvasLayer(Pane layersPane, String name) {
-		CanvasLayer canvasLayer = new CanvasLayer(this, layersPane, name, getWidth(), getHeight());
+	public CanvasLayer addCanvasLayer(Pane layersPane, String name) {
+		CanvasLayer canvasLayer = new CanvasLayer(this, layersPane, name, width, height);
 		canvasLayers.add(canvasLayer);
 		updateVisibleCanvas();
 		return canvasLayer;
 	}
+	
 	public CanvasLayer getCanvasLayer(int index) {
 		return canvasLayers.get(index);
 	}
 	
-	public HBox getHBoxOfCanvasLayer(Canvas canvasLayer) {
+	public HBox getHBoxOfCanvasLayer(CanvasLayer canvasLayer) {
 		int index = canvasLayers.indexOf(canvasLayer);
 		return canvasLayerHBoxes.get(index);
 	}
 	
-	public void removeCanvasLayer(Canvas canvasLayer) {
+	public void removeCanvasLayer(CanvasLayer canvasLayer) {
 		if (canvasLayer != null && !canvasLayers.contains(canvasLayer)) {
 			return;
 		}
@@ -110,20 +115,12 @@ public class Sprite {
 		return canvasLayers.size();
 	}
 	
-	public int getWidth() {
-		return width;
+	public double getImageWidth() {
+		return writableImage.getWidth();
 	}
 	
-	public void setWidth(int width) {
-		this.width = width;
-	}
-	
-	public int getHeight() {
-		return height;
-	}
-	
-	public void setHeight(int height) {
-		this.height = height;
+	public double getImageHeight() {
+		return writableImage.getHeight();
 	}
 	
 	public ImageView getImageView() {
