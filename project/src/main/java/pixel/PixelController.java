@@ -76,15 +76,15 @@ public class PixelController {
 		// Init layerButtons
 		newLayerButton.setOnAction(event -> {
 			Sprite sprite = getSpriteCurrent();
-			sprite.addCanvasLayer();
+			sprite.addSpriteLayer();
 		});
 		
 		removeLayerButton.setOnAction(event -> {
 			Sprite sprite = getSpriteCurrent();
-			SpriteLayer canvasLayerCurrent = sprite.getCanvasLayerCurrent();
+			SpriteLayer canvasLayerCurrent = sprite.getSpriteLayerCurrent();
 			if (canvasLayerCurrent != null) {
 				canvasLayerCurrent.removeGuiFromParent();
-				sprite.removeCanvasLayer(canvasLayerCurrent);
+				sprite.removeSpriteLayer(canvasLayerCurrent);
 			}
 		});
 		

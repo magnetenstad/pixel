@@ -34,10 +34,10 @@ public class SpriteLayer {
 		HBox gui = new HBox();
 		
 		ToggleButton layerButton = new ToggleButton(name);
-		layerButton.setToggleGroup(spriteParent.getCanvasLayerToggleGroup());
+		layerButton.setToggleGroup(spriteParent.getSpriteLayerToggleGroup());
 		gui.getChildren().add(layerButton);
 		layerButton.setOnAction(event -> {
-			spriteParent.setCanvasLayerCurrent(this);
+			spriteParent.setSpriteLayerCurrent(this);
 		});
 		
 		CheckBox layerCheckBox = new CheckBox();

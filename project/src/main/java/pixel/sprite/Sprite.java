@@ -12,25 +12,25 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 
 public class Sprite {
-	private ArrayList<SpriteLayer> canvasLayers = new ArrayList<SpriteLayer>();
-	private ArrayList<HBox> canvasLayerHBoxes = new ArrayList<HBox>();
+	private ArrayList<SpriteLayer> spriteLayers = new ArrayList<SpriteLayer>();
+	private ArrayList<HBox> spriteLayerHBoxes = new ArrayList<HBox>();
 	private ImageView imageView = new ImageView();
-	private ToggleGroup canvasLayerToggleGroup = new ToggleGroup();
+	private ToggleGroup spriteLayerToggleGroup = new ToggleGroup();
 	private WritableImage writableImage;
-	private SpriteLayer canvasLayerCurrent;
-	private Pane layersPane;
+	private SpriteLayer spriteLayerCurrent;
+	private Pane layerGuiPane;
 	private int width;
 	private int height;
 	private int scale = 32;
 	
-	public Sprite(Pane layersPane, int width, int height) {
-		this.layersPane = layersPane;
+	public Sprite(Pane layerGuiPane, int width, int height) {
+		this.layerGuiPane = layerGuiPane;
 		this.width = width;
 		this.height = height;
 		imageView.setSmooth(false);
 		writableImage = new WritableImage(width * scale, height * scale);
 		imageView.setImage(writableImage);
-		setCanvasLayerCurrent(addCanvasLayer());
+		setSpriteLayerCurrent(addSpriteLayer());
 		updateImageView();
 	}
 	
@@ -38,11 +38,11 @@ public class Sprite {
 		Canvas combinedCanvas = new Canvas(getImageWidth(), getImageHeight());
 		GraphicsContext graphics = combinedCanvas.getGraphicsContext2D();
 		graphics.setImageSmoothing(false);
-		for (SpriteLayer canvasLayer : canvasLayers) {
-			if (canvasLayer.isVisible()) {
-				for (int x = 0; x < canvasLayer.getWidth(); x++) {
-					for (int y = 0; y < canvasLayer.getHeight(); y++) {
-						graphics.setFill(canvasLayer.getPixel(x, y));
+		for (SpriteLayer spriteLayer : spriteLayers) {
+			if (spriteLayer.isVisible()) {
+				for (int x = 0; x < spriteLayer.getWidth(); x++) {
+					for (int y = 0; y < spriteLayer.getHeight(); y++) {
+						graphics.setFill(spriteLayer.getPixel(x, y));
 						graphics.fillRect(x * scale, y * scale, scale, scale);
 					}
 				}
@@ -52,20 +52,20 @@ public class Sprite {
 	}
 	
 	public void fillPixel(double x, double y, Color color) {
-		if (!canvasLayerCurrentIsEditable()) {
+		if (!isSpriteLayerCurrentEditable()) {
 			return;
 		}
-		SpriteLayer canvasLayer = getCanvasLayerCurrent();
-		canvasLayer.fillPixel(((int) x / scale), ((int) y / scale), color);
+		SpriteLayer spriteLayer = getSpriteLayerCurrent();
+		spriteLayer.fillPixel(((int) x / scale), ((int) y / scale), color);
 		updateImageView();
 	}
 	
 	public void clearPixel(double x, double y) {
-		if (!canvasLayerCurrentIsEditable()) {
+		if (!isSpriteLayerCurrentEditable()) {
 			return;
 		}
-		SpriteLayer canvasLayer = getCanvasLayerCurrent();
-		canvasLayer.clearPixel(((int) x / scale), ((int) y / scale));
+		SpriteLayer spriteLayer = getSpriteLayerCurrent();
+		spriteLayer.clearPixel(((int) x / scale), ((int) y / scale));
 		updateImageView();
 	}
 	
@@ -74,11 +74,11 @@ public class Sprite {
 	}
 	
 	public void fillRect(int x, int y, int width, int height, Color color) {
-		if (!canvasLayerCurrentIsEditable()) {
+		if (!isSpriteLayerCurrentEditable()) {
 			return;
 		}
-		SpriteLayer canvasLayer = getCanvasLayerCurrent();
-		canvasLayer.fillRect(x, y, width, height, color);
+		SpriteLayer spriteLayer = getSpriteLayerCurrent();
+		spriteLayer.fillRect(x, y, width, height, color);
 		updateImageView();
 	}
 	
@@ -87,65 +87,56 @@ public class Sprite {
 	}
 	
 	public void clearRect(int x, int y, int width, int height) {
-		if (!canvasLayerCurrentIsEditable()) {
+		if (!isSpriteLayerCurrentEditable()) {
 			return;
 		}
-		SpriteLayer canvasLayer = getCanvasLayerCurrent();
-		canvasLayer.clearRect(x, y, width, height);
+		SpriteLayer spriteLayer = getSpriteLayerCurrent();
+		spriteLayer.clearRect(x, y, width, height);
 		updateImageView();
 	}
 	
-	public boolean canvasLayerCurrentIsEditable() {
-		SpriteLayer canvas = getCanvasLayerCurrent();
-		return (canvas != null && canvas.isVisible());
+	public boolean isSpriteLayerCurrentEditable() {
+		SpriteLayer spriteLayer = getSpriteLayerCurrent();
+		return (spriteLayer != null && spriteLayer.isVisible());
 	}
 	
-	public SpriteLayer addCanvasLayer() {
-		return addCanvasLayer("Layer " + getCanvasLayerCount());
+	public SpriteLayer addSpriteLayer() {
+		return addSpriteLayer("Layer " + getSpriteLayerCount());
 	}
 	
-	public SpriteLayer addCanvasLayer(String name) {
-		SpriteLayer canvasLayer = new SpriteLayer(this, layersPane, name, width, height);
-		canvasLayers.add(canvasLayer);
+	public SpriteLayer addSpriteLayer(String name) {
+		SpriteLayer spriteLayer = new SpriteLayer(this, layerGuiPane, name, width, height);
+		spriteLayers.add(spriteLayer);
 		updateImageView();
-		return canvasLayer;
+		return spriteLayer;
 	}
 	
-	public SpriteLayer getCanvasLayer(int index) {
-		return canvasLayers.get(index);
+	public SpriteLayer getSpriteLayer(int index) {
+		return spriteLayers.get(index);
 	}
 	
-	public HBox getHBoxOfCanvasLayer(SpriteLayer canvasLayer) {
-		int index = canvasLayers.indexOf(canvasLayer);
-		return canvasLayerHBoxes.get(index);
-	}
-	
-	public void removeCanvasLayer(SpriteLayer canvasLayer) {
-		if (canvasLayer != null && !canvasLayers.contains(canvasLayer)) {
+	public void removeSpriteLayer(SpriteLayer spriteLayer) {
+		if (spriteLayer != null && !spriteLayers.contains(spriteLayer)) {
 			return;
 		}
-		canvasLayers.remove(canvasLayer);
-		setCanvasLayerCurrent(null);
+		spriteLayers.remove(spriteLayer);
+		setSpriteLayerCurrent(null);
 		updateImageView();
 	}
 	
-	public SpriteLayer getCanvasLayerCurrent() {
-		return canvasLayerCurrent;
+	public SpriteLayer getSpriteLayerCurrent() {
+		return spriteLayerCurrent;
 	}
 	
-	public void setCanvasLayerCurrent(int canvasLayerIndex) {
-		canvasLayerCurrent = canvasLayers.get(canvasLayerIndex);
-	}
-	
-	public void setCanvasLayerCurrent(SpriteLayer canvasLayer) {
-		if (canvasLayer != null && !canvasLayers.contains(canvasLayer)) {
-			throw new IllegalArgumentException("This canvas is not a layer of this sprite!");
+	public void setSpriteLayerCurrent(SpriteLayer spriteLayer) {
+		if (spriteLayer != null && !spriteLayers.contains(spriteLayer)) {
+			throw new IllegalArgumentException();
 		}
-		canvasLayerCurrent = canvasLayer;
+		spriteLayerCurrent = spriteLayer;
 	}
 	
-	public int getCanvasLayerCount() {
-		return canvasLayers.size();
+	public int getSpriteLayerCount() {
+		return spriteLayers.size();
 	}
 	
 	public double getImageWidth() {
@@ -160,16 +151,16 @@ public class Sprite {
 		return imageView;
 	}
 
-	public void setCanvasLayerVisible(Canvas canvas, boolean visible) {
-		canvas.setVisible(visible);
+	public void setSpriteLayerVisible(SpriteLayer spriteLayer, boolean visible) {
+		spriteLayer.setVisible(visible);
 		updateImageView();
 	}
 
-	public ArrayList<SpriteLayer> getCanvasLayers() {
-		return canvasLayers;
+	public ArrayList<SpriteLayer> getSpriteLayers() {
+		return spriteLayers;
 	}
 	
-	public ToggleGroup getCanvasLayerToggleGroup() {
-		return canvasLayerToggleGroup;
+	public ToggleGroup getSpriteLayerToggleGroup() {
+		return spriteLayerToggleGroup;
 	}
 }

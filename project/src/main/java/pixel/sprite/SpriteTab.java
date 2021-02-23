@@ -43,10 +43,10 @@ public class SpriteTab extends Tab {
 	}
 	
 	public void updateSpriteLayerGui() {
-		Pane guiParent = sprite.getCanvasLayer(0).getGuiParent();
+		Pane guiParent = sprite.getSpriteLayer(0).getGuiParent();
 		guiParent.getChildren().clear();
 		
-		for (SpriteLayer canvasLayer : getSpriteCurrent().getCanvasLayers()) {
+		for (SpriteLayer canvasLayer : getSpriteCurrent().getSpriteLayers()) {
 			canvasLayer.addGuiToParent();
 		}
 	}
