@@ -21,6 +21,8 @@ public class SpriteTab extends Tab {
 		setContent(new ZoomableScrollPane(pane));
 		setText(name);
 		setSprite(sprite);
+		updateSpriteLayerGui();
+		
 	}
 	
 	public Sprite getSprite() {
@@ -36,15 +38,20 @@ public class SpriteTab extends Tab {
 		StackPane.setAlignment(sprite.getImageView(), Pos.CENTER);
 		
 		setOnSelectionChanged(event -> {
-			if (sprite.getCanvasLayerCount() > 0) {
-				Pane guiParent = sprite.getCanvasLayer(0).getGuiParent();
-				guiParent.getChildren().clear();
-			}
-			if (isSelected()) {
-				for (SpriteLayer canvasLayer : sprite.getCanvasLayers()) {
-					canvasLayer.addGuiToParent();
-				}
-			}
+			updateSpriteLayerGui();
 		});
+	}
+	
+	public void updateSpriteLayerGui() {
+		Pane guiParent = sprite.getCanvasLayer(0).getGuiParent();
+		guiParent.getChildren().clear();
+		
+		for (SpriteLayer canvasLayer : getSpriteCurrent().getCanvasLayers()) {
+			canvasLayer.addGuiToParent();
+		}
+	}
+	
+	public Sprite getSpriteCurrent() {
+		return ((SpriteTab) getTabPane().getSelectionModel().getSelectedItem()).getSprite();
 	}
 }
