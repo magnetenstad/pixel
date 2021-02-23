@@ -23,6 +23,7 @@ import javafx.scene.control.TreeView;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.DirectoryChooser;
 
@@ -57,6 +58,7 @@ public class PixelController {
 	
 	@FXML
 	void initialize() {
+		
 		// Init Toolbar
 		ArrayList<Tool> tools = new ArrayList<Tool>(Arrays.asList(new PencilTool(), new EraserTool()));
 		toolbar = new Toolbar(toolBarVBox, tools);
@@ -85,6 +87,10 @@ public class PixelController {
 				canvasLayerCurrent.removeGuiFromParent();
 				sprite.removeCanvasLayer(canvasLayerCurrent);
 			}
+		});
+		
+		colorPicker.setOnAction(event -> {
+			toolbar.updateToolColor(colorPicker.getValue());
 		});
 	}
 	

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
 
 public class Toolbar {
 	private Pane parent;
@@ -47,5 +48,11 @@ public class Toolbar {
 		});
 		parent.getChildren().add(toolButton);
 		return toolButton;
+	}
+	
+	public void updateToolColor(Color color) {
+		for (Tool tool : tools) {
+			tool.setColor(color);
+		}
 	}
 }

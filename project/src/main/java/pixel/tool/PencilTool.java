@@ -36,5 +36,5 @@ public class PencilTool implements Tool {
 		else if (event.isSecondaryButtonDown()) {
 			sprite.clearPixel(event.getX(), event.getY());
 		}
-	}
+	}	
 }

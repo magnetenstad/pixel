@@ -1,6 +1,7 @@
 package pixel.tool;
 
 import javafx.scene.input.MouseEvent;
+import javafx.scene.paint.Color;
 import pixel.sprite.Sprite;
 
 public class EraserTool implements Tool {
@@ -26,4 +27,7 @@ public class EraserTool implements Tool {
 	public void use(Sprite sprite, MouseEvent event) {
 		sprite.clearPixel(event.getX(), event.getY());
 	}
+
+	@Override
+	public void setColor(Color color) {}
 }
