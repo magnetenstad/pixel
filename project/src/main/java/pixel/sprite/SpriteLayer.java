@@ -1,39 +1,42 @@
-package pixel;
+package pixel.sprite;
 
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.ToggleButton;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 
-public class CanvasLayer {
+public class SpriteLayer {
 	private Color[][] canvas;
-	private Pane guiParent;
-	private HBox gui;
 	private Sprite spriteParent;
+	private Pane guiParent;
 	private String name;
 	private Boolean visible = true;
-	private Color fill;
+	private Color fill = Color.TRANSPARENT;
+	private HBox gui;
 	private int width;
 	private int height;
 	
-	public CanvasLayer(Sprite spriteParent, Pane guiParent, String name, int width, int height) {
+	public SpriteLayer(Sprite spriteParent, Pane guiParent, String name, int width, int height) {
 		this.spriteParent = spriteParent;
 		this.guiParent = guiParent;
 		this.name = name;
 		this.width = width;
 		this.height = height;
+		
 		this.canvas = new Color[width][height];
 		clearRect(0, 0, width, height);
 		
-		gui = newGui();
+		gui = newLayerGui();
 		addGuiToParent();
 	}
 	
-	public HBox newGui() {
-		gui = new HBox();
+	public HBox newLayerGui() {
+		HBox gui = new HBox();
 		
-		Button layerButton = new Button(name);
+		ToggleButton layerButton = new ToggleButton(name);
+		layerButton.setToggleGroup(spriteParent.getCanvasLayerToggleGroup());
 		gui.getChildren().add(layerButton);
 		layerButton.setOnAction(event -> {
 			spriteParent.setCanvasLayerCurrent(this);
@@ -44,7 +47,6 @@ public class CanvasLayer {
 		layerCheckBox.setSelected(true);
 		layerCheckBox.setOnAction(event -> {
 			setVisible(layerCheckBox.isSelected());
-			spriteParent.updateVisibleCanvas();
 		});
 		return gui;
 	}
@@ -60,6 +62,7 @@ public class CanvasLayer {
 	public void setFill(Color fill) {
 		this.fill = fill;
 	}
+	
 	public void fillRect(int x0, int y0, int width, int height) {
 		for (int x = x0; x < x0 + width; x++) {
 			for (int y = y0; x < y0 + height; y++) {
@@ -100,6 +103,7 @@ public class CanvasLayer {
 	
 	public void setVisible(boolean visible) {
 		this.visible = visible;
+		spriteParent.updateImageView();
 	}
 	
 	public boolean isVisible() {

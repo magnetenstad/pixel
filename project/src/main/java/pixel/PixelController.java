@@ -1,6 +1,9 @@
 package pixel;
 
 import pixel.ext.SimpleFileTreeItem;
+import pixel.sprite.Sprite;
+import pixel.sprite.SpriteLayer;
+import pixel.sprite.SpriteTab;
 import pixel.tool.EraserTool;
 import pixel.tool.PencilTool;
 import pixel.tool.Tool;
@@ -72,12 +75,12 @@ public class PixelController {
 		// Init layerButtons
 		newLayerButton.setOnAction(event -> {
 			Sprite sprite = getSpriteCurrent();
-			sprite.addCanvasLayer(layersVBox, "Layer " + sprite.getCanvasLayerCount());
+			sprite.addCanvasLayer();
 		});
 		
 		removeLayerButton.setOnAction(event -> {
 			Sprite sprite = getSpriteCurrent();
-			CanvasLayer canvasLayerCurrent = sprite.getCanvasLayerCurrent();
+			SpriteLayer canvasLayerCurrent = sprite.getCanvasLayerCurrent();
 			if (canvasLayerCurrent != null) {
 				canvasLayerCurrent.removeGuiFromParent();
 				sprite.removeCanvasLayer(canvasLayerCurrent);
@@ -105,7 +108,7 @@ public class PixelController {
 	}
 	
 	public void newSpriteTab() {
-		SpriteTab spriteTab = new SpriteTab(tabPane, "untitled");
+		SpriteTab spriteTab = new SpriteTab(tabPane, layersVBox, "untitled");
 		ImageView imageView = spriteTab.getSprite().getImageView();
 		imageView.setOnMousePressed(event -> {
 			useTool(event);

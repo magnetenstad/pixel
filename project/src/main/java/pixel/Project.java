@@ -3,6 +3,8 @@ package pixel;
 import java.util.ArrayList;
 import java.util.Date;
 
+import pixel.sprite.Sprite;
+
 public class Project {
 	private String fileName;
 	private String filePath;

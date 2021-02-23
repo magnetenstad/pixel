@@ -1,7 +1,7 @@
 package pixel.tool;
 
 import javafx.scene.input.MouseEvent;
-import pixel.Sprite;
+import pixel.sprite.Sprite;
 
 public interface Tool {
 	

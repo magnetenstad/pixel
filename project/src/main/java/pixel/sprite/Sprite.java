@@ -1,10 +1,11 @@
-package pixel;
+package pixel.sprite;
 
 import java.util.ArrayList;
 
-import javafx.scene.SnapshotParameters;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.ToggleButton;
+import javafx.scene.control.ToggleGroup;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.WritableImage;
 import javafx.scene.layout.HBox;
@@ -12,29 +13,33 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 
 public class Sprite {
-	private ArrayList<CanvasLayer> canvasLayers = new ArrayList<CanvasLayer>();
+	private ArrayList<SpriteLayer> canvasLayers = new ArrayList<SpriteLayer>();
 	private ArrayList<HBox> canvasLayerHBoxes = new ArrayList<HBox>();
 	private ImageView imageView = new ImageView();
+	private ToggleGroup canvasLayerToggleGroup = new ToggleGroup();
 	private WritableImage writableImage;
-	private CanvasLayer canvasLayerCurrent;
+	private SpriteLayer canvasLayerCurrent;
+	private Pane layersPane;
 	private int width;
 	private int height;
 	private int scale = 32;
 	
-	public Sprite(int width, int height) {
+	public Sprite(Pane layersPane, int width, int height) {
+		this.layersPane = layersPane;
 		this.width = width;
 		this.height = height;
 		imageView.setSmooth(false);
 		writableImage = new WritableImage(width * scale, height * scale);
 		imageView.setImage(writableImage);
-		updateVisibleCanvas();
+		setCanvasLayerCurrent(addCanvasLayer());
+		updateImageView();
 	}
 	
-	public void updateVisibleCanvas() {
+	public void updateImageView() {
 		Canvas combinedCanvas = new Canvas(getImageWidth(), getImageHeight());
 		GraphicsContext graphics = combinedCanvas.getGraphicsContext2D();
 		graphics.setImageSmoothing(false);
-		for (CanvasLayer canvasLayer : canvasLayers) {
+		for (SpriteLayer canvasLayer : canvasLayers) {
 			if (canvasLayer.isVisible()) {
 				for (int x = 0; x < canvasLayer.getWidth(); x++) {
 					for (int y = 0; y < canvasLayer.getHeight(); y++) {
@@ -51,52 +56,56 @@ public class Sprite {
 		if (!canvasLayerCurrentIsEditable()) {
 			return;
 		}
-		CanvasLayer canvasLayer = getCanvasLayerCurrent();
+		SpriteLayer canvasLayer = getCanvasLayerCurrent();
 		canvasLayer.setFill(color);
 		canvasLayer.fillPixel(((int) x / scale), ((int) y / scale));
-		updateVisibleCanvas();
+		updateImageView();
 	}
 	
 	public void clearPixel(double x, double y) {
 		if (!canvasLayerCurrentIsEditable()) {
 			return;
 		}
-		CanvasLayer canvasLayer = getCanvasLayerCurrent();
+		SpriteLayer canvasLayer = getCanvasLayerCurrent();
 		canvasLayer.clearPixel(((int) x / scale), ((int) y / scale));
-		updateVisibleCanvas();
+		updateImageView();
 	}
 	
 	public boolean canvasLayerCurrentIsEditable() {
-		CanvasLayer canvas = getCanvasLayerCurrent();
+		SpriteLayer canvas = getCanvasLayerCurrent();
 		return (canvas != null && canvas.isVisible());
 	}
 	
-	public CanvasLayer addCanvasLayer(Pane layersPane, String name) {
-		CanvasLayer canvasLayer = new CanvasLayer(this, layersPane, name, width, height);
+	public SpriteLayer addCanvasLayer() {
+		return addCanvasLayer("Layer " + getCanvasLayerCount());
+	}
+	
+	public SpriteLayer addCanvasLayer(String name) {
+		SpriteLayer canvasLayer = new SpriteLayer(this, layersPane, name, width, height);
 		canvasLayers.add(canvasLayer);
-		updateVisibleCanvas();
+		updateImageView();
 		return canvasLayer;
 	}
 	
-	public CanvasLayer getCanvasLayer(int index) {
+	public SpriteLayer getCanvasLayer(int index) {
 		return canvasLayers.get(index);
 	}
 	
-	public HBox getHBoxOfCanvasLayer(CanvasLayer canvasLayer) {
+	public HBox getHBoxOfCanvasLayer(SpriteLayer canvasLayer) {
 		int index = canvasLayers.indexOf(canvasLayer);
 		return canvasLayerHBoxes.get(index);
 	}
 	
-	public void removeCanvasLayer(CanvasLayer canvasLayer) {
+	public void removeCanvasLayer(SpriteLayer canvasLayer) {
 		if (canvasLayer != null && !canvasLayers.contains(canvasLayer)) {
 			return;
 		}
 		canvasLayers.remove(canvasLayer);
 		setCanvasLayerCurrent(null);
-		updateVisibleCanvas();
+		updateImageView();
 	}
 	
-	public CanvasLayer getCanvasLayerCurrent() {
+	public SpriteLayer getCanvasLayerCurrent() {
 		return canvasLayerCurrent;
 	}
 	
@@ -104,7 +113,7 @@ public class Sprite {
 		canvasLayerCurrent = canvasLayers.get(canvasLayerIndex);
 	}
 	
-	public void setCanvasLayerCurrent(CanvasLayer canvasLayer) {
+	public void setCanvasLayerCurrent(SpriteLayer canvasLayer) {
 		if (canvasLayer != null && !canvasLayers.contains(canvasLayer)) {
 			throw new IllegalArgumentException("This canvas is not a layer of this sprite!");
 		}
@@ -127,12 +136,16 @@ public class Sprite {
 		return imageView;
 	}
 
-	public void setCanvasLayerVisible(Canvas canvas, boolean selected) {
-		canvas.setVisible(selected);
-		updateVisibleCanvas();
+	public void setCanvasLayerVisible(Canvas canvas, boolean visible) {
+		canvas.setVisible(visible);
+		updateImageView();
 	}
 
-	public ArrayList<CanvasLayer> getCanvasLayers() {
+	public ArrayList<SpriteLayer> getCanvasLayers() {
 		return canvasLayers;
+	}
+	
+	public ToggleGroup getCanvasLayerToggleGroup() {
+		return canvasLayerToggleGroup;
 	}
 }

@@ -1,4 +1,4 @@
-package pixel;
+package pixel.sprite;
 
 import javafx.geometry.Pos;
 import javafx.scene.control.Tab;
@@ -11,8 +11,8 @@ public class SpriteTab extends Tab {
 	private Sprite sprite;
 	private StackPane pane;
 	
-	public SpriteTab(TabPane parent, String name) {
-		this(parent, name, new Sprite(32, 32));
+	public SpriteTab(TabPane parent, Pane layersPane, String name) {
+		this(parent, name, new Sprite(layersPane, 32, 32));
 	}
 	
 	public SpriteTab(TabPane parent, String name, Sprite sprite) {
@@ -29,8 +29,8 @@ public class SpriteTab extends Tab {
 	
 	public void setSprite(Sprite sprite) {
 		this.sprite = sprite;
-		pane.setPrefHeight(sprite.getImageWidth()*2);
-		pane.setPrefWidth(sprite.getImageHeight()*2);
+		pane.setPrefWidth(sprite.getImageWidth()*2);
+		pane.setPrefHeight(sprite.getImageHeight()*2);
 		pane.getChildren().clear();
 		pane.getChildren().add(sprite.getImageView());
 		StackPane.setAlignment(sprite.getImageView(), Pos.CENTER);
@@ -41,7 +41,7 @@ public class SpriteTab extends Tab {
 				guiParent.getChildren().clear();
 			}
 			if (isSelected()) {
-				for (CanvasLayer canvasLayer : sprite.getCanvasLayers()) {
+				for (SpriteLayer canvasLayer : sprite.getCanvasLayers()) {
 					canvasLayer.addGuiToParent();
 				}
 			}
