@@ -67,10 +67,6 @@ public class Sprite {
 		updateImageView();
 	}
 	
-	public void fillRect(double x, double y, int width, int height, Color color) {
-		fillRect((int) x / scale, (int) y / scale, width, height, color);
-	}
-	
 	public void fillRect(int x, int y, int width, int height, Color color) {
 		if (!isSpriteLayerCurrentEditable()) {
 			return;
@@ -78,10 +74,6 @@ public class Sprite {
 		SpriteLayer spriteLayer = getSpriteLayerCurrent();
 		spriteLayer.fillRect(x, y, width, height, color);
 		updateImageView();
-	}
-	
-	public void clearRect(double x, double y, int width, int height) {
-		clearRect((int) x / scale, (int) y / scale, width, height);
 	}
 	
 	public void clearRect(int x, int y, int width, int height) {
@@ -160,5 +152,9 @@ public class Sprite {
 	
 	public ToggleGroup getSpriteLayerToggleGroup() {
 		return spriteLayerToggleGroup;
+	}
+	
+	public int getScale() {
+		return scale;
 	}
 }

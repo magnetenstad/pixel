@@ -31,10 +31,10 @@ public class PencilTool implements Tool {
 	@Override
 	public void use(Sprite sprite, MouseEvent event) {
 		if (event.isPrimaryButtonDown()) {
-			sprite.fillRect(event.getX(), event.getY(), size, size, color);
+			sprite.fillRect((int) event.getX()/sprite.getScale() - size/2, (int) event.getY()/sprite.getScale() - size/2, size, size, color);
 		}
 		else if (event.isSecondaryButtonDown()) {
-			sprite.clearRect(event.getX(), event.getY(), size, size);
+			sprite.clearRect((int) event.getX()/sprite.getScale() - size/2, (int) event.getY()/sprite.getScale() - size/2, size, size);
 		}
 	}
 	
