@@ -30,4 +30,9 @@ public class EraserTool implements Tool {
 
 	@Override
 	public void setColor(Color color) {}
+
+	@Override
+	public int getSize() {
+		return size;
+	}
 }

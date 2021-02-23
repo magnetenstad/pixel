@@ -36,5 +36,10 @@ public class PencilTool implements Tool {
 		else if (event.isSecondaryButtonDown()) {
 			sprite.clearRect(event.getX(), event.getY(), size, size);
 		}
-	}	
+	}
+	
+	@Override
+	public int getSize() {
+		return size;
+	}
 }

@@ -36,8 +36,7 @@ public class Toolbar {
 		ToggleButton toolButton = new ToggleButton(tool.getName());
 		toolButton.setToggleGroup(toggleGroup);
 		toolButton.setOnAction(event -> {
-			toolSelected = tool;
-			
+			setToolSelected(tool);
 		});
 		parent.getChildren().add(toolButton);
 		return toolButton;

@@ -7,13 +7,11 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.WritableImage;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 
 public class Sprite {
 	private ArrayList<SpriteLayer> spriteLayers = new ArrayList<SpriteLayer>();
-	private ArrayList<HBox> spriteLayerHBoxes = new ArrayList<HBox>();
 	private ImageView imageView = new ImageView();
 	private ToggleGroup spriteLayerToggleGroup = new ToggleGroup();
 	private WritableImage writableImage;

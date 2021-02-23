@@ -12,8 +12,9 @@ public interface Tool {
 	
 	public void setSize(int size);
 	
+	public int getSize();
+	
 	public void use(Sprite sprite, MouseEvent event);
 	
 	public void setColor(Color color);
-	
 }
