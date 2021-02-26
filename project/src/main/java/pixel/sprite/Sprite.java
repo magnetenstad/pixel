@@ -36,10 +36,16 @@ public class Sprite {
 		Canvas combinedCanvas = new Canvas(getImageWidth(), getImageHeight());
 		GraphicsContext graphics = combinedCanvas.getGraphicsContext2D();
 		graphics.setImageSmoothing(false);
+		for (int x = 0; x < width; x++) {
+			for (int y = 0; y < height; y++) {
+				graphics.setFill((x + y) % 2 == 0 ? Color.grayRgb(220) : Color.grayRgb(240));
+				graphics.fillRect(x * scale, y * scale, scale, scale);
+			}
+		}
 		for (SpriteLayer spriteLayer : spriteLayers) {
 			if (spriteLayer.isVisible()) {
-				for (int x = 0; x < spriteLayer.getWidth(); x++) {
-					for (int y = 0; y < spriteLayer.getHeight(); y++) {
+				for (int x = 0; x < width; x++) {
+					for (int y = 0; y < height; y++) {
 						graphics.setFill(spriteLayer.getPixel(x, y));
 						graphics.fillRect(x * scale, y * scale, scale, scale);
 					}
