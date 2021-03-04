@@ -8,6 +8,7 @@ import javafx.stage.Stage;
 
 public class PixelApp extends Application {
 	private static Scene pixelScene;
+	
 	@Override
 	public void start(final Stage primaryStage) throws Exception {
 		primaryStage.setTitle("Pixel");

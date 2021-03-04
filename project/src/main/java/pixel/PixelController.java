@@ -28,8 +28,7 @@ import javafx.stage.DirectoryChooser;
 
 public class PixelController {
 	private Toolbar toolbar;
-	private File rootFile;
-	private TreeView<File> fileView = new TreeView<File>();
+	private Directory directory;
 	
 	@FXML
 	Button setFileRootButton;
@@ -59,6 +58,7 @@ public class PixelController {
 		// Init Toolbar
 		ArrayList<Tool> tools = new ArrayList<Tool>(Arrays.asList(new PencilTool(), new EraserTool()));
 		toolbar = new Toolbar(toolBarVBox, tools);
+		directory = new Directory(fileViewPane);
 		
 		// Init SpriteTabs
 		newSpriteTab();
@@ -68,7 +68,7 @@ public class PixelController {
 		
 		// Init setFileRootButton
 		setFileRootButton.setOnAction(event -> {
-			askForDirectory();
+			directory.askForDirectory();
 		});
 		
 		// Init layerButtons
@@ -93,25 +93,6 @@ public class PixelController {
 		toolSlider.setOnMouseClicked(event -> {
 			toolbar.updateToolSize((int) toolSlider.getValue());
 		});
-	}
-	
-	public File getRootFile() {
-		return rootFile;
-	}
-	
-	public void askForDirectory() {
-		DirectoryChooser directoryChooser = new DirectoryChooser();
-		File selectedDirectory = directoryChooser.showDialog(setFileRootButton.getScene().getWindow());
-		if (selectedDirectory != null) {
-			setRootFile(selectedDirectory);
-		}
-	}
-	
-	public void setRootFile(File rootFile) {
-		this.rootFile = rootFile;
-		fileView = new TreeView<File>(new SimpleFileTreeItem(rootFile));
-		fileViewPane.getChildren().clear();
-		fileViewPane.getChildren().add(fileView);
 	}
 	
 	public void newSpriteTab() {
