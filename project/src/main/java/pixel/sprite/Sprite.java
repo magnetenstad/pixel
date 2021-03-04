@@ -35,13 +35,7 @@ public class Sprite {
 	public void updateImageView() {
 		Canvas combinedCanvas = new Canvas(getImageWidth(), getImageHeight());
 		GraphicsContext graphics = combinedCanvas.getGraphicsContext2D();
-		graphics.setImageSmoothing(false);
-		for (int x = 0; x < width; x++) {
-			for (int y = 0; y < height; y++) {
-				graphics.setFill((x + y) % 2 == 0 ? Color.grayRgb(220) : Color.grayRgb(240));
-				graphics.fillRect(x * scale, y * scale, scale, scale);
-			}
-		}
+		fillTransparentBackground(graphics);
 		for (SpriteLayer spriteLayer : spriteLayers) {
 			if (spriteLayer.isVisible()) {
 				for (int x = 0; x < width; x++) {
@@ -54,23 +48,14 @@ public class Sprite {
 		}
 		combinedCanvas.snapshot(null, writableImage);
 	}
-	
-	public void fillPixel(double x, double y, Color color) {
-		if (!isSpriteLayerCurrentEditable()) {
-			return;
+	private void fillTransparentBackground(GraphicsContext graphics) {
+		graphics.setImageSmoothing(false);
+		for (int x = 0; x < width; x++) {
+			for (int y = 0; y < height; y++) {
+				graphics.setFill((x + y) % 2 == 0 ? Color.grayRgb(220) : Color.grayRgb(240));
+				graphics.fillRect(x * scale, y * scale, scale, scale);
+			}
 		}
-		SpriteLayer spriteLayer = getSpriteLayerCurrent();
-		spriteLayer.fillPixel(((int) x / scale), ((int) y / scale), color);
-		updateImageView();
-	}
-	
-	public void clearPixel(double x, double y) {
-		if (!isSpriteLayerCurrentEditable()) {
-			return;
-		}
-		SpriteLayer spriteLayer = getSpriteLayerCurrent();
-		spriteLayer.clearPixel(((int) x / scale), ((int) y / scale));
-		updateImageView();
 	}
 	
 	public void fillRect(int x, int y, int width, int height, Color color) {
