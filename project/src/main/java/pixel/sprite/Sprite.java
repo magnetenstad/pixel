@@ -25,7 +25,6 @@ public class Sprite {
 		this.layerGuiPane = layerGuiPane;
 		this.width = width;
 		this.height = height;
-		imageView.setSmooth(false);
 		writableImage = new WritableImage(width * scale, height * scale);
 		imageView.setImage(writableImage);
 		setSpriteLayerCurrent(addSpriteLayer());
@@ -49,7 +48,6 @@ public class Sprite {
 		combinedCanvas.snapshot(null, writableImage);
 	}
 	private void fillTransparentBackground(GraphicsContext graphics) {
-		graphics.setImageSmoothing(false);
 		for (int x = 0; x < width; x++) {
 			for (int y = 0; y < height; y++) {
 				graphics.setFill((x + y) % 2 == 0 ? Color.grayRgb(220) : Color.grayRgb(240));
