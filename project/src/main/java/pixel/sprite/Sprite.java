@@ -83,6 +83,9 @@ public class Sprite {
 	public SpriteLayer addSpriteLayer(String name) {
 		SpriteLayer spriteLayer = new SpriteLayer(this, name);
 		spriteLayers.add(spriteLayer);
+		if (spriteLayers.size() == 1) {
+			spriteLayer.selectLayerButton();
+		}
 		updateImageView();
 		return spriteLayer;
 	}

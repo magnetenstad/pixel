@@ -39,6 +39,9 @@ public class Toolbar {
 			PixelApp.getController().getToolSlider().setValue(tool.getSize());
 		});
 		parent.getChildren().add(toolButton);
+		if (parent.getChildren().size() == 1) {
+			toolButton.setSelected(true);
+		}
 		return toolButton;
 	}
 	public void setToolSelected(Tool toolSelected) {

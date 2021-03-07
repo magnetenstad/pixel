@@ -13,6 +13,7 @@ public class SpriteLayer {
 	private String name;
 	private Boolean visible = true;
 	private HBox gui;
+	private ToggleButton layerButton;
 	private int width;
 	private int height;
 	private final static String newLine = "_\n";
@@ -44,7 +45,7 @@ public class SpriteLayer {
 	public HBox newLayerGui() {
 		HBox gui = new HBox();
 		
-		ToggleButton layerButton = new ToggleButton(name);
+		layerButton = new ToggleButton(name);
 		layerButton.setToggleGroup(spriteParent.getSpriteLayerToggleGroup());
 		gui.getChildren().add(layerButton);
 		layerButton.setOnAction(event -> {
@@ -146,6 +147,9 @@ public class SpriteLayer {
 	}
 	public int getHeight() {
 		return height;
+	}
+	public void selectLayerButton() {
+		layerButton.setSelected(true);
 	}
 }
 
