@@ -19,7 +19,7 @@ public class Palette {
 	
 	public Palette() {
 		indexCurrent = 0;
-		paletteFromHexFile("palettes/endesga-16.hex");
+		paletteFromHexFile("src/main/resources/endesga-16.hex");
 	}
 	
 	public void addColor(Color color) {
