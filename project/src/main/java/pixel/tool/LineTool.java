@@ -58,7 +58,9 @@ public class LineTool implements Tool {
 	}
 	
 	@Override
-	public void setColor(int color) {}
+	public void setColor(int color) {
+		this.color = color;
+	}
 
 	@Override
 	public int getSize() {
