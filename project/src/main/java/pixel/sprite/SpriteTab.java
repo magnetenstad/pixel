@@ -12,6 +12,9 @@ public class SpriteTab extends Tab {
 	private Sprite sprite;
 	private StackPane pane;
 	
+	public SpriteTab() {
+		this("untitled");
+	}
 	public SpriteTab(String name) {
 		this(name, new Sprite(32, 32));
 	}

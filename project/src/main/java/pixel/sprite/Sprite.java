@@ -8,6 +8,7 @@ import javafx.scene.control.ToggleGroup;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.WritableImage;
 import javafx.scene.paint.Color;
+import pixel.PixelApp;
 
 public class Sprite {
 	private ArrayList<SpriteLayer> spriteLayers = new ArrayList<SpriteLayer>();
@@ -26,6 +27,11 @@ public class Sprite {
 		imageView.setImage(writableImage);
 		setSpriteLayerCurrent(addSpriteLayer());
 		updateImageView();
+		
+		imageView.setOnMousePressed(event -> {
+			PixelApp.getController().getToolbar().useToolSelected(this, event);
+		});
+		imageView.setOnMouseDragged(imageView.getOnMousePressed());
 	}
 	public void updateImageView() {
 		Canvas combinedCanvas = new Canvas(getImageWidth(), getImageHeight());

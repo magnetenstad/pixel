@@ -12,11 +12,9 @@ public class PixelApp extends Application {
 	@Override
 	public void start(final Stage primaryStage) throws Exception {
 		primaryStage.setTitle("Pixel");
-        loader.setLocation(getClass().getResource("PixelGUI.fxml"));
+		loader.setLocation(getClass().getResource("PixelGUI.fxml"));
         Parent root = loader.load();
-        
         Scene scene = new Scene(root);
-        
         primaryStage.setScene(scene);
         primaryStage.show();
 	}

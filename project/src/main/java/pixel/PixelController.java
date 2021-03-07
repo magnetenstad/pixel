@@ -18,7 +18,6 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TabPane;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
@@ -62,16 +61,19 @@ public class PixelController {
 	public TabPane getTabPane() {
 		return tabPane;
 	}
+	public Toolbar getToolbar() {
+		return toolbar;
+	}
 	
 	@FXML
 	void initialize() {
 		ArrayList<Tool> tools = new ArrayList<Tool>(Arrays.asList(new PencilTool(), new EraserTool()));
 		toolbar = new Toolbar(tools);
 		directory = new Directory();
-		newSpriteTab();
+		new SpriteTab();
 		
 		newTab.setOnAction(event -> {
-			newSpriteTab();
+			new SpriteTab();
 		});
 		
 		setFileRootButton.setOnAction(event -> {
@@ -99,20 +101,6 @@ public class PixelController {
 		toolSlider.setOnMouseClicked(event -> {
 			toolbar.updateToolSize((int) toolSlider.getValue());
 		});
-	}
-	
-	private void newSpriteTab() {
-		SpriteTab spriteTab = new SpriteTab("untitled");
-		ImageView imageView = spriteTab.getSprite().getImageView();
-		imageView.setOnMousePressed(event -> {
-			useTool(event);
-		});
-		imageView.setOnMouseDragged(imageView.getOnMousePressed());
-	}
-	private void useTool(MouseEvent event) {
-		Tool tool = toolbar.getToolSelected();
-		Sprite sprite = getSpriteCurrent();
-		tool.use(sprite, event);
 	}
 	private Sprite getSpriteCurrent() {
 		return ((SpriteTab) tabPane.getSelectionModel().getSelectedItem()).getSprite();
