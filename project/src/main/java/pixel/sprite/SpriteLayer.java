@@ -15,8 +15,14 @@ public class SpriteLayer {
 	private HBox gui;
 	private int width;
 	private int height;
+	private final static String newLine = "_\n";
 	
 	public SpriteLayer() {}
+	public SpriteLayer(int width, int height) {
+		this.width = width;
+		this.height = height;
+		this.canvas = new Integer[width][height];
+	}
 	public SpriteLayer(Sprite spriteParent, String name) {
 		init(name, spriteParent);
 	}
@@ -31,6 +37,8 @@ public class SpriteLayer {
 		
 		gui = newLayerGui();
 		addGuiToParent();
+		
+		deserialize(serialize(this));
 	}
 	
 	public HBox newLayerGui() {
@@ -78,7 +86,7 @@ public class SpriteLayer {
 		}
 		canvas[x][y] = 0;
 	}
-	private boolean isPointInCanvas(int x, int y) {
+	public boolean isPointInCanvas(int x, int y) {
 		return (0 <= x && x < width && 0 <= y && y < height);
 	}
 	public int getPixel(int x, int y) {
@@ -97,13 +105,47 @@ public class SpriteLayer {
 	public void addGuiToParent() {
 		guiParent.getChildren().add(gui);
 	}
-	public static String serialize() {
+	public static String serialize(SpriteLayer spriteLayer) {
 		String string = "";
+		for (int y = 0; y < spriteLayer.getWidth(); y++) {
+			for (int x = 0; x < spriteLayer.getHeight(); x++) {
+				String hex = Integer.toHexString(spriteLayer.getPixel(x, y));
+				if (hex.length() < 2) {
+					hex = "0" + hex;
+				}
+				string += hex;
+			}
+			string += newLine;
+		}
 		return string;
 	}
-	public static SpriteLayer deserialize() {
-		SpriteLayer spriteLayer = new SpriteLayer();
+	public static SpriteLayer deserialize(String string) {
+		int width = string.indexOf(newLine);
+		int height = count(string, newLine);
+		SpriteLayer spriteLayer = new SpriteLayer(width, height);
+		int x = 0;
+		int y = 0;
+		for (int i = 0; i < string.length() - 1; i += 2) {
+			String c = string.substring(i, i + 2);
+			if (!c.equals(newLine)) {
+				spriteLayer.fillPixel(x, y, Integer.parseInt(c, 16));
+				x++;
+			}
+			else {
+				y++;
+				x = 0;
+			}
+		}
 		return spriteLayer;
+	}
+	public static int count(String str, String target) {
+	    return (str.length() - str.replace(target, "").length()) / target.length();
+	}
+	public int getWidth() {
+		return width;
+	}
+	public int getHeight() {
+		return height;
 	}
 }
 

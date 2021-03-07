@@ -9,9 +9,10 @@ import javafx.scene.layout.Pane;
 import javafx.stage.DirectoryChooser;
 import pixel.ext.SimpleFileTreeItem;
 import pixel.sprite.Sprite;
+import pixel.sprite.SpriteLayer;
 
 public class Directory {
-	private File rootFile;
+	private static File rootFile;
 	private TreeView<File> fileView = new TreeView<File>();
 	private Pane fileViewPane = PixelApp.getController().getFileViewPane();
 	
@@ -21,23 +22,23 @@ public class Directory {
 		if (selectedDirectory != null) {
 			setRootFile(selectedDirectory);
 		}
-		saveSprite(null);
+		saveSprite(PixelApp.getController().getSpriteCurrent());
 	}
 	
 	public File getRootFile() {
 		return rootFile;
 	}
 	public void setRootFile(File rootFile) {
-		this.rootFile = rootFile;
+		Directory.rootFile = rootFile;
 		fileView = new TreeView<File>(new SimpleFileTreeItem(rootFile));
 		fileViewPane.getChildren().clear();
 		fileViewPane.getChildren().add(fileView);
 	}
 	
-	public void saveSprite(Sprite sprite) {
+	public static void saveSprite(Sprite sprite) {
 		try {
-			PrintWriter file = new PrintWriter(rootFile.getAbsolutePath() + "/test.txt");
-			file.println("Hello world:)))))");
+			PrintWriter file = new PrintWriter(rootFile.getAbsolutePath() + "/sprite.pixel");
+			file.print(SpriteLayer.serialize(sprite.getSpriteLayerCurrent()));
 			file.close();
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();

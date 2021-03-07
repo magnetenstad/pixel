@@ -64,10 +64,13 @@ public class PixelController {
 	public Pane getPaletteVBox() {
 		return (Pane) paletteVBox;
 	}
+	public Slider getToolSlider() {
+		return toolSlider;
+	}
 	
 	@FXML
 	void initialize() {
-		ArrayList<Tool> tools = new ArrayList<Tool>(Arrays.asList(new PencilTool(), new EraserTool(), new LineTool()));
+		ArrayList<Tool> tools = new ArrayList<Tool>(Arrays.asList(new PencilTool(), new EraserTool(), new LineTool(), new BucketTool()));
 		toolbar = new Toolbar(tools);
 		directory = new Directory();
 		palette = new Palette();
@@ -100,7 +103,7 @@ public class PixelController {
 			toolbar.updateToolSize((int) toolSlider.getValue());
 		});
 	}
-	private Sprite getSpriteCurrent() {
+	public Sprite getSpriteCurrent() {
 		return ((SpriteTab) tabPane.getSelectionModel().getSelectedItem()).getSprite();
 	}
 	public Palette getPalette() {

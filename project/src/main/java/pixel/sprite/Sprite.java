@@ -19,7 +19,7 @@ public class Sprite {
 	private String name = "untitled";
 	private int width;
 	private int height;
-	private int scale = 32;
+	private final static int scale = 32;
 	
 	public Sprite(int width, int height) {
 		this.width = width;
@@ -65,7 +65,6 @@ public class Sprite {
 		}
 		SpriteLayer spriteLayer = getSpriteLayerCurrent();
 		spriteLayer.fillRect(x, y, width, height, color);
-		updateImageView();
 	}
 	public void clearRect(int x, int y, int width, int height) {
 		if (!isSpriteLayerCurrentEditable()) {
@@ -73,7 +72,6 @@ public class Sprite {
 		}
 		SpriteLayer spriteLayer = getSpriteLayerCurrent();
 		spriteLayer.clearRect(x, y, width, height);
-		updateImageView();
 	}
 	public boolean isSpriteLayerCurrentEditable() {
 		SpriteLayer spriteLayer = getSpriteLayerCurrent();

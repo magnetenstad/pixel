@@ -36,6 +36,7 @@ public class Toolbar {
 		toolButton.setToggleGroup(toggleGroup);
 		toolButton.setOnAction(event -> {
 			setToolSelected(tool);
+			PixelApp.getController().getToolSlider().setValue(tool.getSize());
 		});
 		parent.getChildren().add(toolButton);
 		return toolButton;
@@ -48,6 +49,7 @@ public class Toolbar {
 	}
 	public void useToolSelected(Sprite sprite, MouseEvent event) {
 		toolSelected.use(sprite, event);
+		sprite.updateImageView();
 	}
 	public void updateToolColor(int color) {
 		for (Tool tool : tools) {
@@ -55,8 +57,6 @@ public class Toolbar {
 		}
 	}
 	public void updateToolSize(int size) {
-		for (Tool tool : tools) {
-			tool.setSize(size);
-		}
+		toolSelected.setSize(size);
 	}
 }
