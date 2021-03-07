@@ -7,7 +7,7 @@ import pixel.sprite.Sprite;
 public class PencilTool implements Tool {
 	private String name = "Pencil";
 	private int size = 1;
-	private Color color = Color.BLACK;
+	private int color = 0;
 	
 	@Override
 	public void setName(String name) {
@@ -24,7 +24,7 @@ public class PencilTool implements Tool {
 		this.size = size;
 	}
 	
-	public void setColor(Color color) {
+	public void setColor(int color) {
 		this.color = color;
 	}
 	

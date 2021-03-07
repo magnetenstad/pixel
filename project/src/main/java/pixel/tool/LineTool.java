@@ -9,7 +9,7 @@ import pixel.sprite.Sprite;
 public class LineTool implements Tool {
 	private String name = "Line";
 	private int size = 1;
-	private Color color = Color.BLACK;
+	private int color = 0;
 	private Point2D startPos;
 	
 	@Override
@@ -58,7 +58,7 @@ public class LineTool implements Tool {
 	}
 	
 	@Override
-	public void setColor(Color color) {}
+	public void setColor(int color) {}
 
 	@Override
 	public int getSize() {

@@ -37,12 +37,13 @@ public class Sprite {
 	public void updateImageView() {
 		Canvas combinedCanvas = new Canvas(getImageWidth(), getImageHeight());
 		GraphicsContext graphics = combinedCanvas.getGraphicsContext2D();
+		ArrayList<Color> colors = PixelApp.getController().getPalette().getColors();
 		fillTransparentBackground(graphics);
 		for (SpriteLayer spriteLayer : spriteLayers) {
 			if (spriteLayer.isVisible()) {
 				for (int x = 0; x < width; x++) {
 					for (int y = 0; y < height; y++) {
-						graphics.setFill(spriteLayer.getPixel(x, y));
+						graphics.setFill(colors.get(spriteLayer.getPixel(x, y)));
 						graphics.fillRect(x * scale, y * scale, scale, scale);
 					}
 				}
@@ -58,7 +59,7 @@ public class Sprite {
 			}
 		}
 	}
-	public void fillRect(int x, int y, int width, int height, Color color) {
+	public void fillRect(int x, int y, int width, int height, int color) {
 		if (!isSpriteLayerCurrentEditable()) {
 			return;
 		}

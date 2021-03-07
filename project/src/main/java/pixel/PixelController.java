@@ -93,12 +93,17 @@ public class PixelController {
 		});
 		colorPicker.setOnAction(event -> {
 			palette.setColorCurrent(colorPicker.getValue());
+			getSpriteCurrent().updateImageView();
 		});
+		
 		toolSlider.setOnMouseClicked(event -> {
 			toolbar.updateToolSize((int) toolSlider.getValue());
 		});
 	}
 	private Sprite getSpriteCurrent() {
 		return ((SpriteTab) tabPane.getSelectionModel().getSelectedItem()).getSprite();
+	}
+	public Palette getPalette() {
+		return palette;
 	}
 }

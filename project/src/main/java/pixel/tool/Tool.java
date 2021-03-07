@@ -16,5 +16,5 @@ public interface Tool {
 	
 	public void use(Sprite sprite, MouseEvent event);
 	
-	public void setColor(Color color);
+	public void setColor(int color);
 }

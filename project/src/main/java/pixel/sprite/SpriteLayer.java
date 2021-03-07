@@ -4,11 +4,10 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
-import javafx.scene.paint.Color;
 import pixel.PixelApp;
 
 public class SpriteLayer {
-	private Color[][] canvas;
+	private Integer[][] canvas;
 	private Sprite spriteParent;
 	private Pane guiParent = PixelApp.getController().getLayersVBox();
 	private String name;
@@ -27,7 +26,7 @@ public class SpriteLayer {
 		this.width = spriteParent.getWidth();
 		this.height = spriteParent.getHeight();
 		
-		this.canvas = new Color[width][height];
+		this.canvas = new Integer[width][height];
 		clearRect(0, 0, width, height);
 		
 		gui = newLayerGui();
@@ -53,7 +52,7 @@ public class SpriteLayer {
 		
 		return gui;
 	}
-	public void fillRect(int x0, int y0, int width, int height, Color color) {
+	public void fillRect(int x0, int y0, int width, int height, int color) {
 		for (int x = x0; x < x0 + width; x++) {
 			for (int y = y0; y < y0 + height; y++) {
 				fillPixel(x, y, color);
@@ -67,7 +66,7 @@ public class SpriteLayer {
 			}
 		}
 	}
-	public void fillPixel(int x, int y, Color color) {
+	public void fillPixel(int x, int y, int color) {
 		if (!isPointInCanvas(x, y)) {
 			return;
 		}
@@ -77,12 +76,12 @@ public class SpriteLayer {
 		if (!isPointInCanvas(x, y)) {
 			return;
 		}
-		canvas[x][y] = Color.TRANSPARENT;
+		canvas[x][y] = 0;
 	}
 	private boolean isPointInCanvas(int x, int y) {
 		return (0 <= x && x < width && 0 <= y && y < height);
 	}
-	public Color getPixel(int x, int y) {
+	public int getPixel(int x, int y) {
 		return canvas[x][y];
 	}
 	public void setVisible(boolean visible) {

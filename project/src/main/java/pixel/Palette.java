@@ -12,10 +12,10 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 
 public class Palette {
-	Pane pane = PixelApp.getController().getPaletteVBox();
-	ArrayList<Color> colors = new ArrayList<Color>();
-	ToggleGroup toggleGroup = new ToggleGroup();
-	int indexCurrent;
+	private Pane pane = PixelApp.getController().getPaletteVBox();
+	private ArrayList<Color> colors = new ArrayList<Color>();
+	private ToggleGroup toggleGroup = new ToggleGroup();
+	private int indexCurrent;
 	
 	public Palette() {
 		indexCurrent = 0;
@@ -35,7 +35,7 @@ public class Palette {
 		toggleButton.setToggleGroup(toggleGroup);
 		toggleButton.setOnAction(event -> {
 			indexCurrent = pane.getChildren().indexOf(toggleButton);
-			PixelApp.getController().getToolbar().updateToolColor(colors.get(indexCurrent));
+			PixelApp.getController().getToolbar().updateToolColor(indexCurrent);
 		});
 	}
 	
@@ -56,6 +56,7 @@ public class Palette {
 	}
 	
 	public void paletteFromHexFile(String path) {
+		addColor(Color.TRANSPARENT);
 		try {
 			Scanner in = new Scanner(new FileReader(path));
 			while(in.hasNext()){
@@ -78,6 +79,10 @@ public class Palette {
 	
 	public int getIndexCurrent() {
 		return indexCurrent;
+	}
+
+	public ArrayList<Color> getColors() {
+		return colors;
 	}
 }
 

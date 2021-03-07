@@ -49,7 +49,7 @@ public class Toolbar {
 	public void useToolSelected(Sprite sprite, MouseEvent event) {
 		toolSelected.use(sprite, event);
 	}
-	public void updateToolColor(Color color) {
+	public void updateToolColor(int color) {
 		for (Tool tool : tools) {
 			tool.setColor(color);
 		}
