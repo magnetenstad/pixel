@@ -1,6 +1,5 @@
 package pixel;
 
-import pixel.ext.SimpleFileTreeItem;
 import pixel.sprite.Sprite;
 import pixel.sprite.SpriteLayer;
 import pixel.sprite.SpriteTab;
@@ -9,7 +8,6 @@ import pixel.tool.PencilTool;
 import pixel.tool.Tool;
 import pixel.tool.Toolbar;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -19,12 +17,11 @@ import javafx.scene.control.ColorPicker;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TabPane;
-import javafx.scene.control.TreeView;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
-import javafx.stage.DirectoryChooser;
 
 public class PixelController {
 	private Toolbar toolbar;
@@ -53,25 +50,34 @@ public class PixelController {
 	@FXML
 	Button removeLayerButton;
 	
+	public Pane getLayersVBox() {
+		return (Pane) layersVBox;
+	}
+	public Pane getToolBarVBox() {
+		return (Pane) toolBarVBox;
+	}
+	public Pane getFileViewPane() {
+		return (Pane) fileViewPane;
+	}
+	public TabPane getTabPane() {
+		return tabPane;
+	}
+	
 	@FXML
 	void initialize() {
-		// Init Toolbar
 		ArrayList<Tool> tools = new ArrayList<Tool>(Arrays.asList(new PencilTool(), new EraserTool()));
-		toolbar = new Toolbar(toolBarVBox, tools);
-		directory = new Directory(fileViewPane);
-		
-		// Init SpriteTabs
+		toolbar = new Toolbar(tools);
+		directory = new Directory();
 		newSpriteTab();
+		
 		newTab.setOnAction(event -> {
 			newSpriteTab();
 		});
 		
-		// Init setFileRootButton
 		setFileRootButton.setOnAction(event -> {
 			directory.askForDirectory();
 		});
 		
-		// Init layerButtons
 		newLayerButton.setOnAction(event -> {
 			Sprite sprite = getSpriteCurrent();
 			sprite.addSpriteLayer();
@@ -95,23 +101,20 @@ public class PixelController {
 		});
 	}
 	
-	public void newSpriteTab() {
-		SpriteTab spriteTab = new SpriteTab(tabPane, layersVBox, "untitled");
+	private void newSpriteTab() {
+		SpriteTab spriteTab = new SpriteTab("untitled");
 		ImageView imageView = spriteTab.getSprite().getImageView();
 		imageView.setOnMousePressed(event -> {
 			useTool(event);
 		});
 		imageView.setOnMouseDragged(imageView.getOnMousePressed());
 	}
-	
-	public void useTool(MouseEvent event) {
+	private void useTool(MouseEvent event) {
 		Tool tool = toolbar.getToolSelected();
 		Sprite sprite = getSpriteCurrent();
 		tool.use(sprite, event);
 	}
-	
-	public Sprite getSpriteCurrent() {
+	private Sprite getSpriteCurrent() {
 		return ((SpriteTab) tabPane.getSelectionModel().getSelectedItem()).getSprite();
 	}
-	
 }

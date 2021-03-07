@@ -5,20 +5,20 @@ import javafx.scene.control.ToggleButton;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
+import pixel.PixelApp;
 
 public class SpriteLayer {
 	private Color[][] canvas;
 	private Sprite spriteParent;
-	private Pane guiParent;
+	private Pane guiParent = PixelApp.getController().getLayersVBox();
 	private String name;
 	private Boolean visible = true;
 	private HBox gui;
 	private int width;
 	private int height;
 	
-	public SpriteLayer(Sprite spriteParent, Pane guiParent, String name, int width, int height) {
+	public SpriteLayer(Sprite spriteParent, String name, int width, int height) {
 		this.spriteParent = spriteParent;
-		this.guiParent = guiParent;
 		this.name = name;
 		this.width = width;
 		this.height = height;

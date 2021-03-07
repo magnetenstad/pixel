@@ -5,15 +5,15 @@ import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
+import pixel.PixelApp;
 
 public class Toolbar {
-	private Pane parent;
+	private Pane parent = PixelApp.getController().getToolBarVBox();
 	private Tool toolSelected;
 	private ArrayList<Tool> tools = new ArrayList<Tool>();
 	private ToggleGroup toggleGroup = new ToggleGroup();
 	
-	public Toolbar(Pane parent, ArrayList<Tool> tools) {
-		this.parent = parent;
+	public Toolbar(ArrayList<Tool> tools) {
 		checkToolsNotEmpty(tools);
 		for (Tool tool : tools) {
 			addTool(tool);
