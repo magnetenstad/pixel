@@ -1,12 +1,7 @@
 package pixel;
 
-import pixel.sprite.Sprite;
-import pixel.sprite.SpriteLayer;
-import pixel.sprite.SpriteTab;
-import pixel.tool.EraserTool;
-import pixel.tool.PencilTool;
-import pixel.tool.Tool;
-import pixel.tool.Toolbar;
+import pixel.sprite.*;
+import pixel.tool.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -17,7 +12,6 @@ import javafx.scene.control.ColorPicker;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TabPane;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
@@ -67,7 +61,7 @@ public class PixelController {
 	
 	@FXML
 	void initialize() {
-		ArrayList<Tool> tools = new ArrayList<Tool>(Arrays.asList(new PencilTool(), new EraserTool()));
+		ArrayList<Tool> tools = new ArrayList<Tool>(Arrays.asList(new PencilTool(), new EraserTool(), new LineTool()));
 		toolbar = new Toolbar(tools);
 		directory = new Directory();
 		new SpriteTab();

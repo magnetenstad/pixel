@@ -16,6 +16,7 @@ public class Sprite {
 	private ToggleGroup spriteLayerToggleGroup = new ToggleGroup();
 	private WritableImage writableImage;
 	private SpriteLayer spriteLayerCurrent;
+	private String name = "untitled";
 	private int width;
 	private int height;
 	private int scale = 32;
@@ -25,13 +26,13 @@ public class Sprite {
 		this.height = height;
 		writableImage = new WritableImage(width * scale, height * scale);
 		imageView.setImage(writableImage);
-		setSpriteLayerCurrent(addSpriteLayer());
-		updateImageView();
-		
 		imageView.setOnMousePressed(event -> {
 			PixelApp.getController().getToolbar().useToolSelected(this, event);
 		});
 		imageView.setOnMouseDragged(imageView.getOnMousePressed());
+		imageView.setOnMouseReleased(imageView.getOnMousePressed());
+		setSpriteLayerCurrent(addSpriteLayer());
+		updateImageView();
 	}
 	public void updateImageView() {
 		Canvas combinedCanvas = new Canvas(getImageWidth(), getImageHeight());
@@ -87,21 +88,33 @@ public class Sprite {
 		return spriteLayer;
 	}
 	public void removeSpriteLayer(SpriteLayer spriteLayer) {
-		if (spriteLayer != null && !spriteLayers.contains(spriteLayer)) {
+		if (!spriteLayers.contains(spriteLayer)) {
 			return;
 		}
+		int index = spriteLayers.indexOf(spriteLayer) - 1;
 		spriteLayers.remove(spriteLayer);
-		setSpriteLayerCurrent(null);
+		if (0 <= index) {
+			setSpriteLayerCurrent(index);
+		}
 		updateImageView();
 	}
 	public SpriteLayer getSpriteLayerCurrent() {
 		return spriteLayerCurrent;
+	}
+	public void setSpriteLayerCurrent(int index) {
+		if (!(0 <= index && index < getSpriteLayerCount())) {
+			throw new IllegalArgumentException();
+		}
+		spriteLayerCurrent = spriteLayers.get(index);
 	}
 	public void setSpriteLayerCurrent(SpriteLayer spriteLayer) {
 		if (spriteLayer != null && !spriteLayers.contains(spriteLayer)) {
 			throw new IllegalArgumentException();
 		}
 		spriteLayerCurrent = spriteLayer;
+	}
+	public String getName() {
+		return name;
 	}
 	public int getSpriteLayerCount() {
 		return spriteLayers.size();
