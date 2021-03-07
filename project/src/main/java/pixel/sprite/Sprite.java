@@ -81,13 +81,10 @@ public class Sprite {
 		return addSpriteLayer("Layer " + getSpriteLayerCount());
 	}
 	public SpriteLayer addSpriteLayer(String name) {
-		SpriteLayer spriteLayer = new SpriteLayer(this, name, width, height);
+		SpriteLayer spriteLayer = new SpriteLayer(this, name);
 		spriteLayers.add(spriteLayer);
 		updateImageView();
 		return spriteLayer;
-	}
-	public SpriteLayer getSpriteLayer(int index) {
-		return spriteLayers.get(index);
 	}
 	public void removeSpriteLayer(SpriteLayer spriteLayer) {
 		if (spriteLayer != null && !spriteLayers.contains(spriteLayer)) {
@@ -114,6 +111,12 @@ public class Sprite {
 	}
 	public double getImageHeight() {
 		return writableImage.getHeight();
+	}
+	public int getWidth() {
+		return width;
+	}
+	public int getHeight() {
+		return height;
 	}
 	public ImageView getImageView() {
 		return imageView;

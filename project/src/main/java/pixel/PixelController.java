@@ -75,16 +75,13 @@ public class PixelController {
 		newTab.setOnAction(event -> {
 			new SpriteTab();
 		});
-		
 		setFileRootButton.setOnAction(event -> {
 			directory.askForDirectory();
 		});
-		
 		newLayerButton.setOnAction(event -> {
 			Sprite sprite = getSpriteCurrent();
 			sprite.addSpriteLayer();
 		});
-		
 		removeLayerButton.setOnAction(event -> {
 			Sprite sprite = getSpriteCurrent();
 			SpriteLayer canvasLayerCurrent = sprite.getSpriteLayerCurrent();
@@ -93,11 +90,9 @@ public class PixelController {
 				sprite.removeSpriteLayer(canvasLayerCurrent);
 			}
 		});
-		
 		colorPicker.setOnAction(event -> {
 			toolbar.updateToolColor(colorPicker.getValue());
 		});
-		
 		toolSlider.setOnMouseClicked(event -> {
 			toolbar.updateToolSize((int) toolSlider.getValue());
 		});

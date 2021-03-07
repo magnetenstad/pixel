@@ -42,8 +42,8 @@ public class SpriteTab extends Tab {
 		});
 	}
 	public void updateSpriteLayerGui() {
-		Pane guiParent = sprite.getSpriteLayer(0).getGuiParent();
-		guiParent.getChildren().clear();
+		Pane layersVBox = PixelApp.getController().getLayersVBox();
+		layersVBox.getChildren().clear();
 		
 		for (SpriteLayer canvasLayer : getSpriteCurrent().getSpriteLayers()) {
 			canvasLayer.addGuiToParent();

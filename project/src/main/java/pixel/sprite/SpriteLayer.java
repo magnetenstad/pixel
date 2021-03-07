@@ -17,11 +17,11 @@ public class SpriteLayer {
 	private int width;
 	private int height;
 	
-	public SpriteLayer(Sprite spriteParent, String name, int width, int height) {
+	public SpriteLayer(Sprite spriteParent, String name) {
 		this.spriteParent = spriteParent;
 		this.name = name;
-		this.width = width;
-		this.height = height;
+		this.width = spriteParent.getWidth();
+		this.height = spriteParent.getHeight();
 		
 		this.canvas = new Color[width][height];
 		clearRect(0, 0, width, height);
@@ -29,7 +29,6 @@ public class SpriteLayer {
 		gui = newLayerGui();
 		addGuiToParent();
 	}
-	
 	public HBox newLayerGui() {
 		HBox gui = new HBox();
 		
@@ -46,17 +45,9 @@ public class SpriteLayer {
 		layerCheckBox.setOnAction(event -> {
 			setVisible(layerCheckBox.isSelected());
 		});
+		
 		return gui;
 	}
-	
-	public int getWidth() {
-		return width;
-	}
-	
-	public int getHeight() {
-		return height;
-	}
-	
 	public void fillRect(int x0, int y0, int width, int height, Color color) {
 		for (int x = x0; x < x0 + width; x++) {
 			for (int y = y0; y < y0 + height; y++) {
@@ -64,7 +55,6 @@ public class SpriteLayer {
 			}
 		}
 	}
-	
 	public void clearRect(int x0, int y0, int width, int height) {
 		for (int x = x0; x < x0 + width; x++) {
 			for (int y = y0; y < y0 + height; y++) {
@@ -72,47 +62,35 @@ public class SpriteLayer {
 			}
 		}
 	}
-	
 	public void fillPixel(int x, int y, Color color) {
 		if (!isPointInCanvas(x, y)) {
 			return;
 		}
 		canvas[x][y] = color;
 	}
-	
 	public void clearPixel(int x, int y) {
 		if (!isPointInCanvas(x, y)) {
 			return;
 		}
 		canvas[x][y] = Color.TRANSPARENT;
 	}
-	
 	private boolean isPointInCanvas(int x, int y) {
 		return (0 <= x && x < width && 0 <= y && y < height);
 	}
-	
 	public Color getPixel(int x, int y) {
 		return canvas[x][y];
 	}
-	
 	public void setVisible(boolean visible) {
 		this.visible = visible;
 		spriteParent.updateImageView();
 	}
-	
 	public boolean isVisible() {
 		return visible;
 	}
-	
 	public void removeGuiFromParent() {
 		guiParent.getChildren().remove(gui);
 	}
-	
 	public void addGuiToParent() {
 		guiParent.getChildren().add(gui);
-	}
-	
-	public Pane getGuiParent() {
-		return guiParent;
 	}
 }
