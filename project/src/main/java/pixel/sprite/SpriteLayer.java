@@ -17,9 +17,13 @@ public class SpriteLayer {
 	private int width;
 	private int height;
 	
+	public SpriteLayer() {}
 	public SpriteLayer(Sprite spriteParent, String name) {
-		this.spriteParent = spriteParent;
+		init(name, spriteParent);
+	}
+	public void init(String name, Sprite spriteParent) {
 		this.name = name;
+		this.spriteParent = spriteParent;
 		this.width = spriteParent.getWidth();
 		this.height = spriteParent.getHeight();
 		
@@ -29,6 +33,7 @@ public class SpriteLayer {
 		gui = newLayerGui();
 		addGuiToParent();
 	}
+	
 	public HBox newLayerGui() {
 		HBox gui = new HBox();
 		
@@ -93,4 +98,27 @@ public class SpriteLayer {
 	public void addGuiToParent() {
 		guiParent.getChildren().add(gui);
 	}
+	public static String serialize() {
+		String string = "";
+		return string;
+	}
+	public static SpriteLayer deserialize() {
+		SpriteLayer spriteLayer = new SpriteLayer();
+		return spriteLayer;
+	}
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

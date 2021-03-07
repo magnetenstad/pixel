@@ -140,7 +140,7 @@ public class Sprite {
 	public ToggleGroup getSpriteLayerToggleGroup() {
 		return spriteLayerToggleGroup;
 	}
-	public int getScale() {
-		return scale;
+	public double getScale() {
+		return (double) scale;
 	}
 }

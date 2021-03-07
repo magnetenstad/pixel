@@ -25,7 +25,7 @@ public class EraserTool implements Tool {
 
 	@Override
 	public void use(Sprite sprite, MouseEvent event) {
-		sprite.clearRect((int) event.getX()/sprite.getScale() - size/2, (int) event.getY()/sprite.getScale() - size/2, size, size);
+		sprite.clearRect((int) (event.getX()/sprite.getScale() - size / 2), (int) (event.getY()/sprite.getScale() - size / 2), size, size);
 	}
 
 	@Override

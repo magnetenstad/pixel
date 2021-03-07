@@ -19,6 +19,7 @@ import javafx.scene.layout.VBox;
 public class PixelController {
 	private Toolbar toolbar;
 	private Directory directory;
+	private Palette palette;
 	
 	@FXML
 	Button setFileRootButton;
@@ -42,6 +43,8 @@ public class PixelController {
 	Button newLayerButton;
 	@FXML
 	Button removeLayerButton;
+	@FXML
+	VBox paletteVBox;
 	
 	public Pane getLayersVBox() {
 		return (Pane) layersVBox;
@@ -58,12 +61,16 @@ public class PixelController {
 	public Toolbar getToolbar() {
 		return toolbar;
 	}
+	public Pane getPaletteVBox() {
+		return (Pane) paletteVBox;
+	}
 	
 	@FXML
 	void initialize() {
 		ArrayList<Tool> tools = new ArrayList<Tool>(Arrays.asList(new PencilTool(), new EraserTool(), new LineTool()));
 		toolbar = new Toolbar(tools);
 		directory = new Directory();
+		palette = new Palette();
 		new SpriteTab();
 		
 		newTab.setOnAction(event -> {
@@ -85,7 +92,7 @@ public class PixelController {
 			}
 		});
 		colorPicker.setOnAction(event -> {
-			toolbar.updateToolColor(colorPicker.getValue());
+			palette.setColorCurrent(colorPicker.getValue());
 		});
 		toolSlider.setOnMouseClicked(event -> {
 			toolbar.updateToolSize((int) toolSlider.getValue());

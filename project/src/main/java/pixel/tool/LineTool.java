@@ -46,7 +46,7 @@ public class LineTool implements Tool {
 				for (int i = 0; i <= length; i++) {
 					double x = startPos.getX() + i * Math.cos(angle);
 					double y = startPos.getY() + i * Math.sin(angle);
-					sprite.fillRect((int) x - size/2, (int) y - size/2, size, size, color);
+					sprite.fillRect((int) (x - size / 2), (int) (y - size / 2), size, size, color);
 				}
 				
 				startPos = null;
