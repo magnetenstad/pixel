@@ -2,6 +2,9 @@ package pixel.sprite;
 
 import java.util.ArrayList;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.ToggleGroup;
@@ -31,7 +34,6 @@ public class Sprite {
 		});
 		imageView.setOnMouseDragged(imageView.getOnMousePressed());
 		imageView.setOnMouseReleased(imageView.getOnMousePressed());
-		setSpriteLayerCurrent(addSpriteLayer());
 		updateImageView();
 	}
 	public void updateImageView() {
@@ -87,6 +89,16 @@ public class Sprite {
 		updateImageView();
 		return spriteLayer;
 	}
+	public SpriteLayer addSpriteLayer(SpriteLayer spriteLayer) {
+		spriteLayer.setSpriteParent(this);
+		spriteLayers.add(spriteLayer);
+		if (spriteLayers.size() == 1) {
+			setSpriteLayerCurrent(spriteLayer);
+			spriteLayer.selectLayerButton();
+		}
+		updateImageView();
+		return spriteLayer;
+	}
 	public void removeSpriteLayer(SpriteLayer spriteLayer) {
 		if (!spriteLayers.contains(spriteLayer)) {
 			return;
@@ -116,6 +128,9 @@ public class Sprite {
 	public String getName() {
 		return name;
 	}
+	public void setName(String name) {
+		this.name = name;
+	}
 	public int getSpriteLayerCount() {
 		return spriteLayers.size();
 	}
@@ -143,12 +158,57 @@ public class Sprite {
 	public double getScale() {
 		return (double) scale;
 	}
-	public static String serialise() {
-		String string = "";
-		return string;
+	public static JSONObject serialise(Sprite sprite) {
+		JSONObject json = new JSONObject();
+		json.put("name", sprite.getName());
+		json.put("width", sprite.getWidth());
+		json.put("height", sprite.getHeight());
+		JSONArray spriteLayers = new JSONArray();
+		for (SpriteLayer spriteLayer : sprite.spriteLayers) {
+			spriteLayers.put(SpriteLayer.serialize(spriteLayer));
+		}
+		json.put("data", spriteLayers);
+		
+		return json;
 	}
-	public static Sprite deserialise() {
-		Sprite sprite = new Sprite(32, 32);
+	
+	public static Sprite deserialise(JSONObject json) {
+		int width = json.getInt("width");
+		int height = json.getInt("height");
+		Sprite sprite = new Sprite(width, height);
+		sprite.setName(json.getString("name"));
+		JSONArray spriteLayers = json.getJSONArray("data");
+		for (Object spriteLayerJSONObject : spriteLayers) {
+			SpriteLayer spriteLayer = SpriteLayer.deserialize((JSONObject) spriteLayerJSONObject);
+			sprite.addSpriteLayer(spriteLayer);
+		}
 		return sprite;
 	}
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

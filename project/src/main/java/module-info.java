@@ -5,4 +5,5 @@ open module pixelproject {
 	requires javafx.graphics;
 	requires java.desktop;
 	requires javafx.swing;
+	requires json;
 }

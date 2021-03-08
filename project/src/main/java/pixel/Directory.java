@@ -1,12 +1,19 @@
 package pixel;
 
 import java.awt.image.BufferedImage;
+
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 import javax.imageio.ImageIO;
+
+import org.json.JSONObject;
 
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.control.TreeView;
@@ -15,7 +22,7 @@ import javafx.scene.layout.Pane;
 import javafx.stage.DirectoryChooser;
 import pixel.ext.SimpleFileTreeItem;
 import pixel.sprite.Sprite;
-import pixel.sprite.SpriteLayer;
+import pixel.sprite.SpriteTab;
 
 public class Directory {
 	private static File rootFile;
@@ -28,8 +35,9 @@ public class Directory {
 		if (selectedDirectory != null) {
 			setRootFile(selectedDirectory);
 		}
-		saveSprite(PixelApp.getController().getSpriteCurrent());
-		saveToFile(PixelApp.getController().getSpriteCurrent().getImageView().getImage());
+		saveSprite(rootFile.getAbsolutePath() + "/sprite.json", PixelApp.getController().getSpriteCurrent());
+		exportImageToPng(PixelApp.getController().getSpriteCurrent().getImageView().getImage());
+		new SpriteTab(loadSprite(rootFile.getAbsolutePath() + "/sprite.json"));
 	}
 	
 	public File getRootFile() {
@@ -41,23 +49,27 @@ public class Directory {
 		fileViewPane.getChildren().clear();
 		fileViewPane.getChildren().add(fileView);
 	}
-	
-	public static void saveSprite(Sprite sprite) {
+	public static void saveSprite(String path, Sprite sprite) {
 		try {
-			PrintWriter file = new PrintWriter(rootFile.getAbsolutePath() + "/sprite.pixel");
-			file.print(SpriteLayer.serialize(sprite.getSpriteLayerCurrent()));
+			PrintWriter file = new PrintWriter(path);
+			file.print(Sprite.serialise(sprite));
 			file.close();
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
 	}
-	
-	public Sprite loadSprite() {
-		Sprite sprite = new Sprite(32, 32);
-		return sprite;
+	public Sprite loadSprite(String path) {
+		try {
+			String text = new String(Files.readAllBytes(Paths.get(path)), StandardCharsets.UTF_8);
+			JSONObject json = new JSONObject(text);
+			Sprite sprite = Sprite.deserialise(json);
+			return sprite;
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
-	
-	public static void saveToFile(Image image) {
+	public static void exportImageToPng(Image image) {
 		File outputFile = new File(rootFile.getAbsolutePath() + "/sprite.png");
 		BufferedImage bImage = SwingFXUtils.fromFXImage(image, null);
 		try {

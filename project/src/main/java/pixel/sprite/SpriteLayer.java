@@ -1,5 +1,7 @@
 package pixel.sprite;
 
+import org.json.JSONObject;
+
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.layout.HBox;
@@ -35,13 +37,16 @@ public class SpriteLayer {
 			fillRect(0, 0, width, height, 0);
 		}
 		else if (width != spriteParent.getWidth() || height != spriteParent.getHeight()) {
-			throw new IllegalArgumentException("SpriteParent does not match canvas size!");
+			throw new IllegalArgumentException("SpriteParent does not match SpriteLayer size! SpriteParent[" + spriteParent.getWidth() + ", " + spriteParent.getHeight() + "], SpriteLayer[" + width + ", " + height + "]");
 		}
 		this.spriteParent = spriteParent;
 		addGuiToParent();
 	}
 	public void setName(String name) {
 		this.name = name;
+	}
+	public String getName() {
+		return name;
 	}
 	public void fillRect(int x0, int y0, int width, int height, int color) {
 		for (int x = x0; x < x0 + width; x++) {
@@ -116,7 +121,7 @@ public class SpriteLayer {
 		
 		return gui;
 	}
-	public static String serialize(SpriteLayer spriteLayer) {
+	public static JSONObject serialize(SpriteLayer spriteLayer) {
 		String string = "";
 		for (int y = 0; y < spriteLayer.getWidth(); y++) {
 			for (int x = 0; x < spriteLayer.getHeight(); x++) {
@@ -128,12 +133,19 @@ public class SpriteLayer {
 			}
 			string += newLine;
 		}
-		return string;
+		
+		JSONObject json = new JSONObject();
+		json.put("name", spriteLayer.getName());
+		json.put("data", string);
+		
+		return json;
 	}
-	public static SpriteLayer deserialize(String string) {
-		int width = string.indexOf(newLine);
+	public static SpriteLayer deserialize(JSONObject json) {
+		String string = json.getString("data");
+		int width = string.indexOf(newLine) / 2;
 		int height = count(string, newLine);
 		SpriteLayer spriteLayer = new SpriteLayer(width, height);
+		spriteLayer.setName(json.getString("name"));
 		int x = 0;
 		int y = 0;
 		for (int i = 0; i < string.length() - 1; i += 2) {
