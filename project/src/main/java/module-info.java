@@ -4,4 +4,5 @@ open module pixelproject {
 	requires javafx.fxml;
 	requires javafx.graphics;
 	requires java.desktop;
+	requires javafx.swing;
 }

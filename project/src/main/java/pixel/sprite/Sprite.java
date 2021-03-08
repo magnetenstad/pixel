@@ -78,12 +78,10 @@ public class Sprite {
 		return (spriteLayer != null && spriteLayer.isVisible());
 	}
 	public SpriteLayer addSpriteLayer() {
-		return addSpriteLayer("Layer " + getSpriteLayerCount());
-	}
-	public SpriteLayer addSpriteLayer(String name) {
-		SpriteLayer spriteLayer = new SpriteLayer(this, name);
+		SpriteLayer spriteLayer = new SpriteLayer(this);
 		spriteLayers.add(spriteLayer);
 		if (spriteLayers.size() == 1) {
+			setSpriteLayerCurrent(spriteLayer);
 			spriteLayer.selectLayerButton();
 		}
 		updateImageView();
@@ -144,5 +142,13 @@ public class Sprite {
 	}
 	public double getScale() {
 		return (double) scale;
+	}
+	public static String serialise() {
+		String string = "";
+		return string;
+	}
+	public static Sprite deserialise() {
+		Sprite sprite = new Sprite(32, 32);
+		return sprite;
 	}
 }

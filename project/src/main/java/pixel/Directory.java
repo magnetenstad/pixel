@@ -1,10 +1,16 @@
 package pixel;
 
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.PrintWriter;
 
+import javax.imageio.ImageIO;
+
+import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.control.TreeView;
+import javafx.scene.image.Image;
 import javafx.scene.layout.Pane;
 import javafx.stage.DirectoryChooser;
 import pixel.ext.SimpleFileTreeItem;
@@ -23,6 +29,7 @@ public class Directory {
 			setRootFile(selectedDirectory);
 		}
 		saveSprite(PixelApp.getController().getSpriteCurrent());
+		saveToFile(PixelApp.getController().getSpriteCurrent().getImageView().getImage());
 	}
 	
 	public File getRootFile() {
@@ -49,4 +56,36 @@ public class Directory {
 		Sprite sprite = new Sprite(32, 32);
 		return sprite;
 	}
+	
+	public static void saveToFile(Image image) {
+		File outputFile = new File(rootFile.getAbsolutePath() + "/sprite.png");
+		BufferedImage bImage = SwingFXUtils.fromFXImage(image, null);
+		try {
+			ImageIO.write(bImage, "png", outputFile);
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
+	}
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

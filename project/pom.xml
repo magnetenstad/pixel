@@ -20,6 +20,13 @@
   		<artifactId>junit-jupiter-engine</artifactId>
   		<version>5.7.0</version>
   	</dependency>
+  	
+  	<!-- https://mvnrepository.com/artifact/org.openjfx/javafx-swing -->
+	<dependency>
+	    <groupId>org.openjfx</groupId>
+	    <artifactId>javafx-swing</artifactId>
+	    <version>16-ea+5</version>
+	</dependency>
   </dependencies>
   
   <build>

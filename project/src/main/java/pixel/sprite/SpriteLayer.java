@@ -10,7 +10,7 @@ public class SpriteLayer {
 	private Integer[][] canvas;
 	private Sprite spriteParent;
 	private Pane guiParent = PixelApp.getController().getLayersVBox();
-	private String name;
+	private String name = "untitled";
 	private Boolean visible = true;
 	private HBox gui;
 	private ToggleButton layerButton;
@@ -18,48 +18,30 @@ public class SpriteLayer {
 	private int height;
 	private final static String newLine = "_\n";
 	
-	public SpriteLayer() {}
 	public SpriteLayer(int width, int height) {
 		this.width = width;
 		this.height = height;
 		this.canvas = new Integer[width][height];
+		fillRect(0, 0, width, height, 0);
 	}
-	public SpriteLayer(Sprite spriteParent, String name) {
-		init(name, spriteParent);
+	public SpriteLayer(Sprite spriteParent) {
+		setSpriteParent(spriteParent);
 	}
-	public void init(String name, Sprite spriteParent) {
-		this.name = name;
+	public void setSpriteParent(Sprite spriteParent) {
+		if (canvas == null) {
+			width = spriteParent.getWidth();
+			height = spriteParent.getHeight();
+			this.canvas = new Integer[width][height];
+			fillRect(0, 0, width, height, 0);
+		}
+		else if (width != spriteParent.getWidth() || height != spriteParent.getHeight()) {
+			throw new IllegalArgumentException("SpriteParent does not match canvas size!");
+		}
 		this.spriteParent = spriteParent;
-		this.width = spriteParent.getWidth();
-		this.height = spriteParent.getHeight();
-		
-		this.canvas = new Integer[width][height];
-		clearRect(0, 0, width, height);
-		
-		gui = newLayerGui();
 		addGuiToParent();
-		
-		deserialize(serialize(this));
 	}
-	
-	public HBox newLayerGui() {
-		HBox gui = new HBox();
-		
-		layerButton = new ToggleButton(name);
-		layerButton.setToggleGroup(spriteParent.getSpriteLayerToggleGroup());
-		gui.getChildren().add(layerButton);
-		layerButton.setOnAction(event -> {
-			spriteParent.setSpriteLayerCurrent(this);
-		});
-		
-		CheckBox layerCheckBox = new CheckBox();
-		gui.getChildren().add(layerCheckBox);
-		layerCheckBox.setSelected(true);
-		layerCheckBox.setOnAction(event -> {
-			setVisible(layerCheckBox.isSelected());
-		});
-		
-		return gui;
+	public void setName(String name) {
+		this.name = name;
 	}
 	public void fillRect(int x0, int y0, int width, int height, int color) {
 		for (int x = x0; x < x0 + width; x++) {
@@ -101,10 +83,38 @@ public class SpriteLayer {
 		return visible;
 	}
 	public void removeGuiFromParent() {
-		guiParent.getChildren().remove(gui);
+		if (gui != null) {
+			guiParent.getChildren().remove(gui);
+		}
 	}
 	public void addGuiToParent() {
+		if (spriteParent == null) {
+			return;
+		}
+		removeGuiFromParent();
+		gui = newLayerGui();
 		guiParent.getChildren().add(gui);
+	}
+	public HBox newLayerGui() {
+		if (spriteParent == null) {
+			throw new IllegalStateException("Cannot create a layerGui without a spriteParent!");
+		}
+		HBox gui = new HBox();
+		layerButton = new ToggleButton(name);
+		layerButton.setToggleGroup(spriteParent.getSpriteLayerToggleGroup());
+		gui.getChildren().add(layerButton);
+		layerButton.setOnAction(event -> {
+			spriteParent.setSpriteLayerCurrent(this);
+		});
+		
+		CheckBox layerCheckBox = new CheckBox();
+		gui.getChildren().add(layerCheckBox);
+		layerCheckBox.setSelected(true);
+		layerCheckBox.setOnAction(event -> {
+			setVisible(layerCheckBox.isSelected());
+		});
+		
+		return gui;
 	}
 	public static String serialize(SpriteLayer spriteLayer) {
 		String string = "";
@@ -139,7 +149,7 @@ public class SpriteLayer {
 		}
 		return spriteLayer;
 	}
-	public static int count(String str, String target) {
+	private static int count(String str, String target) {
 	    return (str.length() - str.replace(target, "").length()) / target.length();
 	}
 	public int getWidth() {
