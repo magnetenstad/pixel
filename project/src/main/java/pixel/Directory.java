@@ -4,7 +4,6 @@ import java.awt.image.BufferedImage;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;
@@ -20,6 +19,8 @@ import javafx.scene.control.TreeView;
 import javafx.scene.image.Image;
 import javafx.scene.layout.Pane;
 import javafx.stage.DirectoryChooser;
+import javafx.stage.FileChooser;
+import javafx.stage.FileChooser.ExtensionFilter;
 import pixel.ext.SimpleFileTreeItem;
 import pixel.sprite.Sprite;
 import pixel.sprite.SpriteTab;
@@ -49,7 +50,7 @@ public class Directory {
 		fileViewPane.getChildren().clear();
 		fileViewPane.getChildren().add(fileView);
 	}
-	public static void saveSprite(String path, Sprite sprite) {
+	public static void saveSpriteToPath(Sprite sprite, String path) {
 		try {
 			PrintWriter file = new PrintWriter(path);
 			file.print(Sprite.serialise(sprite));
@@ -58,7 +59,7 @@ public class Directory {
 			e.printStackTrace();
 		}
 	}
-	public Sprite loadSprite(String path) {
+	public Sprite loadSpriteFromPath(String path) {
 		try {
 			String text = new String(Files.readAllBytes(Paths.get(path)), StandardCharsets.UTF_8);
 			JSONObject json = new JSONObject(text);
@@ -77,6 +78,22 @@ public class Directory {
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
+	}
+	public void openFile() {
+		FileChooser fileChooser = new FileChooser();
+		fileChooser.getExtensionFilters().add(new ExtensionFilter("Pixel Files", "*.pixel"));
+		File fileSelected = fileChooser.showOpenDialog(fileViewPane.getScene().getWindow());
+		if (fileSelected != null) {
+			Sprite sprite = loadSpriteFromPath(fileSelected.getAbsolutePath());
+			new SpriteTab(sprite);
+		}
+	}
+	public void saveSprite(Sprite sprite) {
+		FileChooser fileChooser = new FileChooser();
+		fileChooser.getExtensionFilters().add(new ExtensionFilter("Pixel Files", "*.pixel"));
+		File fileSelected = fileChooser.showSaveDialog(fileViewPane.getScene().getWindow());
+		saveSpriteToPath(sprite, fileSelected.getAbsolutePath());
+		sprite.setPath(fileSelected.getAbsolutePath());
 	}
 }
 

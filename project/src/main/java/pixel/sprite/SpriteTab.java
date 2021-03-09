@@ -17,8 +17,12 @@ public class SpriteTab extends Tab {
 	}
 	public SpriteTab(Sprite sprite) {
 		PixelApp.getController().getTabPane().getTabs().add(this);
+		PixelApp.getController().getTabPane().getSelectionModel().select(this);
 		pane = new StackPane();
 		setContent(new ZoomableScrollPane(pane));
+		setOnSelectionChanged(event -> {
+			updateSpriteLayerGui();
+		});
 		if (sprite == null) {
 			sprite = new Sprite(32, 32);
 			sprite.addSpriteLayer();
@@ -34,9 +38,6 @@ public class SpriteTab extends Tab {
 		StackPane.setAlignment(sprite.getImageView(), Pos.CENTER);
 		setText(sprite.getName());
 		updateSpriteLayerGui();
-		setOnSelectionChanged(event -> {
-			updateSpriteLayerGui();
-		});
 	}
 	public Sprite getSprite() {
 		return sprite;
@@ -44,9 +45,12 @@ public class SpriteTab extends Tab {
 	public void updateSpriteLayerGui() {
 		Pane layersVBox = PixelApp.getController().getLayersVBox();
 		layersVBox.getChildren().clear();
-		
-		for (SpriteLayer canvasLayer : getSpriteCurrent().getSpriteLayers()) {
+		Sprite sprite = getSpriteCurrent();
+		for (SpriteLayer canvasLayer : sprite.getSpriteLayers()) {
 			canvasLayer.addGuiToParent();
+		}
+		if (sprite.getSpriteLayerCurrent() != null) {
+			sprite.getSpriteLayerCurrent().selectLayerButton();
 		}
 	}
 	private Sprite getSpriteCurrent() {

@@ -3,6 +3,7 @@ package pixel;
 import pixel.sprite.*;
 import pixel.tool.*;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -15,6 +16,9 @@ import javafx.scene.control.TabPane;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import javafx.stage.DirectoryChooser;
+import javafx.stage.FileChooser;
+import javafx.stage.FileChooser.ExtensionFilter;
 
 public class PixelController {
 	private Toolbar toolbar;
@@ -22,29 +26,37 @@ public class PixelController {
 	private Palette palette;
 	
 	@FXML
-	Button setFileRootButton;
+	private Button setFileRootButton;
 	@FXML
-	AnchorPane fileViewPane;
+	private AnchorPane fileViewPane;
 	@FXML
-	TabPane tabPane;
+	private TabPane tabPane;
 	@FXML
-	VBox toolBarVBox;
+	private VBox toolBarVBox;
 	@FXML
-	ColorPicker colorPicker;
+	private ColorPicker colorPicker;
 	@FXML
-	MenuItem newTab;
+	private Slider toolSlider;
 	@FXML
-	Slider toolSlider;
+	private VBox rightVBox;
 	@FXML
-	VBox rightVBox;
+	private VBox layersVBox;
 	@FXML
-	VBox layersVBox;
+	private Button newLayerButton;
 	@FXML
-	Button newLayerButton;
+	private Button removeLayerButton;
 	@FXML
-	Button removeLayerButton;
+	private VBox paletteVBox;
 	@FXML
-	VBox paletteVBox;
+	private MenuItem newFile;
+	@FXML
+	private MenuItem openFile;
+	@FXML
+	private MenuItem closeFile;
+	@FXML
+	private MenuItem saveFile;
+	@FXML
+	private MenuItem saveFileAs;
 	
 	public Pane getLayersVBox() {
 		return (Pane) layersVBox;
@@ -74,10 +86,28 @@ public class PixelController {
 		toolbar = new Toolbar(tools);
 		directory = new Directory();
 		palette = new Palette();
-		new SpriteTab();
+		//new SpriteTab();
 		
-		newTab.setOnAction(event -> {
+		newFile.setOnAction(event -> {
 			new SpriteTab();
+		});
+		openFile.setOnAction(event -> {
+			directory.openFile();
+		});
+		closeFile.setOnAction(event -> {
+			tabPane.getTabs().remove(tabPane.getSelectionModel().getSelectedItem());
+		});
+		saveFile.setOnAction(event -> {
+			Sprite sprite = getSpriteCurrent();
+			if (sprite.getPath() != null) {
+				Directory.saveSpriteToPath(sprite, sprite.getPath());
+			}
+			else {
+				directory.saveSprite(sprite);
+			}
+		});
+		saveFileAs.setOnAction(event -> {
+			directory.saveSprite(getSpriteCurrent());
 		});
 		setFileRootButton.setOnAction(event -> {
 			directory.askForDirectory();

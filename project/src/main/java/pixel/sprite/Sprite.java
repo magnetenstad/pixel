@@ -20,6 +20,7 @@ public class Sprite {
 	private WritableImage writableImage;
 	private SpriteLayer spriteLayerCurrent;
 	private String name = "untitled";
+	private String path;
 	private int width;
 	private int height;
 	private final static int scale = 32;
@@ -183,6 +184,12 @@ public class Sprite {
 			sprite.addSpriteLayer(spriteLayer);
 		}
 		return sprite;
+	}
+	public String getPath() {
+		return path;
+	}
+	public void setPath(String path) {
+		this.path = path;
 	}
 }
 
