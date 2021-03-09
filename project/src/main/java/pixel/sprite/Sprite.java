@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import javafx.scene.SnapshotParameters;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.ToggleGroup;
@@ -15,10 +16,11 @@ import pixel.PixelApp;
 
 public class Sprite {
 	private ArrayList<SpriteLayer> spriteLayers = new ArrayList<SpriteLayer>();
-	private ImageView imageView = new ImageView();
+	private SnapshotParameters snapshotParameters = new SnapshotParameters();
 	private ToggleGroup spriteLayerToggleGroup = new ToggleGroup();
-	private WritableImage writableImage;
+	private ImageView imageView = new ImageView();
 	private SpriteLayer spriteLayerCurrent;
+	private WritableImage writableImage;
 	private String name = "untitled";
 	private String path;
 	private int width;
@@ -28,6 +30,7 @@ public class Sprite {
 	public Sprite(int width, int height) {
 		this.width = width;
 		this.height = height;
+		snapshotParameters.setFill(Color.TRANSPARENT);
 		writableImage = new WritableImage(width * scale, height * scale);
 		imageView.setImage(writableImage);
 		imageView.setOnMousePressed(event -> {
@@ -40,8 +43,20 @@ public class Sprite {
 	public void updateImageView() {
 		Canvas combinedCanvas = new Canvas(getImageWidth(), getImageHeight());
 		GraphicsContext graphics = combinedCanvas.getGraphicsContext2D();
-		ArrayList<Color> colors = PixelApp.getController().getPalette().getColors();
 		fillTransparentBackground(graphics);
+		drawSpriteLayersToGraphics(graphics, scale);
+		combinedCanvas.snapshot(snapshotParameters, writableImage);
+	}
+	private void fillTransparentBackground(GraphicsContext graphics) {
+		for (int x = 0; x < width; x++) {
+			for (int y = 0; y < height; y++) {
+				graphics.setFill((x + y) % 2 == 0 ? Color.grayRgb(220) : Color.grayRgb(240));
+				graphics.fillRect(x * scale, y * scale, scale, scale);
+			}
+		}
+	}
+	public void drawSpriteLayersToGraphics(GraphicsContext graphics, double scale) {
+		ArrayList<Color> colors = PixelApp.getController().getPalette().getColors();
 		for (SpriteLayer spriteLayer : spriteLayers) {
 			if (spriteLayer.isVisible()) {
 				for (int x = 0; x < width; x++) {
@@ -52,15 +67,14 @@ public class Sprite {
 				}
 			}
 		}
-		combinedCanvas.snapshot(null, writableImage);
 	}
-	private void fillTransparentBackground(GraphicsContext graphics) {
-		for (int x = 0; x < width; x++) {
-			for (int y = 0; y < height; y++) {
-				graphics.setFill((x + y) % 2 == 0 ? Color.grayRgb(220) : Color.grayRgb(240));
-				graphics.fillRect(x * scale, y * scale, scale, scale);
-			}
-		}
+	public WritableImage exportImage() {
+		WritableImage writableImage = new WritableImage(getWidth(), getHeight());
+		Canvas canvas = new Canvas(getWidth(), getHeight());
+		GraphicsContext graphics = canvas.getGraphicsContext2D();
+		drawSpriteLayersToGraphics(graphics, 1);
+		canvas.snapshot(snapshotParameters, writableImage);
+		return writableImage;
 	}
 	public void fillRect(int x, int y, int width, int height, int color) {
 		if (!isSpriteLayerCurrentEditable()) {

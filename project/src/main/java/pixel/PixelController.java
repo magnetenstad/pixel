@@ -3,7 +3,6 @@ package pixel;
 import pixel.sprite.*;
 import pixel.tool.*;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -17,9 +16,6 @@ import javafx.scene.control.TabPane.TabClosingPolicy;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
-import javafx.stage.DirectoryChooser;
-import javafx.stage.FileChooser;
-import javafx.stage.FileChooser.ExtensionFilter;
 
 public class PixelController {
 	private Toolbar toolbar;
@@ -84,7 +80,7 @@ public class PixelController {
 	}
 	
 	@FXML
-	void initialize() {
+	private void initialize() {
 		ArrayList<Tool> tools = new ArrayList<Tool>(Arrays.asList(new PencilTool(), new EraserTool(), new LineTool(), new BucketTool()));
 		toolbar = new Toolbar(tools);
 		directory = new Directory();

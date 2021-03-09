@@ -1,5 +1,7 @@
 package pixel;
 
+import java.awt.AlphaComposite;
+import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 
 import java.io.File;
@@ -74,9 +76,10 @@ public class Directory {
 		fileChooser.getExtensionFilters().add(new ExtensionFilter("PNG Files", "*.png"));
 		File fileSelected = fileChooser.showSaveDialog(PixelApp.getWindow());
 		if (fileSelected != null) {
-			BufferedImage bImage = SwingFXUtils.fromFXImage(sprite.getImageView().getImage(), null);
+				BufferedImage bufferedImage = new BufferedImage(sprite.getWidth(), sprite.getHeight(), BufferedImage.TYPE_INT_ARGB);
+				SwingFXUtils.fromFXImage(sprite.exportImage(), bufferedImage);
 			try {
-				ImageIO.write(bImage, "png", fileSelected);
+				ImageIO.write(bufferedImage, "png", fileSelected);
 			} catch (IOException e) {
 				throw new RuntimeException(e);
 			}
