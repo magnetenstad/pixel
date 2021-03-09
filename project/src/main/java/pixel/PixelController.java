@@ -13,6 +13,7 @@ import javafx.scene.control.ColorPicker;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TabPane;
+import javafx.scene.control.TabPane.TabClosingPolicy;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
@@ -57,6 +58,8 @@ public class PixelController {
 	private MenuItem saveFile;
 	@FXML
 	private MenuItem saveFileAs;
+	@FXML
+	private MenuItem exportFile;
 	
 	public Pane getLayersVBox() {
 		return (Pane) layersVBox;
@@ -86,47 +89,67 @@ public class PixelController {
 		toolbar = new Toolbar(tools);
 		directory = new Directory();
 		palette = new Palette();
-		//new SpriteTab();
+		tabPane.setTabClosingPolicy(TabClosingPolicy.SELECTED_TAB);
 		
 		newFile.setOnAction(event -> {
 			new SpriteTab();
 		});
 		openFile.setOnAction(event -> {
-			directory.openFile();
+			directory.openSprite();
 		});
 		closeFile.setOnAction(event -> {
-			tabPane.getTabs().remove(tabPane.getSelectionModel().getSelectedItem());
+			if (0 < tabPane.getTabs().size()) {
+				tabPane.getTabs().remove(tabPane.getSelectionModel().getSelectedItem());
+				SpriteTab.updateSpriteLayerGui();
+			}
 		});
 		saveFile.setOnAction(event -> {
 			Sprite sprite = getSpriteCurrent();
-			if (sprite.getPath() != null) {
-				Directory.saveSpriteToPath(sprite, sprite.getPath());
-			}
-			else {
-				directory.saveSprite(sprite);
+			if (sprite != null) {
+				if (sprite.getPath() != null) {
+					Directory.saveSpriteToPath(sprite, sprite.getPath());
+				}
+				else {
+					directory.saveSprite(sprite);
+				}
 			}
 		});
 		saveFileAs.setOnAction(event -> {
-			directory.saveSprite(getSpriteCurrent());
+			Sprite sprite = getSpriteCurrent();
+			if (sprite != null) {
+				directory.saveSprite(sprite);
+			}
+		});
+		exportFile.setOnAction(event -> {
+			Sprite sprite = getSpriteCurrent();
+			if (sprite != null) {
+				directory.exportSpriteToPng(sprite);
+			}
 		});
 		setFileRootButton.setOnAction(event -> {
 			directory.askForDirectory();
 		});
 		newLayerButton.setOnAction(event -> {
 			Sprite sprite = getSpriteCurrent();
-			sprite.addSpriteLayer();
+			if (sprite != null) {
+				sprite.addSpriteLayer();
+			}
 		});
 		removeLayerButton.setOnAction(event -> {
 			Sprite sprite = getSpriteCurrent();
-			SpriteLayer canvasLayerCurrent = sprite.getSpriteLayerCurrent();
-			if (canvasLayerCurrent != null) {
-				canvasLayerCurrent.removeGuiFromParent();
-				sprite.removeSpriteLayer(canvasLayerCurrent);
+			if (sprite != null) {
+				SpriteLayer canvasLayerCurrent = sprite.getSpriteLayerCurrent();
+				if (canvasLayerCurrent != null) {
+					canvasLayerCurrent.removeGuiFromParent();
+					sprite.removeSpriteLayer(canvasLayerCurrent);
+				}
 			}
 		});
 		colorPicker.setOnAction(event -> {
 			palette.setColorCurrent(colorPicker.getValue());
-			getSpriteCurrent().updateImageView();
+			if (getSpriteCurrent() != null) {
+				getSpriteCurrent().updateImageView();
+			}
 		});
 		
 		toolSlider.setOnMouseClicked(event -> {
@@ -134,7 +157,11 @@ public class PixelController {
 		});
 	}
 	public Sprite getSpriteCurrent() {
-		return ((SpriteTab) tabPane.getSelectionModel().getSelectedItem()).getSprite();
+		SpriteTab spriteTab = ((SpriteTab) tabPane.getSelectionModel().getSelectedItem());
+		if (spriteTab != null) {
+			return spriteTab.getSprite();
+		}
+		return null;
 	}
 	public Palette getPalette() {
 		return palette;

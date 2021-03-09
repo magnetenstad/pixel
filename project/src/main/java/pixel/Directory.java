@@ -21,6 +21,7 @@ import javafx.scene.layout.Pane;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
+import javafx.stage.Window;
 import pixel.ext.SimpleFileTreeItem;
 import pixel.sprite.Sprite;
 import pixel.sprite.SpriteTab;
@@ -29,10 +30,10 @@ public class Directory {
 	private static File rootFile;
 	private TreeView<File> fileView = new TreeView<File>();
 	private Pane fileViewPane = PixelApp.getController().getFileViewPane();
-	
+
 	public void askForDirectory() {
 		DirectoryChooser directoryChooser = new DirectoryChooser();
-		File selectedDirectory = directoryChooser.showDialog(fileViewPane.getScene().getWindow());
+		File selectedDirectory = directoryChooser.showDialog(PixelApp.getWindow());
 		if (selectedDirectory != null) {
 			setRootFile(selectedDirectory);
 		}
@@ -67,30 +68,43 @@ public class Directory {
 		}
 		return null;
 	}
-	public static void exportImageToPng(Image image) {
-		File outputFile = new File(rootFile.getAbsolutePath() + "/sprite.png");
-		BufferedImage bImage = SwingFXUtils.fromFXImage(image, null);
-		try {
-			ImageIO.write(bImage, "png", outputFile);
-		} catch (IOException e) {
-			throw new RuntimeException(e);
+	public void exportSpriteToPng(Sprite sprite) {
+		checkNotNull(sprite);
+		FileChooser fileChooser = new FileChooser();
+		fileChooser.getExtensionFilters().add(new ExtensionFilter("PNG Files", "*.png"));
+		File fileSelected = fileChooser.showSaveDialog(PixelApp.getWindow());
+		if (fileSelected != null) {
+			BufferedImage bImage = SwingFXUtils.fromFXImage(sprite.getImageView().getImage(), null);
+			try {
+				ImageIO.write(bImage, "png", fileSelected);
+			} catch (IOException e) {
+				throw new RuntimeException(e);
+			}
 		}
 	}
-	public void openFile() {
+	public void openSprite() {
 		FileChooser fileChooser = new FileChooser();
 		fileChooser.getExtensionFilters().add(new ExtensionFilter("Pixel Files", "*.pixel"));
-		File fileSelected = fileChooser.showOpenDialog(fileViewPane.getScene().getWindow());
+		File fileSelected = fileChooser.showOpenDialog(PixelApp.getWindow());
 		if (fileSelected != null) {
 			Sprite sprite = loadSpriteFromPath(fileSelected.getAbsolutePath());
 			new SpriteTab(sprite);
 		}
 	}
 	public void saveSprite(Sprite sprite) {
+		checkNotNull(sprite);
 		FileChooser fileChooser = new FileChooser();
 		fileChooser.getExtensionFilters().add(new ExtensionFilter("Pixel Files", "*.pixel"));
-		File fileSelected = fileChooser.showSaveDialog(fileViewPane.getScene().getWindow());
-		saveSpriteToPath(sprite, fileSelected.getAbsolutePath());
-		sprite.setPath(fileSelected.getAbsolutePath());
+		File fileSelected = fileChooser.showSaveDialog(PixelApp.getWindow());
+		if (fileSelected != null) {
+			saveSpriteToPath(sprite, fileSelected.getAbsolutePath());
+			sprite.setPath(fileSelected.getAbsolutePath());
+		}
+	}
+	private void checkNotNull(Object obj) {
+		if (obj == null) {
+			throw new NullPointerException("Sprite cannot be null!");
+		}
 	}
 }
 

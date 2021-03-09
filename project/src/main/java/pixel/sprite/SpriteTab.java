@@ -42,18 +42,15 @@ public class SpriteTab extends Tab {
 	public Sprite getSprite() {
 		return sprite;
 	}
-	public void updateSpriteLayerGui() {
+	public static void updateSpriteLayerGui() {
 		Pane layersVBox = PixelApp.getController().getLayersVBox();
 		layersVBox.getChildren().clear();
-		Sprite sprite = getSpriteCurrent();
+		Sprite sprite = PixelApp.getController().getSpriteCurrent();
 		for (SpriteLayer canvasLayer : sprite.getSpriteLayers()) {
 			canvasLayer.addGuiToParent();
 		}
 		if (sprite.getSpriteLayerCurrent() != null) {
 			sprite.getSpriteLayerCurrent().selectLayerButton();
 		}
-	}
-	private Sprite getSpriteCurrent() {
-		return ((SpriteTab) getTabPane().getSelectionModel().getSelectedItem()).getSprite();
 	}
 }
