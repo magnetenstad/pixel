@@ -19,6 +19,7 @@ public class PixelApp extends Application {
         Scene scene = new Scene(root);
         primaryStage.setScene(scene);
         primaryStage.show();
+        primaryStage.setMaximized(true);
 	}
 
 	public static void main(final String[] args) {

@@ -51,7 +51,7 @@
 <?import javafx.scene.paint.Color?>
 <?import javafx.scene.text.Font?>
 
-<VBox prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pixel.PixelController">
+<VBox prefHeight="1080.0" prefWidth="1920.0" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pixel.PixelController">
   <children>
     <MenuBar VBox.vgrow="NEVER">
       <menus>
@@ -89,53 +89,61 @@
         </Menu>
       </menus>
     </MenuBar>
-    <SplitPane dividerPositions="0.2, 0.8" focusTraversable="true" prefHeight="-1.0" prefWidth="-1.0" VBox.vgrow="ALWAYS">
+    <SplitPane dividerPositions="0.1, 0.9" focusTraversable="true" prefHeight="-1.0" prefWidth="-1.0" VBox.vgrow="ALWAYS">
       <items>
-        <AnchorPane>
-          <children>
-                  <VBox prefHeight="500.0" prefWidth="200.0">
-                     <children>
-                        <VBox fx:id="toolBarVBox" prefHeight="200.0" prefWidth="200.0" />
-                        <Slider fx:id="toolSlider" blockIncrement="1.0" majorTickUnit="3.0" max="12.0" min="1.0" minorTickCount="2" showTickLabels="true" showTickMarks="true" snapToTicks="true" />
-                        <ColorPicker fx:id="colorPicker" prefWidth="125.0">
-                           <value>
-                              <Color />
-                           </value>
-                        </ColorPicker>
-                        <VBox fx:id="paletteVBox" prefHeight="200.0" prefWidth="100.0" />
-                     </children>
-                  </VBox>
-          </children>
-        </AnchorPane>
-            <TabPane fx:id="tabPane" tabClosingPolicy="UNAVAILABLE" />
-        <AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308">
-          <children>
-                  <VBox fx:id="rightVBox" alignment="TOP_CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                     <children>
-                      <TitledPane animated="false" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Workspace">
-                           <content>
-                              <VBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308">
-                                 <children>
-                                    <AnchorPane fx:id="fileViewPane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" />
-                                 </children>
-                              </VBox>
-                           </content>
-                        </TitledPane>
-                      <TitledPane animated="false" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Layers" VBox.vgrow="SOMETIMES">
-                           <content>
-                              <VBox>
-                                 <children>
-                                    <Button fx:id="newLayerButton" mnemonicParsing="false" text="+ New Layer" />
-                                    <Button fx:id="removeLayerButton" mnemonicParsing="false" text="x Remove Current Layer" />
-                                    <VBox fx:id="layersVBox" prefHeight="200.0" prefWidth="100.0" />
-                                 </children>
-                              </VBox>
-                           </content>
-                        </TitledPane>
-                     </children>
-                  </VBox>
-          </children>
-        </AnchorPane>
+            <SplitPane dividerPositions="0.5" orientation="VERTICAL">
+              <items>
+                  <TitledPane animated="false" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Tools">
+                     <content>
+                        <VBox prefHeight="200.0" prefWidth="100.0">
+                           <children>
+                              <Slider fx:id="toolSlider" blockIncrement="1.0" majorTickUnit="3.0" max="12.0" min="1.0" minorTickCount="2" showTickLabels="true" showTickMarks="true" snapToTicks="true" />
+                              <VBox fx:id="toolBarVBox" prefHeight="200.0" prefWidth="200.0" />
+                           </children>
+                        </VBox>
+                     </content>
+                  </TitledPane>
+                  <TitledPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Palette">
+                     <content>
+                        <VBox prefHeight="200.0" prefWidth="100.0">
+                           <children>
+                              <VBox fx:id="paletteVBox" prefHeight="200.0" prefWidth="100.0" />
+                              <ColorPicker fx:id="colorPicker" prefWidth="125.0">
+                                 <value>
+                                    <Color />
+                                 </value>
+                              </ColorPicker>
+                           </children>
+                        </VBox>
+                     </content>
+                  </TitledPane>
+              </items>
+            </SplitPane>
+            <TabPane fx:id="tabPane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" tabClosingPolicy="UNAVAILABLE" />
+            <SplitPane dividerPositions="0.5" orientation="VERTICAL">
+              <items>
+                <TitledPane animated="false" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Workspace">
+                     <content>
+                        <VBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308">
+                           <children>
+                              <AnchorPane fx:id="fileViewPane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" />
+                           </children>
+                        </VBox>
+                     </content>
+                  </TitledPane>
+                <TitledPane animated="false" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Layers">
+                     <content>
+                        <VBox>
+                           <children>
+                              <Button fx:id="newLayerButton" mnemonicParsing="false" text="+ New Layer" />
+                              <Button fx:id="removeLayerButton" mnemonicParsing="false" text="x Remove Current Layer" />
+                              <VBox fx:id="layersVBox" prefHeight="200.0" prefWidth="100.0" />
+                           </children>
+                        </VBox>
+                     </content>
+                  </TitledPane>
+              </items>
+            </SplitPane>
       </items>
     </SplitPane>
     <HBox id="HBox" alignment="CENTER_LEFT" spacing="5.0" VBox.vgrow="NEVER">
