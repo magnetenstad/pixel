@@ -11,9 +11,10 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.Slider;
+import javafx.scene.control.Spinner;
+import javafx.scene.control.SpinnerValueFactory;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TabPane.TabClosingPolicy;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 
@@ -25,13 +26,11 @@ public class PixelController {
 	@FXML
 	private TabPane tabPane;
 	@FXML
-	private VBox toolBarVBox;
+	private VBox toolbarVBox;
 	@FXML
 	private ColorPicker colorPicker;
 	@FXML
-	private Slider toolSlider;
-	@FXML
-	private VBox rightVBox;
+	private Spinner<Integer> toolSizeSpinner;
 	@FXML
 	private VBox layersVBox;
 	@FXML
@@ -56,8 +55,8 @@ public class PixelController {
 	public Pane getLayersVBox() {
 		return (Pane) layersVBox;
 	}
-	public Pane getToolBarVBox() {
-		return (Pane) toolBarVBox;
+	public Pane getToolbarVBox() {
+		return (Pane) toolbarVBox;
 	}
 	public TabPane getTabPane() {
 		return tabPane;
@@ -68,8 +67,8 @@ public class PixelController {
 	public Pane getPaletteVBox() {
 		return (Pane) paletteVBox;
 	}
-	public Slider getToolSlider() {
-		return toolSlider;
+	public Spinner<Integer> getToolSizeSpinner() {
+		return toolSizeSpinner;
 	}
 	
 	@FXML
@@ -79,6 +78,7 @@ public class PixelController {
 		directory = new Directory();
 		palette = new Palette();
 		tabPane.setTabClosingPolicy(TabClosingPolicy.SELECTED_TAB);
+		toolSizeSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 40, 1));
 		
 		newFile.setOnAction(event -> {
 			new SpriteTab();
@@ -137,8 +137,8 @@ public class PixelController {
 				getSpriteCurrent().updateImageView();
 			}
 		});
-		toolSlider.setOnMouseClicked(event -> {
-			toolbar.updateToolSize((int) toolSlider.getValue());
+		toolSizeSpinner.setOnMouseClicked(event -> {
+			toolbar.updateToolSize((int) toolSizeSpinner.getValue());
 		});
 	}
 	public Sprite getSpriteCurrent() {

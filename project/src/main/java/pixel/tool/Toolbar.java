@@ -10,7 +10,7 @@ import pixel.PixelApp;
 import pixel.sprite.Sprite;
 
 public class Toolbar {
-	private Pane parent = PixelApp.getController().getToolBarVBox();
+	private Pane parent = PixelApp.getController().getToolbarVBox();
 	private Tool toolSelected;
 	private ArrayList<Tool> tools = new ArrayList<Tool>();
 	private ToggleGroup toggleGroup = new ToggleGroup();
@@ -36,7 +36,7 @@ public class Toolbar {
 		toolButton.setToggleGroup(toggleGroup);
 		toolButton.setOnAction(event -> {
 			setToolSelected(tool);
-			PixelApp.getController().getToolSlider().setValue(tool.getSize());
+			PixelApp.getController().getToolSizeSpinner().getValueFactory().setValue(tool.getSize());
 		});
 		parent.getChildren().add(toolButton);
 		if (parent.getChildren().size() == 1) {
