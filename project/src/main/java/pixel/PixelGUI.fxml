@@ -116,7 +116,6 @@
                            <content>
                               <VBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308">
                                  <children>
-                                    <Button fx:id="setFileRootButton" mnemonicParsing="false" text="Choose Workspace" />
                                     <AnchorPane fx:id="fileViewPane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" />
                                  </children>
                               </VBox>

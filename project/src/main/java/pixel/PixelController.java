@@ -23,10 +23,6 @@ public class PixelController {
 	private Palette palette;
 	
 	@FXML
-	private Button setFileRootButton;
-	@FXML
-	private AnchorPane fileViewPane;
-	@FXML
 	private TabPane tabPane;
 	@FXML
 	private VBox toolBarVBox;
@@ -62,9 +58,6 @@ public class PixelController {
 	}
 	public Pane getToolBarVBox() {
 		return (Pane) toolBarVBox;
-	}
-	public Pane getFileViewPane() {
-		return (Pane) fileViewPane;
 	}
 	public TabPane getTabPane() {
 		return tabPane;
@@ -122,9 +115,6 @@ public class PixelController {
 				directory.exportSpriteToPng(sprite);
 			}
 		});
-		setFileRootButton.setOnAction(event -> {
-			directory.askForDirectory();
-		});
 		newLayerButton.setOnAction(event -> {
 			Sprite sprite = getSpriteCurrent();
 			if (sprite != null) {
@@ -147,7 +137,6 @@ public class PixelController {
 				getSpriteCurrent().updateImageView();
 			}
 		});
-		
 		toolSlider.setOnMouseClicked(event -> {
 			toolbar.updateToolSize((int) toolSlider.getValue());
 		});
