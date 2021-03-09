@@ -36,9 +36,6 @@ public class Directory {
 		if (selectedDirectory != null) {
 			setRootFile(selectedDirectory);
 		}
-		saveSprite(rootFile.getAbsolutePath() + "/sprite.json", PixelApp.getController().getSpriteCurrent());
-		exportImageToPng(PixelApp.getController().getSpriteCurrent().getImageView().getImage());
-		new SpriteTab(loadSprite(rootFile.getAbsolutePath() + "/sprite.json"));
 	}
 	
 	public File getRootFile() {
