@@ -53,6 +53,7 @@ public class PixelController {
 		paletteGui = new PaletteGui();
 		paletteGui.setPane(paletteVBox);
 		paletteGui.setPalette(palette);
+		SpriteLayerGui.setPane(layersVBox);
 		fileManager = new PixelFileManager();
 		toolbar = new Toolbar(tools);
 		tabPane.setTabClosingPolicy(TabClosingPolicy.SELECTED_TAB);
