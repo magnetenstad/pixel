@@ -23,13 +23,21 @@ import pixel.sprite.Sprite;
 import pixel.sprite.SpriteTab;
 
 public class PixelFileManager implements FileManager {
-
+	
+	/*
+	 * Prompts the user to save a file.
+	 * @return The selected file.
+	 */
 	public File showSaveDialog(ExtensionFilter filter) {
 		FileChooser fileChooser = new FileChooser();
 		fileChooser.getExtensionFilters().add(filter);
 		return fileChooser.showSaveDialog(PixelApp.getWindow());
 	}
 	
+	/*
+	 * Prompts the user to open a file.
+	 * @return The selected file.
+	 */
 	public File showOpenDialog(ExtensionFilter filter) {
 		FileChooser fileChooser = new FileChooser();
 		fileChooser.getExtensionFilters().add(filter);
@@ -40,7 +48,7 @@ public class PixelFileManager implements FileManager {
 	public void saveSprite(String path, Sprite sprite) {
 		checkNotNull(sprite);
 		try {
-			FileManager.saveString(path, Sprite.serialiseToString(sprite));
+			FileManager.writeString(path, Sprite.serialiseToString(sprite));
 			sprite.setPath(path);
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -56,7 +64,7 @@ public class PixelFileManager implements FileManager {
 	@Override
 	public Sprite loadSprite(String path) {
 		try {
-			String string = FileManager.loadString(path);
+			String string = FileManager.readString(path);
 			return Sprite.deserialiseFromString(string);
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -94,24 +102,6 @@ public class PixelFileManager implements FileManager {
 		}
 	}
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

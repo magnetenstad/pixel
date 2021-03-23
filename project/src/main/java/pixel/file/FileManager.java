@@ -7,23 +7,50 @@ import pixel.sprite.Sprite;
 
 public interface FileManager {
 	
-	public static void saveString(String path, String string) throws IOException {
+	/*
+	 * Writes the given string to the given path.
+	 */
+	public static void writeString(String path, String string) throws IOException {
 		Files.writeString(Paths.get(path), string);
 	}
 	
-	public static String loadString(String path) throws IOException {
+	/*
+	 * Reads a string from the given path.
+	 * @return The read string.
+	 */
+	public static String readString(String path) throws IOException {
 		return Files.readString(Paths.get(path));
 	}
 	
+	/*
+	 * Saves the given sprite to the given path.
+	 */
 	public void saveSprite(String path, Sprite sprite);
 	
+	/*
+	 * Prompts the user to select a file and saves the given sprite to that file.
+	 */
 	public void saveSprite(Sprite sprite);
 	
+	/*
+	 * Loads a sprite from the given path.
+	 * @return The loaded sprite.
+	 */
 	public Sprite loadSprite(String path);
 	
+	/*
+	 * Prompts the user to select a file and loads the sprite from that file.
+	 * @return The loaded sprite.
+	 */
 	public Sprite loadSprite();
 	
+	/*
+	 * Saves the given sprite to the given path as a PNG.
+	 */
 	public void exportSprite(String path, Sprite sprite);
 	
+	/*
+	 * Prompts the user to select a file and saves the given sprite to that file as a png.
+	 */
 	public void exportSprite(Sprite sprite);
 }
