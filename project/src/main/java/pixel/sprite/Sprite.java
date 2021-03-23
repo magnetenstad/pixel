@@ -12,6 +12,7 @@ import javafx.scene.control.ToggleGroup;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.WritableImage;
 import javafx.scene.paint.Color;
+import pixel.Palette;
 import pixel.PixelApp;
 
 public class Sprite {
@@ -56,12 +57,12 @@ public class Sprite {
 		}
 	}
 	public void drawSpriteLayersToGraphics(GraphicsContext graphics, double scale) {
-		ArrayList<Color> colors = PixelApp.getController().getPalette().getColors();
+		Palette palette = PixelApp.getController().getPalette();
 		for (SpriteLayer spriteLayer : spriteLayers) {
 			if (spriteLayer.isVisible()) {
 				for (int x = 0; x < width; x++) {
 					for (int y = 0; y < height; y++) {
-						graphics.setFill(colors.get(spriteLayer.getPixel(x, y)));
+						graphics.setFill(palette.getColor(spriteLayer.getPixel(x, y)));
 						graphics.fillRect(x * scale, y * scale, scale, scale);
 					}
 				}

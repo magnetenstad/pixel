@@ -57,13 +57,13 @@
       <menus>
         <Menu mnemonicParsing="false" text="File">
           <items>
-            <MenuItem fx:id="newFile" mnemonicParsing="false" text="New" />
-            <MenuItem fx:id="openFile" mnemonicParsing="false" text="Open…" />
+            <MenuItem fx:id="newFile" mnemonicParsing="false" onAction="#newFileOnAction" text="New" />
+            <MenuItem fx:id="openFile" mnemonicParsing="false" onAction="#openFileOnAction" text="Open…" />
             <SeparatorMenuItem mnemonicParsing="false" />
-            <MenuItem fx:id="closeFile" mnemonicParsing="false" text="Close" />
-            <MenuItem fx:id="saveFile" mnemonicParsing="false" text="Save" />
-            <MenuItem fx:id="saveFileAs" mnemonicParsing="false" text="Save As…" />
-            <MenuItem fx:id="exportFile" mnemonicParsing="false" text="Export..." />
+            <MenuItem fx:id="closeFile" mnemonicParsing="false" onAction="#closeFileOnAction" text="Close" />
+            <MenuItem fx:id="saveFile" mnemonicParsing="false" onAction="#saveFileOnAction" text="Save" />
+            <MenuItem fx:id="saveFileAs" mnemonicParsing="false" onAction="#saveFileAsOnAction" text="Save As…" />
+            <MenuItem fx:id="exportFile" mnemonicParsing="false" onAction="#exportFileOnAction" text="Export..." />
             <SeparatorMenuItem mnemonicParsing="false" />
             <MenuItem mnemonicParsing="false" text="Preferences…" />
           </items>
@@ -97,7 +97,7 @@
                      <content>
                         <VBox prefHeight="200.0" prefWidth="100.0">
                            <children>
-                              <Spinner fx:id="toolSizeSpinner" editable="true" />
+                              <Spinner fx:id="toolSizeSpinner" onMouseClicked="#toolSizeSpinnerOnMouseClicked" editable="true" />
                               <VBox fx:id="toolbarVBox" prefHeight="200.0" prefWidth="200.0" />
                            </children>
                         </VBox>
@@ -135,8 +135,8 @@
                      <content>
                         <VBox>
                            <children>
-                              <Button fx:id="newLayerButton" mnemonicParsing="false" text="+ New Layer" />
-                              <Button fx:id="removeLayerButton" mnemonicParsing="false" text="x Remove Current Layer" />
+                              <Button fx:id="newLayerButton" mnemonicParsing="false" onAction="#newLayerButtonOnAction" text="+ New Layer" />
+                              <Button fx:id="removeLayerButton" mnemonicParsing="false" onAction="#removeLayerButtonOnAction" text="x Remove Current Layer" />
                               <VBox fx:id="layersVBox" prefHeight="200.0" prefWidth="100.0" />
                            </children>
                         </VBox>
