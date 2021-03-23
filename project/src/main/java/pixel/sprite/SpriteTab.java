@@ -9,48 +9,37 @@ import pixel.PixelApp;
 import pixel.ext.ZoomableScrollPane;
 
 public class SpriteTab extends Tab {
-	private Sprite sprite;
-	private StackPane pane;
+	private SpriteGui spriteGui;
+	private StackPane pane = new StackPane();
 	
 	public SpriteTab() {
 		this(null);
-	}
-	public SpriteTab(Sprite sprite) {
+	}	
+	public SpriteTab(SpriteGui spriteGui) {
 		PixelApp.getController().getTabPane().getTabs().add(this);
 		PixelApp.getController().getTabPane().getSelectionModel().select(this);
-		pane = new StackPane();
 		setContent(new ZoomableScrollPane(pane));
 		setOnSelectionChanged(event -> {
-			updateSpriteLayerGui();
+			SpriteGui.updateSpriteLayerGui();
 		});
-		if (sprite == null) {
-			sprite = new Sprite(32, 32);
+		if (spriteGui == null) {
+			Sprite sprite = new Sprite(32, 32);
 			sprite.addSpriteLayer();
+			spriteGui = sprite.getSpriteGui();
 		}
-		setSprite(sprite);
+		setSprite(spriteGui);
 	}
-	public void setSprite(Sprite sprite) {
-		this.sprite = sprite;
-		pane.setPrefWidth(sprite.getImageWidth()*2);
-		pane.setPrefHeight(sprite.getImageHeight()*2);
+	public void setSprite(SpriteGui spriteGui) {
+		this.spriteGui = spriteGui;
+		pane.setPrefWidth(spriteGui.getImageWidth()*2);
+		pane.setPrefHeight(spriteGui.getImageHeight()*2);
 		pane.getChildren().clear();
-		pane.getChildren().add(sprite.getImageView());
-		StackPane.setAlignment(sprite.getImageView(), Pos.CENTER);
-		setText(sprite.getName());
-		updateSpriteLayerGui();
+		pane.getChildren().add(spriteGui.getImageView());
+		StackPane.setAlignment(spriteGui.getImageView(), Pos.CENTER);
+		setText(spriteGui.getSprite().getName());
+		SpriteGui.updateSpriteLayerGui();
 	}
 	public Sprite getSprite() {
-		return sprite;
-	}
-	public static void updateSpriteLayerGui() {
-		Pane layersVBox = PixelApp.getController().getLayersVBox();
-		layersVBox.getChildren().clear();
-		Sprite sprite = PixelApp.getController().getSpriteCurrent();
-		for (SpriteLayer canvasLayer : sprite.getSpriteLayers()) {
-			canvasLayer.addGuiToParent();
-		}
-		if (sprite.getSpriteLayerCurrent() != null) {
-			sprite.getSpriteLayerCurrent().selectLayerButton();
-		}
+		return spriteGui.getSprite();
 	}
 }

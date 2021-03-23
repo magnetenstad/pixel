@@ -146,14 +146,14 @@ public class PixelController {
 	private void openFileOnAction(ActionEvent event) {
 		Sprite sprite = fileManager.loadSprite();
 		if (sprite != null) {
-			new SpriteTab(sprite);
+			new SpriteTab(sprite.getSpriteGui());
 		}
 	}
 	@FXML
 	private void closeFileOnAction(ActionEvent event) {
 		if (0 < tabPane.getTabs().size()) {
 			tabPane.getTabs().remove(tabPane.getSelectionModel().getSelectedItem());
-			SpriteTab.updateSpriteLayerGui();
+			SpriteGui.updateSpriteLayerGui();
 		}
 	}
 	@FXML

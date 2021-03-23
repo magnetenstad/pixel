@@ -10,7 +10,7 @@ import pixel.PixelApp;
 
 public class SpriteLayer {
 	private Integer[][] canvas;
-	private Sprite spriteParent;
+	private Sprite sprite;
 	private Pane guiParent = PixelApp.getController().getLayersVBox();
 	private String name = "untitled";
 	private Boolean visible = true;
@@ -18,8 +18,6 @@ public class SpriteLayer {
 	private ToggleButton layerButton;
 	private int width;
 	private int height;
-	private final static String newLine = "_\n";
-	
 	public SpriteLayer(int width, int height) {
 		this.width = width;
 		this.height = height;
@@ -29,17 +27,20 @@ public class SpriteLayer {
 	public SpriteLayer(Sprite spriteParent) {
 		setSpriteParent(spriteParent);
 	}
-	public void setSpriteParent(Sprite spriteParent) {
+	public void setSpriteParent(Sprite sprite) {
 		if (canvas == null) {
-			width = spriteParent.getWidth();
-			height = spriteParent.getHeight();
+			width = sprite.getWidth();
+			height = sprite.getHeight();
 			this.canvas = new Integer[width][height];
 			fillRect(0, 0, width, height, 0);
 		}
-		else if (width != spriteParent.getWidth() || height != spriteParent.getHeight()) {
-			throw new IllegalArgumentException("SpriteParent does not match SpriteLayer size! SpriteParent[" + spriteParent.getWidth() + ", " + spriteParent.getHeight() + "], SpriteLayer[" + width + ", " + height + "]");
+		else if (width != sprite.getWidth() || height != sprite.getHeight()) {
+			throw new IllegalArgumentException(""
+					+ "SpriteParent does not match SpriteLayer size! "
+					+ "SpriteParent[" + sprite.getWidth() + ", "+ sprite.getHeight() + "], "
+					+ "SpriteLayer[" + width + ", " + height + "]");
 		}
-		this.spriteParent = spriteParent;
+		this.sprite = sprite;
 		addGuiToParent();
 	}
 	public void setName(String name) {
@@ -82,7 +83,7 @@ public class SpriteLayer {
 	}
 	public void setVisible(boolean visible) {
 		this.visible = visible;
-		spriteParent.updateImageView();
+		sprite.updateImageView();
 	}
 	public boolean isVisible() {
 		return visible;
@@ -93,7 +94,7 @@ public class SpriteLayer {
 		}
 	}
 	public void addGuiToParent() {
-		if (spriteParent == null) {
+		if (sprite == null) {
 			return;
 		}
 		removeGuiFromParent();
@@ -101,15 +102,15 @@ public class SpriteLayer {
 		guiParent.getChildren().add(gui);
 	}
 	public HBox newLayerGui() {
-		if (spriteParent == null) {
+		if (sprite == null) {
 			throw new IllegalStateException("Cannot create a layerGui without a spriteParent!");
 		}
 		HBox gui = new HBox();
 		layerButton = new ToggleButton(name);
-		layerButton.setToggleGroup(spriteParent.getSpriteLayerToggleGroup());
+		layerButton.setToggleGroup(sprite.getSpriteGui().getSpriteLayerToggleGroup());
 		gui.getChildren().add(layerButton);
 		layerButton.setOnAction(event -> {
-			spriteParent.setSpriteLayerCurrent(this);
+			sprite.setSpriteLayerCurrent(this);
 		});
 		
 		CheckBox layerCheckBox = new CheckBox();
@@ -121,49 +122,7 @@ public class SpriteLayer {
 		
 		return gui;
 	}
-	public static JSONObject serialize(SpriteLayer spriteLayer) {
-		String string = "";
-		for (int y = 0; y < spriteLayer.getWidth(); y++) {
-			for (int x = 0; x < spriteLayer.getHeight(); x++) {
-				String hex = Integer.toHexString(spriteLayer.getPixel(x, y));
-				if (hex.length() < 2) {
-					hex = "0" + hex;
-				}
-				string += hex;
-			}
-			string += newLine;
-		}
-		
-		JSONObject json = new JSONObject();
-		json.put("name", spriteLayer.getName());
-		json.put("data", string);
-		
-		return json;
-	}
-	public static SpriteLayer deserialize(JSONObject json) {
-		String string = json.getString("data");
-		int width = string.indexOf(newLine) / 2;
-		int height = count(string, newLine);
-		SpriteLayer spriteLayer = new SpriteLayer(width, height);
-		spriteLayer.setName(json.getString("name"));
-		int x = 0;
-		int y = 0;
-		for (int i = 0; i < string.length() - 1; i += 2) {
-			String c = string.substring(i, i + 2);
-			if (!c.equals(newLine)) {
-				spriteLayer.fillPixel(x, y, Integer.parseInt(c, 16));
-				x++;
-			}
-			else {
-				y++;
-				x = 0;
-			}
-		}
-		return spriteLayer;
-	}
-	private static int count(String str, String target) {
-	    return (str.length() - str.replace(target, "").length()) / target.length();
-	}
+	
 	public int getWidth() {
 		return width;
 	}

@@ -7,14 +7,17 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 
 public class PaletteGui {
+	ToggleGroup toggleGroup = new ToggleGroup();
 	Palette palette;
 	Pane pane;
-	ToggleGroup toggleGroup = new ToggleGroup();
 	
-	public PaletteGui() {}
+	public Palette getPalette() {
+		return palette;
+	}
 	
-	public PaletteGui(Pane pane) {
-		setPane(pane);
+	public void setPalette(Palette palette) {
+		this.palette = palette;
+		updateGui();
 	}
 	
 	public void setPane(Pane pane) {
@@ -24,7 +27,7 @@ public class PaletteGui {
 		this.pane = pane;
 		updateGui();
 	}
-	
+
 	public void updateGui() {
 		if (pane != null) {
 			pane.getChildren().clear();
@@ -45,19 +48,10 @@ public class PaletteGui {
 		toggleButton.setTooltip(new Tooltip(color.toString()));
 		toggleButton.setStyle("-fx-border-color: #111111; -fx-border-width: 1px; -fx-background-color: #" + color.toString().replaceFirst("0x", ""));
 		toggleButton.setOnAction(event -> {
-			palette.setIndex(index);
+			getPalette().setIndex(index);
 			PixelApp.getController().getToolbar().updateToolColor(index);
 			updateGui();
 		});
 		return toggleButton;
-	}
-	
-	public Palette getPalette() {
-		return palette;
-	}
-	
-	public void setPalette(Palette palette) {
-		this.palette = palette;
-		updateGui();
 	}
 } 

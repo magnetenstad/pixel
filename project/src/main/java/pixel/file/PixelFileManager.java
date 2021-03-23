@@ -11,6 +11,7 @@ import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 import pixel.PixelApp;
 import pixel.sprite.Sprite;
+import pixel.sprite.SpriteSerializer;
 
 public class PixelFileManager implements FileManager {
 	
@@ -38,7 +39,7 @@ public class PixelFileManager implements FileManager {
 	public void saveSprite(String path, Sprite sprite) {
 		checkNotNull(sprite);
 		try {
-			FileManager.writeString(path, Sprite.serialiseToString(sprite));
+			FileManager.writeString(path, SpriteSerializer.serializeToString(sprite));
 			sprite.setPath(path);
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -57,7 +58,7 @@ public class PixelFileManager implements FileManager {
 	public Sprite loadSprite(String path) {
 		try {
 			String string = FileManager.readString(path);
-			return Sprite.deserialiseFromString(string);
+			return SpriteSerializer.deserializeFromString(string);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -77,7 +78,7 @@ public class PixelFileManager implements FileManager {
 	public void exportSprite(String path, Sprite sprite) {
 		checkNotNull(sprite);
 		BufferedImage bufferedImage = new BufferedImage(sprite.getWidth(), sprite.getHeight(), BufferedImage.TYPE_INT_ARGB);
-		SwingFXUtils.fromFXImage(sprite.exportImage(), bufferedImage);
+		SwingFXUtils.fromFXImage(sprite.getSpriteGui().exportImage(), bufferedImage);
 		try {
 			ImageIO.write(bufferedImage, "png", new File(path));
 		} catch (IOException e) {

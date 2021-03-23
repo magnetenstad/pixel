@@ -17,13 +17,10 @@ import pixel.PixelApp;
 
 public class Sprite {
 	private ArrayList<SpriteLayer> spriteLayers = new ArrayList<SpriteLayer>();
-	private SnapshotParameters snapshotParameters = new SnapshotParameters();
-	private ToggleGroup spriteLayerToggleGroup = new ToggleGroup();
-	private ImageView imageView = new ImageView();
 	private SpriteLayer spriteLayerCurrent;
-	private WritableImage writableImage;
 	private String name = "untitled";
 	private String path;
+	private SpriteGui spriteGui;
 	private int width;
 	private int height;
 	private final static int scale = 32;
@@ -31,51 +28,14 @@ public class Sprite {
 	public Sprite(int width, int height) {
 		this.width = width;
 		this.height = height;
-		snapshotParameters.setFill(Color.TRANSPARENT);
-		writableImage = new WritableImage(width * scale, height * scale);
-		imageView.setImage(writableImage);
-		imageView.setOnMousePressed(event -> {
-			PixelApp.getController().getToolbar().useToolSelected(this, event);
-		});
-		imageView.setOnMouseDragged(imageView.getOnMousePressed());
-		imageView.setOnMouseReleased(imageView.getOnMousePressed());
+		spriteGui = new SpriteGui(width, height, this);
 		updateImageView();
 	}
 	public void updateImageView() {
-		Canvas combinedCanvas = new Canvas(getImageWidth(), getImageHeight());
-		GraphicsContext graphics = combinedCanvas.getGraphicsContext2D();
-		fillTransparentBackground(graphics);
-		drawSpriteLayersToGraphics(graphics, scale);
-		combinedCanvas.snapshot(snapshotParameters, writableImage);
+		spriteGui.updateImageView();
 	}
-	private void fillTransparentBackground(GraphicsContext graphics) {
-		for (int x = 0; x < width; x++) {
-			for (int y = 0; y < height; y++) {
-				graphics.setFill((x + y) % 2 == 0 ? Color.grayRgb(220) : Color.grayRgb(240));
-				graphics.fillRect(x * scale, y * scale, scale, scale);
-			}
-		}
-	}
-	public void drawSpriteLayersToGraphics(GraphicsContext graphics, double scale) {
-		Palette palette = PixelApp.getController().getPalette();
-		for (SpriteLayer spriteLayer : spriteLayers) {
-			if (spriteLayer.isVisible()) {
-				for (int x = 0; x < width; x++) {
-					for (int y = 0; y < height; y++) {
-						graphics.setFill(palette.getColor(spriteLayer.getPixel(x, y)));
-						graphics.fillRect(x * scale, y * scale, scale, scale);
-					}
-				}
-			}
-		}
-	}
-	public WritableImage exportImage() {
-		WritableImage writableImage = new WritableImage(getWidth(), getHeight());
-		Canvas canvas = new Canvas(getWidth(), getHeight());
-		GraphicsContext graphics = canvas.getGraphicsContext2D();
-		drawSpriteLayersToGraphics(graphics, 1);
-		canvas.snapshot(snapshotParameters, writableImage);
-		return writableImage;
+	public SpriteGui getSpriteGui() {
+		return spriteGui;
 	}
 	public void fillRect(int x, int y, int width, int height, int color) {
 		if (!isSpriteLayerCurrentEditable()) {
@@ -150,75 +110,30 @@ public class Sprite {
 	public int getSpriteLayerCount() {
 		return spriteLayers.size();
 	}
-	public double getImageWidth() {
-		return writableImage.getWidth();
-	}
-	public double getImageHeight() {
-		return writableImage.getHeight();
-	}
+	
+	
 	public int getWidth() {
 		return width;
 	}
 	public int getHeight() {
 		return height;
 	}
-	public ImageView getImageView() {
-		return imageView;
-	}
+	
 	public ArrayList<SpriteLayer> getSpriteLayers() {
 		return spriteLayers;
 	}
-	public ToggleGroup getSpriteLayerToggleGroup() {
-		return spriteLayerToggleGroup;
-	}
+	
 	public double getScale() {
 		return (double) scale;
 	}
-	public static String serialiseToString(Sprite sprite) {
-		return serialise(sprite).toString(2);
-	}
-	public static Sprite deserialiseFromString(String string) {
-		return deserialise(new JSONObject(string));
-	}
-	public static JSONObject serialise(Sprite sprite) {
-		JSONObject json = new JSONObject();
-		json.put("name", sprite.getName());
-		json.put("width", sprite.getWidth());
-		json.put("height", sprite.getHeight());
-		JSONArray spriteLayers = new JSONArray();
-		for (SpriteLayer spriteLayer : sprite.spriteLayers) {
-			spriteLayers.put(SpriteLayer.serialize(spriteLayer));
-		}
-		json.put("data", spriteLayers);
 
-		return json;
-	}
-	
-	public static Sprite deserialise(JSONObject json) {
-		int width = json.getInt("width");
-		int height = json.getInt("height");
-		Sprite sprite = new Sprite(width, height);
-		sprite.setName(json.getString("name"));
-		JSONArray spriteLayers = json.getJSONArray("data");
-		for (Object spriteLayerJSONObject : spriteLayers) {
-			SpriteLayer spriteLayer = SpriteLayer.deserialize((JSONObject) spriteLayerJSONObject);
-			sprite.addSpriteLayer(spriteLayer);
-		}
-		return sprite;
-	}
-	
 	public String getPath() {
 		return path;
 	}
 	public void setPath(String path) {
 		this.path = path;
 	}
-	public void moveSpriteLayerCurrentUp() {
-		
-	}
-	public void moveSpriteLayerCurrentDown() {
-		
-	}
+	
 }
 
 
