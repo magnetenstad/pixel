@@ -3,30 +3,20 @@ package pixel.file;
 import java.awt.image.BufferedImage;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-
 import javax.imageio.ImageIO;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import javafx.embed.swing.SwingFXUtils;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 import pixel.PixelApp;
 import pixel.sprite.Sprite;
-import pixel.sprite.SpriteTab;
 
 public class PixelFileManager implements FileManager {
 	
 	/*
 	 * Prompts the user to save a file.
-	 * @return The selected file.
+	 * @return The selected file, or null!
 	 */
 	public File showSaveDialog(ExtensionFilter filter) {
 		FileChooser fileChooser = new FileChooser();
@@ -36,7 +26,7 @@ public class PixelFileManager implements FileManager {
 	
 	/*
 	 * Prompts the user to open a file.
-	 * @return The selected file.
+	 * @return The selected file, or null!
 	 */
 	public File showOpenDialog(ExtensionFilter filter) {
 		FileChooser fileChooser = new FileChooser();
@@ -57,8 +47,10 @@ public class PixelFileManager implements FileManager {
 	
 	@Override
 	public void saveSprite(Sprite sprite) {
-		String path = showSaveDialog(new ExtensionFilter("Pixel Files", "*.pixel")).getAbsolutePath();
-		saveSprite(path, sprite);
+		File file = showSaveDialog(new ExtensionFilter("Pixel Files", "*.pixel"));
+		if (file != null) {
+			saveSprite(file.getAbsolutePath(), sprite);
+		}
 	}
 	
 	@Override
@@ -74,8 +66,11 @@ public class PixelFileManager implements FileManager {
 	
 	@Override
 	public Sprite loadSprite() {
-		String path = showOpenDialog(new ExtensionFilter("Pixel Files", "*.pixel")).getAbsolutePath();
-		return loadSprite(path);
+		File file = showOpenDialog(new ExtensionFilter("Pixel Files", "*.pixel"));
+		if (file != null) {
+			return loadSprite(file.getAbsolutePath());
+		}
+		return null;
 	}
 	
 	@Override
@@ -92,8 +87,10 @@ public class PixelFileManager implements FileManager {
 	
 	@Override
 	public void exportSprite(Sprite sprite) {
-		String path = showSaveDialog(new ExtensionFilter("Pixel Files", "*.pixel")).getAbsolutePath();
-		exportSprite(path, sprite);
+		File file = showSaveDialog(new ExtensionFilter("Pixel Files", "*.png"));
+		if (file != null) {
+			exportSprite(file.getAbsolutePath(), sprite);
+		}
 	}
 	
 	private void checkNotNull(Object obj) {

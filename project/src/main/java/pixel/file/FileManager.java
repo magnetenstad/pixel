@@ -39,13 +39,13 @@ public interface FileManager {
 	public Sprite loadSprite(String path);
 	
 	/*
-	 * Prompts the user to select a file and loads the sprite from that file.
+	 * Prompts the user to select a file and loads a sprite from that file.
 	 * @return The loaded sprite.
 	 */
 	public Sprite loadSprite();
 	
 	/*
-	 * Saves the given sprite to the given path as a PNG.
+	 * Saves the given sprite to the given path as a png.
 	 */
 	public void exportSprite(String path, Sprite sprite);
 	
