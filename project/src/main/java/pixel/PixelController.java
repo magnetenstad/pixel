@@ -42,17 +42,13 @@ public class PixelController {
 	private Button newLayerButton, removeLayerButton;
 	@FXML
 	private MenuItem newFile, openFile, closeFile, saveFile, saveFileAs, exportFile;
-
+	
 	/*
 	 * Initializes FXML elements.
 	 */
 	@FXML
 	private void initialize() {
-		ArrayList<Tool> tools = new ArrayList<Tool>(Arrays.asList(
-														new PencilTool(),
-														new EraserTool(),
-														new LineTool(),
-														new BucketTool()));
+		Tool[] tools = { new PencilTool(), new EraserTool(), new LineTool(), new BucketTool() };
 		palette = Palette.fromHexFile("src/main/resources/endesga-16.hex");
 		paletteGui = new PaletteGui();
 		paletteGui.setPane(paletteVBox);
@@ -66,7 +62,7 @@ public class PixelController {
 	/*
 	 * @return The sprite that is currently visible in tabPane.
 	 */
-	public Sprite getSpriteCurrent() {
+	public Sprite getSprite() {
 		SpriteTab spriteTab = ((SpriteTab) tabPane.getSelectionModel().getSelectedItem());
 		if (spriteTab != null) {
 			return spriteTab.getSprite();
@@ -105,19 +101,19 @@ public class PixelController {
 	
 	@FXML
 	private void newLayerButtonOnAction(ActionEvent event) {
-		Sprite sprite = getSpriteCurrent();
+		Sprite sprite = getSprite();
 		if (sprite != null) {
 			sprite.addSpriteLayer();
 		}
 	}
 	@FXML
 	private void removeLayerButtonOnAction(ActionEvent event) {
-		Sprite sprite = getSpriteCurrent();
+		Sprite sprite = getSprite();
 		if (sprite != null) {
-			SpriteLayer canvasLayerCurrent = sprite.getSpriteLayerCurrent();
-			if (canvasLayerCurrent != null) {
-				canvasLayerCurrent.removeGuiFromParent();
-				sprite.removeSpriteLayer(canvasLayerCurrent);
+			SpriteLayer spriteLayerCurrent = sprite.getSpriteLayer();
+			if (spriteLayerCurrent != null) {
+				spriteLayerCurrent.getSpriteLayerGui().removeGuiFromParent();
+				sprite.removeSpriteLayer(spriteLayerCurrent);
 			}
 		}
 	}
@@ -127,8 +123,8 @@ public class PixelController {
 	@FXML
 	private void colorPickerOnAction(ActionEvent event) {
 		palette.setColor(colorPicker.getValue());
-		if (getSpriteCurrent() != null) {
-			getSpriteCurrent().updateImageView();
+		if (getSprite() != null) {
+			getSprite().updateImageView();
 		}
 	}
 	@FXML
@@ -158,7 +154,7 @@ public class PixelController {
 	}
 	@FXML
 	private void saveFileOnAction(ActionEvent event) {
-		Sprite sprite = getSpriteCurrent();
+		Sprite sprite = getSprite();
 		if (sprite != null) {
 			if (sprite.getPath() != null) {
 				fileManager.saveSprite(sprite.getPath(), sprite);
@@ -170,14 +166,14 @@ public class PixelController {
 	}
 	@FXML
 	private void saveFileAsOnAction(ActionEvent event) {
-		Sprite sprite = getSpriteCurrent();
+		Sprite sprite = getSprite();
 		if (sprite != null) {
 			fileManager.saveSprite(sprite);
 		}
 	}
 	@FXML
 	private void exportFileOnAction(ActionEvent event) {
-		Sprite sprite = getSpriteCurrent();
+		Sprite sprite = getSprite();
 		if (sprite != null) {
 			fileManager.exportSprite(sprite);
 		}

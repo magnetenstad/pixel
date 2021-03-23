@@ -33,7 +33,7 @@ public class BucketTool implements Tool {
 		if (event.isPrimaryButtonDown()) {
 			int x = (int) (event.getX() / sprite.getScale());
 			int y = (int) (event.getY() / sprite.getScale());
-			int colorMatch = sprite.getSpriteLayerCurrent().getPixel(x, y);
+			int colorMatch = sprite.getSpriteLayer().getPixel(x, y);
 			if (color != colorMatch) {
 				fill(sprite, colorMatch, x, y);
 			}
@@ -41,7 +41,7 @@ public class BucketTool implements Tool {
 	}
 	
 	private void fill(Sprite sprite, int colorMatch, int x, int y) {
-		SpriteLayer spriteLayer = sprite.getSpriteLayerCurrent();
+		SpriteLayer spriteLayer = sprite.getSpriteLayer();
 		if (spriteLayer.isPointInCanvas(x, y) && spriteLayer.getPixel(x, y) == colorMatch) {
 			sprite.fillRect(x, y, 1, 1, color);
 			for (Point2D neighbour : neighbours) {

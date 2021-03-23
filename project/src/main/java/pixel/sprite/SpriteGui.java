@@ -75,10 +75,10 @@ public class SpriteGui {
 	public double getImageWidth() {
 		return writableImage.getWidth();
 	}
-	public void moveSpriteLayerCurrentUp() {
+	public void moveSpriteLayerUp() {
 		
 	}
-	public void moveSpriteLayerCurrentDown() {
+	public void moveSpriteLayerDown() {
 		
 	}
 	public WritableImage exportImage() {
@@ -97,12 +97,12 @@ public class SpriteGui {
 	public static void updateSpriteLayerGui() {
 		Pane layersVBox = PixelApp.getController().getLayersVBox();
 		layersVBox.getChildren().clear();
-		Sprite sprite = PixelApp.getController().getSpriteCurrent();
-		for (SpriteLayer canvasLayer : sprite.getSpriteLayers()) {
-			canvasLayer.addGuiToParent();
+		Sprite sprite = PixelApp.getController().getSprite();
+		for (SpriteLayer spriteLayer : sprite.getSpriteLayers()) {
+			spriteLayer.getSpriteLayerGui().updateGui();
 		}
-		if (sprite.getSpriteLayerCurrent() != null) {
-			sprite.getSpriteLayerCurrent().selectLayerButton();
+		if (sprite.getSpriteLayer() != null) {
+			sprite.getSpriteLayer().getSpriteLayerGui().selectLayerButton();
 		}
 	}
 }

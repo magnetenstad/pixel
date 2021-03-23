@@ -15,15 +15,15 @@ public class Toolbar {
 	private ArrayList<Tool> tools = new ArrayList<Tool>();
 	private ToggleGroup toggleGroup = new ToggleGroup();
 	
-	public Toolbar(ArrayList<Tool> tools) {
+	public Toolbar(Tool[] tools) {
 		checkToolsNotEmpty(tools);
 		for (Tool tool : tools) {
 			addTool(tool);
 		}
-		setToolSelected(tools.get(0));
+		setToolSelected(tools[0]);
 	}
-	private void checkToolsNotEmpty(ArrayList<Tool> tools) {
-		if (tools.size() == 0) {
+	private void checkToolsNotEmpty(Tool[] tools) {
+		if (tools.length == 0) {
 			throw new IllegalArgumentException("Tools is empty!");
 		}
 	}

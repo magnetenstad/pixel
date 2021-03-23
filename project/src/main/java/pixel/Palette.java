@@ -14,29 +14,28 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 
 public class Palette implements Iterable<Color> {
-	
 	private ArrayList<Color> colors = new ArrayList<>();
 	private int index = 0;
 	
-	public void setIndex(int index) {
-		this.index = index;
-	}
 	public int getIndex() {
 		return index;
 	}
 	public int getIndex(Color color) {
 		return colors.indexOf(color);
 	}
-	public Color getColor(int index) {
-		return colors.get(index);
+	public void setIndex(int index) {
+		this.index = index;
 	}
 	public Color getColor() {
 		return colors.get(index);
 	}
-	public void setColor(int index, Color color) {
-		colors.set(index, color);
+	public Color getColor(int index) {
+		return colors.get(index);
 	}
 	public void setColor(Color color) {
+		colors.set(index, color);
+	}
+	public void setColor(int index, Color color) {
 		colors.set(index, color);
 	}
 	public void addColor(Color color) {
@@ -73,16 +72,6 @@ public class Palette implements Iterable<Color> {
 	@Override
 	public Iterator<Color> iterator() {
 		return colors.iterator();
-	}
-	
-	public static void main(String[] args) {
-		Palette palette = new Palette();
-		palette.addColor(Color.ALICEBLUE);
-		palette.addColor(Color.BLACK);
-		palette.addColor(Color.DARKBLUE);
-		for (Color color : palette) {
-			System.out.println(color);
-		}
 	}
 }
 

@@ -16,8 +16,8 @@ import pixel.Palette;
 import pixel.PixelApp;
 
 public class Sprite {
-	private ArrayList<SpriteLayer> spriteLayers = new ArrayList<SpriteLayer>();
-	private SpriteLayer spriteLayerCurrent;
+	private ArrayList<SpriteLayer> spriteLayers = new ArrayList<>();
+	private SpriteLayer spriteLayer;
 	private String name = "untitled";
 	private String path;
 	private SpriteGui spriteGui;
@@ -31,50 +31,58 @@ public class Sprite {
 		spriteGui = new SpriteGui(width, height, this);
 		updateImageView();
 	}
+	
 	public void updateImageView() {
 		spriteGui.updateImageView();
 	}
+	
 	public SpriteGui getSpriteGui() {
 		return spriteGui;
 	}
+	
 	public void fillRect(int x, int y, int width, int height, int color) {
-		if (!isSpriteLayerCurrentEditable()) {
+		if (!isSpriteLayerEditable()) {
 			return;
 		}
-		SpriteLayer spriteLayer = getSpriteLayerCurrent();
+		SpriteLayer spriteLayer = getSpriteLayer();
 		spriteLayer.fillRect(x, y, width, height, color);
 	}
+	
 	public void clearRect(int x, int y, int width, int height) {
-		if (!isSpriteLayerCurrentEditable()) {
+		if (!isSpriteLayerEditable()) {
 			return;
 		}
-		SpriteLayer spriteLayer = getSpriteLayerCurrent();
+		SpriteLayer spriteLayer = getSpriteLayer();
 		spriteLayer.clearRect(x, y, width, height);
 	}
-	public boolean isSpriteLayerCurrentEditable() {
-		SpriteLayer spriteLayer = getSpriteLayerCurrent();
+	
+	public boolean isSpriteLayerEditable() {
+		SpriteLayer spriteLayer = getSpriteLayer();
 		return (spriteLayer != null && spriteLayer.isVisible());
 	}
+	
 	public SpriteLayer addSpriteLayer() {
 		SpriteLayer spriteLayer = new SpriteLayer(this);
 		spriteLayers.add(spriteLayer);
 		if (spriteLayers.size() == 1) {
-			setSpriteLayerCurrent(spriteLayer);
-			spriteLayer.selectLayerButton();
+			selectSpriteLayer(spriteLayer);
+			spriteLayer.getSpriteLayerGui().selectLayerButton();
 		}
 		updateImageView();
 		return spriteLayer;
 	}
+	
 	public SpriteLayer addSpriteLayer(SpriteLayer spriteLayer) {
-		spriteLayer.setSpriteParent(this);
+		spriteLayer.setSprite(this);
 		spriteLayers.add(spriteLayer);
 		if (spriteLayers.size() == 1) {
-			setSpriteLayerCurrent(spriteLayer);
-			spriteLayer.selectLayerButton();
+			selectSpriteLayer(spriteLayer);
+			spriteLayer.getSpriteLayerGui().selectLayerButton();
 		}
 		updateImageView();
 		return spriteLayer;
 	}
+	
 	public void removeSpriteLayer(SpriteLayer spriteLayer) {
 		if (!spriteLayers.contains(spriteLayer)) {
 			return;
@@ -82,35 +90,40 @@ public class Sprite {
 		int index = spriteLayers.indexOf(spriteLayer) - 1;
 		spriteLayers.remove(spriteLayer);
 		if (0 <= index) {
-			setSpriteLayerCurrent(index);
+			selectSpriteLayer(index);
 		}
 		updateImageView();
 	}
-	public SpriteLayer getSpriteLayerCurrent() {
-		return spriteLayerCurrent;
+	
+	public SpriteLayer getSpriteLayer() {
+		return spriteLayer;
 	}
-	public void setSpriteLayerCurrent(int index) {
+	
+	public void selectSpriteLayer(int index) {
 		if (!(0 <= index && index < getSpriteLayerCount())) {
 			throw new IllegalArgumentException();
 		}
-		spriteLayerCurrent = spriteLayers.get(index);
+		spriteLayer = spriteLayers.get(index);
 	}
-	public void setSpriteLayerCurrent(SpriteLayer spriteLayer) {
+	
+	public void selectSpriteLayer(SpriteLayer spriteLayer) {
 		if (spriteLayer != null && !spriteLayers.contains(spriteLayer)) {
 			throw new IllegalArgumentException();
 		}
-		spriteLayerCurrent = spriteLayer;
+		this.spriteLayer = spriteLayer;
 	}
+	
 	public String getName() {
 		return name;
 	}
+	
 	public void setName(String name) {
 		this.name = name;
 	}
+	
 	public int getSpriteLayerCount() {
 		return spriteLayers.size();
 	}
-	
 	
 	public int getWidth() {
 		return width;
