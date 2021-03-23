@@ -173,6 +173,12 @@ public class Sprite {
 	public double getScale() {
 		return (double) scale;
 	}
+	public static String serialiseToString(Sprite sprite) {
+		return serialise(sprite).toString(2);
+	}
+	public static Sprite deserialiseFromString(String string) {
+		return deserialise(new JSONObject(string));
+	}
 	public static JSONObject serialise(Sprite sprite) {
 		JSONObject json = new JSONObject();
 		json.put("name", sprite.getName());
@@ -183,7 +189,7 @@ public class Sprite {
 			spriteLayers.put(SpriteLayer.serialize(spriteLayer));
 		}
 		json.put("data", spriteLayers);
-		
+
 		return json;
 	}
 	
@@ -199,11 +205,18 @@ public class Sprite {
 		}
 		return sprite;
 	}
+	
 	public String getPath() {
 		return path;
 	}
 	public void setPath(String path) {
 		this.path = path;
+	}
+	public void moveSpriteLayerCurrentUp() {
+		
+	}
+	public void moveSpriteLayerCurrentDown() {
+		
 	}
 }
 
