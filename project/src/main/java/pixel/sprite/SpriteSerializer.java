@@ -34,7 +34,7 @@ public class SpriteSerializer {
 		sprite.setName(json.getString("name"));
 		JSONArray spriteLayers = json.getJSONArray("data");
 		for (Object spriteLayerJSONObject : spriteLayers) {
-			SpriteLayer spriteLayer = deserializeSpriteLayer((JSONObject) spriteLayerJSONObject);
+			SpriteLayer spriteLayer = deserializeSpriteLayer(sprite, (JSONObject) spriteLayerJSONObject);
 			sprite.addSpriteLayer(spriteLayer);
 		}
 		return sprite;
@@ -60,11 +60,9 @@ public class SpriteSerializer {
 		return json;
 	}
 	
-	public static SpriteLayer deserializeSpriteLayer(JSONObject json) {
+	public static SpriteLayer deserializeSpriteLayer(Sprite sprite, JSONObject json) {
 		String string = json.getString("data");
-		int width = string.indexOf(newLine) / 2;
-		int height = count(string, newLine);
-		SpriteLayer spriteLayer = new SpriteLayer(width, height);
+		SpriteLayer spriteLayer = new SpriteLayer(sprite);
 		spriteLayer.setName(json.getString("name"));
 		int x = 0;
 		int y = 0;
@@ -80,10 +78,5 @@ public class SpriteSerializer {
 			}
 		}
 		return spriteLayer;
-	}
-	
-	private static int count(String str, String target) {
-	    return (str.length() - str.replace(target, "").length()) / target.length();
-	}
-	
+	}	
 }

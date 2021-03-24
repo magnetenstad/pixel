@@ -17,26 +17,34 @@ import pixel.PixelApp;
 
 public class Sprite {
 	private ArrayList<SpriteLayer> spriteLayers = new ArrayList<>();
-	private SpriteLayer spriteLayer;
+	private int spriteLayerIndex;
 	private String name = "untitled";
 	private String path;
 	private SpriteGui spriteGui;
 	private int width;
 	private int height;
-	private final static int scale = 32;
 	
 	public Sprite(int width, int height) {
 		this.width = width;
 		this.height = height;
-		spriteGui = new SpriteGui(width, height, this);
-		updateImageView();
+		updateGui();
 	}
 	
-	public void updateImageView() {
-		spriteGui.updateImageView();
+	public void updateGui() {
+		if (spriteGui != null) {
+			spriteGui.update();
+		}
 	}
 	
 	public SpriteGui getSpriteGui() {
+		return spriteGui;
+	}
+	
+	public SpriteGui buildGui() {
+		if (spriteGui == null) {
+			spriteGui = new SpriteGui(this);
+		}
+		updateGui();
 		return spriteGui;
 	}
 	
@@ -44,42 +52,38 @@ public class Sprite {
 		if (!isSpriteLayerEditable()) {
 			return;
 		}
-		SpriteLayer spriteLayer = getSpriteLayer();
-		spriteLayer.fillRect(x, y, width, height, color);
+		getSpriteLayer().fillRect(x, y, width, height, color);
 	}
 	
 	public void clearRect(int x, int y, int width, int height) {
 		if (!isSpriteLayerEditable()) {
 			return;
 		}
-		SpriteLayer spriteLayer = getSpriteLayer();
-		spriteLayer.clearRect(x, y, width, height);
+		getSpriteLayer().clearRect(x, y, width, height);
 	}
 	
 	public boolean isSpriteLayerEditable() {
-		SpriteLayer spriteLayer = getSpriteLayer();
-		return (spriteLayer != null && spriteLayer.isVisible());
+		return (getSpriteLayer() != null && getSpriteLayer().isVisible());
+	}
+	
+	public SpriteLayer addSpriteLayerWithGui() {
+		SpriteLayer spriteLayer = new SpriteLayer(this);
+		spriteLayer.buildGui();
+		return addSpriteLayer(spriteLayer);
 	}
 	
 	public SpriteLayer addSpriteLayer() {
 		SpriteLayer spriteLayer = new SpriteLayer(this);
-		spriteLayers.add(spriteLayer);
-		if (spriteLayers.size() == 1) {
-			selectSpriteLayer(spriteLayer);
-			spriteLayer.getSpriteLayerGui().selectLayerButton();
-		}
-		updateImageView();
-		return spriteLayer;
+		return addSpriteLayer(spriteLayer);
 	}
 	
 	public SpriteLayer addSpriteLayer(SpriteLayer spriteLayer) {
-		spriteLayer.setSprite(this);
-		spriteLayers.add(spriteLayer);
-		if (spriteLayers.size() == 1) {
-			selectSpriteLayer(spriteLayer);
-			spriteLayer.getSpriteLayerGui().selectLayerButton();
+		if (spriteLayer.getSprite() != this) {
+			throw new IllegalStateException("Cannot add a SpriteLayer from a different Sprite!");
 		}
-		updateImageView();
+		spriteLayers.add(spriteLayer);
+		selectSpriteLayer(0);
+		updateGui();
 		return spriteLayer;
 	}
 	
@@ -87,30 +91,33 @@ public class Sprite {
 		if (!spriteLayers.contains(spriteLayer)) {
 			return;
 		}
-		int index = spriteLayers.indexOf(spriteLayer) - 1;
 		spriteLayers.remove(spriteLayer);
-		if (0 <= index) {
-			selectSpriteLayer(index);
-		}
-		updateImageView();
+		selectSpriteLayer(-1);
+		SpriteLayerGui.updateAll();
+		updateGui();
 	}
 	
 	public SpriteLayer getSpriteLayer() {
-		return spriteLayer;
+		if (0 <= spriteLayerIndex && spriteLayerIndex < spriteLayers.size()) {
+			return spriteLayers.get(spriteLayerIndex);
+		}
+		return null;
 	}
 	
-	public void selectSpriteLayer(int index) {
-		if (!(0 <= index && index < getSpriteLayerCount())) {
-			throw new IllegalArgumentException();
+	public void selectSpriteLayer(int offset) {
+		if (spriteLayers.size() == 0) {
+			spriteLayerIndex = -1;
 		}
-		spriteLayer = spriteLayers.get(index);
+		else {
+			spriteLayerIndex = Math.min(Math.max(0, spriteLayerIndex + offset), spriteLayers.size());
+		}
 	}
 	
 	public void selectSpriteLayer(SpriteLayer spriteLayer) {
 		if (spriteLayer != null && !spriteLayers.contains(spriteLayer)) {
 			throw new IllegalArgumentException();
 		}
-		this.spriteLayer = spriteLayer;
+		spriteLayerIndex = spriteLayers.indexOf(spriteLayer);
 	}
 	
 	public String getName() {
@@ -137,7 +144,7 @@ public class Sprite {
 	}
 	
 	public double getScale() {
-		return (double) scale;
+		return spriteGui.getScale();
 	}
 
 	public String getPath() {
@@ -147,6 +154,9 @@ public class Sprite {
 		this.path = path;
 	}
 	
+	public WritableImage exportImage() {
+		return SpriteGui.exportImage(this);
+	}
 }
 
 

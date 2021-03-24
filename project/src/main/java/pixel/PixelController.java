@@ -104,17 +104,16 @@ public class PixelController {
 	private void newLayerButtonOnAction(ActionEvent event) {
 		Sprite sprite = getSprite();
 		if (sprite != null) {
-			sprite.addSpriteLayer();
+			sprite.addSpriteLayerWithGui();
 		}
 	}
 	@FXML
 	private void removeLayerButtonOnAction(ActionEvent event) {
 		Sprite sprite = getSprite();
 		if (sprite != null) {
-			SpriteLayer spriteLayerCurrent = sprite.getSpriteLayer();
-			if (spriteLayerCurrent != null) {
-				spriteLayerCurrent.getSpriteLayerGui().removeGuiFromParent();
-				sprite.removeSpriteLayer(spriteLayerCurrent);
+			SpriteLayer spriteLayer = sprite.getSpriteLayer();
+			if (spriteLayer != null) {
+				sprite.removeSpriteLayer(spriteLayer);
 			}
 		}
 	}
@@ -125,7 +124,7 @@ public class PixelController {
 	private void colorPickerOnAction(ActionEvent event) {
 		palette.setColor(colorPicker.getValue());
 		if (getSprite() != null) {
-			getSprite().updateImageView();
+			getSprite().updateGui();
 		}
 	}
 	@FXML
@@ -150,9 +149,10 @@ public class PixelController {
 	private void closeFileOnAction(ActionEvent event) {
 		if (0 < tabPane.getTabs().size()) {
 			tabPane.getTabs().remove(tabPane.getSelectionModel().getSelectedItem());
-			SpriteGui.updateSpriteLayerGui();
+			SpriteLayerGui.updateAll();
 		}
 	}
+	
 	@FXML
 	private void saveFileOnAction(ActionEvent event) {
 		Sprite sprite = getSprite();

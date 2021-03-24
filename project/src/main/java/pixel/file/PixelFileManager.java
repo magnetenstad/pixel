@@ -78,7 +78,7 @@ public class PixelFileManager implements FileManager {
 	public void exportSprite(String path, Sprite sprite) {
 		checkNotNull(sprite);
 		BufferedImage bufferedImage = new BufferedImage(sprite.getWidth(), sprite.getHeight(), BufferedImage.TYPE_INT_ARGB);
-		SwingFXUtils.fromFXImage(sprite.getSpriteGui().exportImage(), bufferedImage);
+		SwingFXUtils.fromFXImage(sprite.exportImage(), bufferedImage);
 		try {
 			ImageIO.write(bufferedImage, "png", new File(path));
 		} catch (IOException e) {
