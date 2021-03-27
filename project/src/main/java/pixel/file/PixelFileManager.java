@@ -4,7 +4,12 @@ import java.awt.image.BufferedImage;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+
 import javax.imageio.ImageIO;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import javafx.embed.swing.SwingFXUtils;
 import javafx.stage.FileChooser;
@@ -13,7 +18,18 @@ import pixel.PixelApp;
 import pixel.sprite.Sprite;
 import pixel.sprite.SpriteSerializer;
 
+/*
+ * An implementation of FileManager.
+ * Saves files to a .PIXEL (JSON-based) format,
+ * and exports to .PNG.
+ */
 public class PixelFileManager implements FileManager {
+	private final static File METADATA = new File("src/main/resources/metadata.json");
+	private ArrayList<String> recentPaths = new ArrayList<>();
+	
+	public PixelFileManager() {
+		readFromMetaData();
+	}
 	
 	/*
 	 * Prompts the user to save a file.
@@ -41,6 +57,7 @@ public class PixelFileManager implements FileManager {
 		try {
 			FileManager.writeString(path, SpriteSerializer.serializeToString(sprite));
 			sprite.setPath(path);
+			addToRecentPaths(path);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -99,8 +116,69 @@ public class PixelFileManager implements FileManager {
 			throw new NullPointerException("This object cannot be null!");
 		}
 	}
+	
+	private void initializeMetaData() {
+		if (!METADATA.exists()) {
+			try {
+				JSONObject json = new JSONObject();
+				JSONArray recentPathsJSON = new JSONArray();
+				json.put(Key.RecentPaths.toString(), recentPathsJSON);
+				FileManager.writeString(METADATA.getAbsolutePath(), json.toString(2));
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	private void readFromMetaData() {
+		if (!METADATA.exists()) {
+			initializeMetaData();
+		}
+		try {
+			String string = FileManager.readString(METADATA.getAbsolutePath());
+			JSONObject json = new JSONObject(string);
+			
+			if (!json.has(Key.RecentPaths.toString())) {
+				METADATA.delete();
+				readFromMetaData();
+				return;
+			}
+			
+			JSONArray recentPathsJSON = json.getJSONArray(Key.RecentPaths.toString());
+			
+			for (Object path : recentPathsJSON) {
+				recentPaths.add((String) path);
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	private void writeToMetaData() {
+		if (!METADATA.exists()) {
+			initializeMetaData();
+		}
+		try {
+			String string = FileManager.readString(METADATA.getAbsolutePath());
+			JSONObject json = new JSONObject(string);
+			JSONArray recentPathsJSON = new JSONArray();
+			
+			for (String path : recentPaths) {
+				recentPathsJSON.put(path);
+			}
+			
+			json.put(Key.RecentPaths.toString(),  recentPathsJSON);
+			FileManager.writeString(METADATA.getAbsolutePath(), json.toString(2));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void addToRecentPaths(String path) {
+		recentPaths.add(path);
+		writeToMetaData();
+	}
 }
-
 
 
 

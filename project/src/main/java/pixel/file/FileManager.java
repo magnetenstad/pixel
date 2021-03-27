@@ -5,6 +5,9 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import pixel.sprite.Sprite;
 
+/*
+ * An interface for saving, loading and exporting sprites.
+ */
 public interface FileManager {
 	
 	/*
@@ -45,12 +48,12 @@ public interface FileManager {
 	public Sprite loadSprite();
 	
 	/*
-	 * Saves the given sprite to the given path as a png.
+	 * Saves the given sprite to the given path as a PNG.
 	 */
 	public void exportSprite(String path, Sprite sprite);
 	
 	/*
-	 * Prompts the user to select a file and saves the given sprite to that file as a png.
+	 * Prompts the user to select a file and saves the given sprite to that file as a PNG.
 	 */
 	public void exportSprite(Sprite sprite);
 }

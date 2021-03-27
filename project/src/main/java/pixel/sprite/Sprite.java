@@ -15,6 +15,9 @@ import javafx.scene.paint.Color;
 import pixel.Palette;
 import pixel.PixelApp;
 
+/*
+ * 
+ */
 public class Sprite {
 	private ArrayList<SpriteLayer> spriteLayers = new ArrayList<>();
 	private int spriteLayerIndex;
