@@ -4,7 +4,7 @@ public class SpriteLayer {
 	private Integer[][] canvas;
 	private final Sprite sprite;
 	private SpriteLayerGui spriteLayerGui;
-	private String name = "untitled";
+	private String name;
 	private Boolean visible = true;
 	private int width;
 	private int height;
@@ -16,6 +16,7 @@ public class SpriteLayer {
 		this.sprite = sprite;
 		this.width = sprite.getWidth();
 		this.height = sprite.getHeight();
+		this.name = "Layer " + sprite.getSpriteLayerCount();
 		this.canvas = new Integer[width][height];
 		fillRect(0, 0, width, height, 0);
 	}

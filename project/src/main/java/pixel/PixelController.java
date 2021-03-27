@@ -39,7 +39,7 @@ public class PixelController {
 	@FXML
 	private Spinner<Integer> toolSizeSpinner;
 	@FXML
-	private Button newLayerButton, removeLayerButton;
+	private Button newLayerButton, removeLayerButton, moveLayerUpButton, moveLayerDownButton;
 	@FXML
 	private MenuItem newFile, openFile, closeFile, saveFile, saveFileAs, exportFile;
 	
@@ -115,6 +115,20 @@ public class PixelController {
 			if (spriteLayer != null) {
 				sprite.removeSpriteLayer(spriteLayer);
 			}
+		}
+	}
+	@FXML
+	private void moveLayerUpButtonOnAction(ActionEvent event) {
+		Sprite sprite = getSprite();
+		if (sprite != null) {
+			sprite.moveSpriteLayerUp();
+		}
+	}
+	@FXML
+	private void moveLayerDownButtonOnAction(ActionEvent event) {
+		Sprite sprite = getSprite();
+		if (sprite != null) {
+			sprite.moveSpriteLayerDown();
 		}
 	}
 	

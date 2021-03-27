@@ -24,10 +24,9 @@ public class SpriteTab extends Tab {
 		});
 		if (spriteGui == null) {
 			Sprite sprite = new Sprite(32, 32);
-			spriteGui = sprite.buildGui();
+			setSpriteGui(sprite.buildGui());
 			sprite.addSpriteLayerWithGui();
 		}
-		setSpriteGui(spriteGui);
 	}
 	public void setSpriteGui(SpriteGui spriteGui) {
 		this.spriteGui = spriteGui;
@@ -37,7 +36,6 @@ public class SpriteTab extends Tab {
 		pane.getChildren().add(spriteGui.getImageView());
 		StackPane.setAlignment(spriteGui.getImageView(), Pos.CENTER);
 		setText(spriteGui.getSprite().getName());
-		SpriteLayerGui.updateAll();
 	}
 	public Sprite getSprite() {
 		return spriteGui.getSprite();

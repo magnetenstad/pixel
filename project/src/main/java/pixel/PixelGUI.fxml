@@ -44,14 +44,13 @@
 <?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.control.TabPane?>
 <?import javafx.scene.control.TitledPane?>
-<?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.paint.Color?>
 <?import javafx.scene.text.Font?>
 
-<VBox prefHeight="1080.0" prefWidth="1920.0" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pixel.PixelController">
+<VBox prefHeight="1080.0" prefWidth="1920.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pixel.PixelController">
   <children>
     <MenuBar VBox.vgrow="NEVER">
       <menus>
@@ -97,7 +96,7 @@
                      <content>
                         <VBox prefHeight="200.0" prefWidth="100.0">
                            <children>
-                              <Spinner fx:id="toolSizeSpinner" onMouseClicked="#toolSizeSpinnerOnMouseClicked" editable="true" />
+                              <Spinner fx:id="toolSizeSpinner" editable="true" onMouseClicked="#toolSizeSpinnerOnMouseClicked" />
                               <VBox fx:id="toolbarVBox" prefHeight="200.0" prefWidth="200.0" />
                            </children>
                         </VBox>
@@ -120,23 +119,28 @@
               </items>
             </SplitPane>
             <TabPane fx:id="tabPane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" tabClosingPolicy="UNAVAILABLE" />
-            <SplitPane dividerPositions="0.5" orientation="VERTICAL">
+            <SplitPane orientation="VERTICAL">
               <items>
-                <TitledPane animated="false" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Workspace">
-                     <content>
-                        <VBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308">
-                           <children>
-                              <AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" />
-                           </children>
-                        </VBox>
-                     </content>
-                  </TitledPane>
                 <TitledPane animated="false" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Layers">
                      <content>
                         <VBox>
                            <children>
-                              <Button fx:id="newLayerButton" mnemonicParsing="false" onAction="#newLayerButtonOnAction" text="+ New Layer" />
-                              <Button fx:id="removeLayerButton" mnemonicParsing="false" onAction="#removeLayerButtonOnAction" text="x Remove Current Layer" />
+                              <HBox>
+                                 <children>
+                                    <VBox>
+                                       <children>
+                                          <Button fx:id="newLayerButton" mnemonicParsing="false" onAction="#newLayerButtonOnAction" text="+ New Layer" />
+                                          <Button fx:id="removeLayerButton" mnemonicParsing="false" onAction="#removeLayerButtonOnAction" text="x Remove Current Layer" />
+                                       </children>
+                                    </VBox>
+                                    <VBox prefHeight="200.0" prefWidth="100.0">
+                                       <children>
+                                          <Button fx:id="moveLayerUpButton" mnemonicParsing="false" onAction="#moveLayerUpButtonOnAction" text="Move Up" />
+                                          <Button fx:id="moveLayerDownButton" mnemonicParsing="false" onAction="#moveLayerDownButtonOnAction" text="Move Down" />
+                                       </children>
+                                    </VBox>
+                                 </children>
+                              </HBox>
                               <VBox fx:id="layersVBox" prefHeight="200.0" prefWidth="100.0" />
                            </children>
                         </VBox>

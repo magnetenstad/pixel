@@ -20,7 +20,7 @@ import pixel.PixelApp;
  */
 public class Sprite {
 	private ArrayList<SpriteLayer> spriteLayers = new ArrayList<>();
-	private int spriteLayerIndex;
+	private int spriteLayerIndex = -1;
 	private String name = "untitled";
 	private String path;
 	private SpriteGui spriteGui;
@@ -85,7 +85,8 @@ public class Sprite {
 			throw new IllegalStateException("Cannot add a SpriteLayer from a different Sprite!");
 		}
 		spriteLayers.add(spriteLayer);
-		selectSpriteLayer(0);
+		offsetSelectedSpriteLayer(0);
+		SpriteLayerGui.updateAll();
 		updateGui();
 		return spriteLayer;
 	}
@@ -95,7 +96,7 @@ public class Sprite {
 			return;
 		}
 		spriteLayers.remove(spriteLayer);
-		selectSpriteLayer(-1);
+		offsetSelectedSpriteLayer(-1);
 		SpriteLayerGui.updateAll();
 		updateGui();
 	}
@@ -107,13 +108,14 @@ public class Sprite {
 		return null;
 	}
 	
-	public void selectSpriteLayer(int offset) {
+	public void offsetSelectedSpriteLayer(int offset) {
 		if (spriteLayers.size() == 0) {
 			spriteLayerIndex = -1;
 		}
 		else {
 			spriteLayerIndex = Math.min(Math.max(0, spriteLayerIndex + offset), spriteLayers.size());
 		}
+		System.out.println(spriteLayerIndex);
 	}
 	
 	public void selectSpriteLayer(SpriteLayer spriteLayer) {
@@ -121,6 +123,7 @@ public class Sprite {
 			throw new IllegalArgumentException();
 		}
 		spriteLayerIndex = spriteLayers.indexOf(spriteLayer);
+		SpriteLayerGui.updateAll();
 	}
 	
 	public String getName() {
@@ -147,6 +150,9 @@ public class Sprite {
 	}
 	
 	public double getScale() {
+		if (spriteGui == null) {
+			return 1;
+		}
 		return spriteGui.getScale();
 	}
 
@@ -159,6 +165,29 @@ public class Sprite {
 	
 	public WritableImage exportImage() {
 		return SpriteGui.exportImage(this);
+	}
+	
+	public void moveSpriteLayerUp() {
+		if (getSpriteLayer() != null && spriteLayerIndex != 0) {
+			SpriteLayer spriteLayerA = spriteLayers.get(spriteLayerIndex - 1);
+			SpriteLayer spriteLayerB = spriteLayers.get(spriteLayerIndex);
+			spriteLayers.set(spriteLayerIndex - 1, spriteLayerB);
+			spriteLayers.set(spriteLayerIndex, spriteLayerA);
+			selectSpriteLayer(spriteLayerB);
+			updateGui();
+		}
+	}
+	
+	public void moveSpriteLayerDown() {
+		if (getSpriteLayer() != null && spriteLayerIndex + 1 < spriteLayers.size()) {
+			System.out.println("HEllo");
+			SpriteLayer spriteLayerA = spriteLayers.get(spriteLayerIndex);
+			SpriteLayer spriteLayerB = spriteLayers.get(spriteLayerIndex + 1);
+			spriteLayers.set(spriteLayerIndex, spriteLayerB);
+			spriteLayers.set(spriteLayerIndex + 1, spriteLayerA);
+			selectSpriteLayer(spriteLayerA);
+			updateGui();
+		}
 	}
 }
 
