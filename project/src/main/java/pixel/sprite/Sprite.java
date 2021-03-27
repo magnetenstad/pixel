@@ -86,8 +86,6 @@ public class Sprite {
 		}
 		spriteLayers.add(spriteLayer);
 		offsetSelectedSpriteLayer(0);
-		SpriteLayerGui.updateAll();
-		updateGui();
 		return spriteLayer;
 	}
 	
@@ -97,7 +95,6 @@ public class Sprite {
 		}
 		spriteLayers.remove(spriteLayer);
 		offsetSelectedSpriteLayer(-1);
-		SpriteLayerGui.updateAll();
 		updateGui();
 	}
 	
@@ -115,7 +112,7 @@ public class Sprite {
 		else {
 			spriteLayerIndex = Math.min(Math.max(0, spriteLayerIndex + offset), spriteLayers.size());
 		}
-		System.out.println(spriteLayerIndex);
+		SpriteLayerGui.updateAll();
 	}
 	
 	public void selectSpriteLayer(SpriteLayer spriteLayer) {
@@ -180,7 +177,6 @@ public class Sprite {
 	
 	public void moveSpriteLayerDown() {
 		if (getSpriteLayer() != null && spriteLayerIndex + 1 < spriteLayers.size()) {
-			System.out.println("HEllo");
 			SpriteLayer spriteLayerA = spriteLayers.get(spriteLayerIndex);
 			SpriteLayer spriteLayerB = spriteLayers.get(spriteLayerIndex + 1);
 			spriteLayers.set(spriteLayerIndex, spriteLayerB);
