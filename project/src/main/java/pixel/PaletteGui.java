@@ -34,7 +34,10 @@ public class PaletteGui {
 			if (palette != null)  {
 				for (int i = 0; i < palette.size(); i++) {
 					ToggleButton toggleButton = newColorButton(palette.getColor(i), i);
-					((ToggleButton) toggleButton).setPrefWidth(i == palette.getIndex() ? 48 : 32);
+					if (i == palette.getIndex()) {
+						toggleButton.setPrefWidth(64);
+						toggleButton.setText("Selected");
+					}
 					pane.getChildren().add(toggleButton);
 				}
 			}
@@ -54,4 +57,4 @@ public class PaletteGui {
 		});
 		return toggleButton;
 	}
-} 
+}

@@ -1,16 +1,9 @@
 package pixel;
 
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Scanner;
-
-import javafx.scene.Node;
-import javafx.scene.control.ToggleButton;
-import javafx.scene.control.ToggleGroup;
-import javafx.scene.control.Tooltip;
-import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 
 public class Palette implements Iterable<Color> {
@@ -24,6 +17,9 @@ public class Palette implements Iterable<Color> {
 		return colors.indexOf(color);
 	}
 	public void setIndex(int index) {
+		if (!(0 <= index && index < size())) {
+			throw new IllegalArgumentException();
+		}
 		this.index = index;
 	}
 	public Color getColor() {
@@ -46,6 +42,10 @@ public class Palette implements Iterable<Color> {
 	}
 	
 	public static Color Color(String hex) {
+		hex = hex.toLowerCase();
+		if (!hex.matches("#?(\\d|a|b|c|d|e|f){6}")) {
+			throw new IllegalArgumentException("Invalid hex! " + hex);
+		}
 		hex = hex.replaceFirst("#", "");
 		double r = Integer.parseInt(hex.substring(0, 2), 16) / 255.0;
 		double g = Integer.parseInt(hex.substring(2, 4), 16) / 255.0;
@@ -63,7 +63,7 @@ public class Palette implements Iterable<Color> {
 				palette.addColor(Color(line));
 			}
 			in.close();
-		} catch (FileNotFoundException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return palette;
