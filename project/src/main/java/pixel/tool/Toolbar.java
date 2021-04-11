@@ -6,10 +6,12 @@ import javafx.scene.control.ToggleGroup;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
+import pixel.Palette;
+import pixel.PaletteListener;
 import pixel.PixelApp;
 import pixel.sprite.Sprite;
 
-public class Toolbar {
+public class Toolbar implements PaletteListener {
 	private Pane parent = PixelApp.getController().getToolbarVBox();
 	private Tool toolSelected;
 	private ArrayList<Tool> tools = new ArrayList<Tool>();
@@ -61,5 +63,9 @@ public class Toolbar {
 	}
 	public void updateToolSize(int size) {
 		toolSelected.setSize(size);
+	}
+	@Override
+	public void paletteIndexChanged(Palette palette, int color) {
+		updateToolColor(color);
 	}
 }

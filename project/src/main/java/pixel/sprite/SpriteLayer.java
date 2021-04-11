@@ -11,7 +11,7 @@ public class SpriteLayer {
 	
 	public SpriteLayer(Sprite sprite) {
 		if (sprite == null) {
-			throw new NullPointerException("Cannot create SpriteLayer from null.");
+			throw new NullPointerException("Cannot create SpriteLayer without a Sprite.");
 		}
 		this.sprite = sprite;
 		this.width = sprite.getWidth();

@@ -7,6 +7,7 @@ import java.util.Scanner;
 import javafx.scene.paint.Color;
 
 public class Palette implements Iterable<Color> {
+	private ArrayList<PaletteListener> listeners = new ArrayList<>();
 	private ArrayList<Color> colors = new ArrayList<>();
 	private int index = 0;
 	
@@ -21,6 +22,7 @@ public class Palette implements Iterable<Color> {
 			throw new IllegalArgumentException();
 		}
 		this.index = index;
+		notifyListeners();
 	}
 	public Color getColor() {
 		return colors.get(index);
@@ -72,6 +74,18 @@ public class Palette implements Iterable<Color> {
 	@Override
 	public Iterator<Color> iterator() {
 		return colors.iterator();
+	}
+	
+	public void notifyListeners() {
+		for (PaletteListener listener : listeners) {
+			listener.paletteIndexChanged(this, index);
+		}
+	}
+	public void addListener(PaletteListener listener) {
+		listeners.add(listener);
+	}
+	public void removeListener(PaletteListener listener) {
+		listeners.remove(listener);
 	}
 }
 

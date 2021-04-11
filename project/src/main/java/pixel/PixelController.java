@@ -49,13 +49,14 @@ public class PixelController {
 	@FXML
 	private void initialize() {
 		Tool[] tools = { new PencilTool(), new EraserTool(), new LineTool(), new BucketTool() };
+		toolbar = new Toolbar(tools);
 		palette = Palette.fromHexFile("src/main/resources/endesga-16.hex");
+		palette.addListener(toolbar);
 		paletteGui = new PaletteGui();
 		paletteGui.setPane(paletteVBox);
 		paletteGui.setPalette(palette);
 		SpriteLayerGui.setPane(layersVBox);
 		fileManager = new PixelFileManager();
-		toolbar = new Toolbar(tools);
 		tabPane.setTabClosingPolicy(TabClosingPolicy.SELECTED_TAB);
 		toolSizeSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 40, 1));
 	}
