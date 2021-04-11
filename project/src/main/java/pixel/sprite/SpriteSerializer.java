@@ -19,7 +19,7 @@ public class SpriteSerializer {
 		json.put("width", sprite.getWidth());
 		json.put("height", sprite.getHeight());
 		JSONArray spriteLayers = new JSONArray();
-		for (SpriteLayer spriteLayer : sprite.getSpriteLayers()) {
+		for (SpriteLayer spriteLayer : sprite) {
 			spriteLayers.put(serializeSpriteLayer(spriteLayer));
 		}
 		json.put("data", spriteLayers);

@@ -57,7 +57,7 @@ public class SpriteGui {
 	
 	public static void drawSpriteLayersToGraphics(Sprite sprite, GraphicsContext graphics, double scale) {
 		Palette palette = PixelApp.getController().getPalette();
-		for (SpriteLayer spriteLayer : sprite.getSpriteLayers()) {
+		for (SpriteLayer spriteLayer : sprite) {
 			if (spriteLayer.isVisible()) {
 				for (int x = 0; x < sprite.getWidth(); x++) {
 					for (int y = 0; y < sprite.getHeight(); y++) {

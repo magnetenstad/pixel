@@ -60,7 +60,7 @@ public class SpriteLayerGui {
 			pane.getChildren().clear();
 			Sprite sprite = PixelApp.getController().getSprite();
 			if (sprite != null) {
-				for (SpriteLayer spriteLayer : sprite.getSpriteLayers()) {
+				for (SpriteLayer spriteLayer : sprite) {
 					spriteLayer.updateGui();
 				}
 			}

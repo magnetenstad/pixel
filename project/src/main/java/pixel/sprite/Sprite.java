@@ -1,24 +1,14 @@
 package pixel.sprite;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
-
-import javafx.scene.SnapshotParameters;
-import javafx.scene.canvas.Canvas;
-import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.control.ToggleGroup;
-import javafx.scene.image.ImageView;
 import javafx.scene.image.WritableImage;
-import javafx.scene.paint.Color;
-import pixel.Palette;
-import pixel.PixelApp;
 
 /*
  * 
  */
-public class Sprite {
+public class Sprite implements Iterable<SpriteLayer> {
 	private ArrayList<SpriteLayer> spriteLayers = new ArrayList<>();
 	private int spriteLayerIndex = -1;
 	private String name = "untitled";
@@ -184,6 +174,11 @@ public class Sprite {
 			selectSpriteLayer(spriteLayerA);
 			updateGui();
 		}
+	}
+
+	@Override
+	public Iterator<SpriteLayer> iterator() {
+		return spriteLayers.iterator();
 	}
 }
 
