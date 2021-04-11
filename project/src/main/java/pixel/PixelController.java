@@ -5,9 +5,6 @@ import pixel.file.PixelFileManager;
 import pixel.sprite.*;
 import pixel.tool.*;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -18,7 +15,6 @@ import javafx.scene.control.SpinnerValueFactory;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TabPane.TabClosingPolicy;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 
 /*
@@ -48,53 +44,51 @@ public class PixelController {
 	 */
 	@FXML
 	private void initialize() {
+		SpriteTab.setTabPane(tabPane);
+		SpriteGui.setSpriteLayerPane(layersVBox);
 		Tool[] tools = { new PencilTool(), new EraserTool(), new LineTool(), new BucketTool() };
 		toolbar = new Toolbar(tools);
+		toolbar.setPane(toolbarVBox);
+		toolbar.setToolSizeSpinner(toolSizeSpinner);
 		palette = Palette.fromHexFile("src/main/resources/endesga-16.hex");
 		palette.addListener(toolbar);
 		paletteGui = new PaletteGui();
-		paletteGui.setPane(paletteVBox);
 		paletteGui.setPalette(palette);
-		SpriteLayerGui.setPane(layersVBox);
+		paletteGui.setPane(paletteVBox);
 		fileManager = new PixelFileManager();
 		tabPane.setTabClosingPolicy(TabClosingPolicy.SELECTED_TAB);
 		toolSizeSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 40, 1));
 	}
 	
 	/*
-	 * @return The sprite that is currently visible in tabPane.
+	 * @return The SpriteGui that is currently visible in tabPane.
+	 */
+	public SpriteGui getSpriteGui() {
+		SpriteTab spriteTab = ((SpriteTab) tabPane.getSelectionModel().getSelectedItem());
+		return (spriteTab != null) ? spriteTab.getSpriteGui() : null;
+	}
+	
+	/*
+	 * @return The Sprite that is currently visible in tabPane.
 	 */
 	public Sprite getSprite() {
-		SpriteTab spriteTab = ((SpriteTab) tabPane.getSelectionModel().getSelectedItem());
-		if (spriteTab != null) {
-			return spriteTab.getSprite();
-		}
-		return null;
+		SpriteGui spriteGui = getSpriteGui();
+		return (spriteGui != null ? spriteGui.getSprite() : null);
 	}
 	
 	public Palette getPalette() {
 		return palette;
 	}
-	
+	public void updateSpriteGui() {
+		SpriteGui spriteGui = getSpriteGui();
+		if (spriteGui != null) {
+			spriteGui.update();
+		}
+	}
 	// 1 Getters for the FXML elements
 	
-	public Pane getLayersVBox() {
-		return (Pane) layersVBox;
-	}
-	public Pane getToolbarVBox() {
-		return (Pane) toolbarVBox;
-	}
-	public TabPane getTabPane() {
-		return tabPane;
-	}
 	public Toolbar getToolbar() {
 		return toolbar;
-	}
-	public Pane getPaletteVBox() {
-		return (Pane) paletteVBox;
-	}
-	public Spinner<Integer> getToolSizeSpinner() {
-		return toolSizeSpinner;
 	}
 	
 	// 2 Methods for the FXML buttons
@@ -105,17 +99,14 @@ public class PixelController {
 	private void newLayerButtonOnAction(ActionEvent event) {
 		Sprite sprite = getSprite();
 		if (sprite != null) {
-			sprite.addSpriteLayerWithGui();
+			sprite.addSpriteLayer();
 		}
 	}
 	@FXML
 	private void removeLayerButtonOnAction(ActionEvent event) {
 		Sprite sprite = getSprite();
 		if (sprite != null) {
-			SpriteLayer spriteLayer = sprite.getSpriteLayer();
-			if (spriteLayer != null) {
-				sprite.removeSpriteLayer(spriteLayer);
-			}
+			sprite.removeSpriteLayer();
 		}
 	}
 	@FXML
@@ -138,9 +129,6 @@ public class PixelController {
 	@FXML
 	private void colorPickerOnAction(ActionEvent event) {
 		palette.setColor(colorPicker.getValue());
-		if (getSprite() != null) {
-			getSprite().updateGui();
-		}
 	}
 	@FXML
 	private void toolSizeSpinnerOnMouseClicked(MouseEvent event) {
@@ -157,14 +145,13 @@ public class PixelController {
 	private void openFileOnAction(ActionEvent event) {
 		Sprite sprite = fileManager.loadSprite();
 		if (sprite != null) {
-			new SpriteTab(sprite.getSpriteGui());
+			new SpriteTab(new SpriteGui(sprite));
 		}
 	}
 	@FXML
 	private void closeFileOnAction(ActionEvent event) {
 		if (0 < tabPane.getTabs().size()) {
 			tabPane.getTabs().remove(tabPane.getSelectionModel().getSelectedItem());
-			SpriteLayerGui.updateAll();
 		}
 	}
 	

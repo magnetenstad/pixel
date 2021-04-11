@@ -3,18 +3,24 @@ package pixel.sprite;
 import javafx.scene.SnapshotParameters;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.WritableImage;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import pixel.Palette;
+import pixel.PaletteListener;
 import pixel.PixelApp;
 
-public class SpriteGui {
+public class SpriteGui implements SpriteListener, PaletteListener {
 	private static final SnapshotParameters snapshotParameters = new SnapshotParameters();
-	private ToggleGroup spriteLayerToggleGroup = new ToggleGroup();
+	private ToggleGroup toggleGroup = new ToggleGroup();
 	private ImageView imageView = new ImageView();
 	private WritableImage writableImage;
+	private static Pane spriteLayerGuiPane;
 	private final Sprite sprite;
 	private int height;
 	private int width;
@@ -27,15 +33,20 @@ public class SpriteGui {
 		this.sprite = sprite;
 		this.width = sprite.getWidth();
 		this.height = sprite.getHeight();
+		sprite.addListener(this);
 		
 		snapshotParameters.setFill(Color.TRANSPARENT);
 		writableImage = new WritableImage(width * scale, height * scale);
 		imageView.setImage(writableImage);
 		imageView.setOnMousePressed(event -> {
-			PixelApp.getController().getToolbar().useToolSelected(sprite, event);
+			PixelApp.getController().getToolbar().useToolSelected(this, event);
 		});
 		imageView.setOnMouseDragged(imageView.getOnMousePressed());
 		imageView.setOnMouseReleased(imageView.getOnMousePressed());
+	}
+
+	public static void setSpriteLayerPane(Pane pane) {
+		SpriteGui.spriteLayerGuiPane = pane;
 	}
 	
 	public void update() {
@@ -44,6 +55,11 @@ public class SpriteGui {
 		fillTransparentBackground(graphics);
 		drawSpriteLayersToGraphics(sprite, graphics, scale);
 		combinedCanvas.snapshot(snapshotParameters, writableImage);
+		
+		spriteLayerGuiPane.getChildren().clear();
+		for (SpriteLayer spriteLayer : sprite) {
+			spriteLayerGuiPane.getChildren().add(buildSpriteLayerGui(spriteLayer));
+		}
 	}
 	
 	private void fillTransparentBackground(GraphicsContext graphics) {
@@ -78,12 +94,27 @@ public class SpriteGui {
 		return writableImage;
 	}
 	
-	public ImageView getImageView() {
-		return imageView;
+	private HBox buildSpriteLayerGui(SpriteLayer spriteLayer) {
+		HBox gui = new HBox();
+		ToggleButton layerButton = new ToggleButton(spriteLayer.getName());
+		layerButton.setToggleGroup(toggleGroup);
+		gui.getChildren().add(layerButton);
+		layerButton.setOnAction(event -> {
+			sprite.selectSpriteLayer(spriteLayer);
+		});
+		layerButton.setSelected(sprite.getSpriteLayer() == spriteLayer);
+		CheckBox layerCheckBox = new CheckBox();
+		gui.getChildren().add(layerCheckBox);
+		layerCheckBox.setSelected(spriteLayer.isVisible());
+		layerCheckBox.setOnAction(event -> {
+			spriteLayer.setVisible(layerCheckBox.isSelected());
+			sprite.notifyListeners();
+		});
+		return gui;
 	}
 	
-	public ToggleGroup getSpriteLayerToggleGroup() {
-		return spriteLayerToggleGroup;
+	public ImageView getImageView() {
+		return imageView;
 	}
 	
 	public double getImageHeight() {
@@ -93,13 +124,6 @@ public class SpriteGui {
 	public double getImageWidth() {
 		return writableImage.getWidth();
 	}
-	
-	public void moveSpriteLayerUp() {
-		
-	}
-	public void moveSpriteLayerDown() {
-		
-	}
 
 	public Sprite getSprite() {
 		return sprite;
@@ -107,5 +131,15 @@ public class SpriteGui {
 	
 	public double getScale() {
 		return (double) scale;
+	}
+	
+	@Override
+	public void spriteChanged(Sprite sprite) {
+		update();
+	}
+
+	@Override
+	public void paletteChanged(Palette palette) {
+		update();
 	}
 }

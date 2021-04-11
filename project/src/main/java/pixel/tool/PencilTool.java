@@ -3,6 +3,7 @@ package pixel.tool;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import pixel.sprite.Sprite;
+import pixel.sprite.SpriteGui;
 
 public class PencilTool implements Tool {
 	private String name = "Pencil";
@@ -29,12 +30,13 @@ public class PencilTool implements Tool {
 	}
 	
 	@Override
-	public void use(Sprite sprite, MouseEvent event) {
+	public void use(SpriteGui spriteGui, MouseEvent event) {
+		Sprite sprite = spriteGui.getSprite();
 		if (event.isPrimaryButtonDown()) {
-			sprite.fillRect((int) (event.getX()/sprite.getScale() - size / 2), (int) (event.getY()/sprite.getScale() - size / 2), size, size, color);
+			sprite.fillRect((int) (event.getX()/spriteGui.getScale() - size / 2), (int) (event.getY()/spriteGui.getScale() - size / 2), size, size, color);
 		}
 		else if (event.isSecondaryButtonDown()) {
-			sprite.clearRect((int) (event.getX()/sprite.getScale() - size / 2), (int) (event.getY()/sprite.getScale() - size / 2), size, size);
+			sprite.clearRect((int) (event.getX()/spriteGui.getScale() - size / 2), (int) (event.getY()/spriteGui.getScale() - size / 2), size, size);
 		}
 	}
 	

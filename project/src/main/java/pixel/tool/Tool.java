@@ -1,8 +1,11 @@
 package pixel.tool;
 
+import java.util.Vector;
+
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import pixel.sprite.Sprite;
+import pixel.sprite.SpriteGui;
 
 public interface Tool {
 	
@@ -14,7 +17,14 @@ public interface Tool {
 	
 	public int getSize();
 	
-	public void use(Sprite sprite, MouseEvent event);
+	public void use(SpriteGui spriteGui, MouseEvent event);
 	
 	public void setColor(int color);
+	
+	public static Integer[] eventToPosition(SpriteGui spriteGui, MouseEvent event) {
+		Integer[] pos = new Integer[2];
+		pos[0] = (int) (event.getX() / spriteGui.getScale());
+		pos[1] = (int) (event.getY() / spriteGui.getScale());
+		return pos;
+	}
 }

@@ -78,7 +78,7 @@ public class Palette implements Iterable<Color> {
 	
 	public void notifyListeners() {
 		for (PaletteListener listener : listeners) {
-			listener.paletteIndexChanged(this, index);
+			listener.paletteChanged(this);
 		}
 	}
 	public void addListener(PaletteListener listener) {

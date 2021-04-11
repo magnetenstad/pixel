@@ -1,18 +1,19 @@
 package pixel.tool;
 
 import java.util.ArrayList;
+
+import javafx.scene.control.Spinner;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
-import javafx.scene.paint.Color;
 import pixel.Palette;
 import pixel.PaletteListener;
-import pixel.PixelApp;
-import pixel.sprite.Sprite;
+import pixel.sprite.SpriteGui;
 
 public class Toolbar implements PaletteListener {
-	private Pane parent = PixelApp.getController().getToolbarVBox();
+	private Pane pane;
+	private Spinner<Integer> toolSizeSpinner;
 	private Tool toolSelected;
 	private ArrayList<Tool> tools = new ArrayList<Tool>();
 	private ToggleGroup toggleGroup = new ToggleGroup();
@@ -22,7 +23,7 @@ public class Toolbar implements PaletteListener {
 		for (Tool tool : tools) {
 			addTool(tool);
 		}
-		setToolSelected(tools[0]);
+		update();
 	}
 	private void checkToolsNotEmpty(Tool[] tools) {
 		if (tools.length == 0) {
@@ -31,20 +32,41 @@ public class Toolbar implements PaletteListener {
 	}
 	public void addTool(Tool tool) {
 		tools.add(tool);
-		newToolButton(tool);
+		update();
+	}
+	public void update() {
+		if (pane != null) {
+			pane.getChildren().clear();
+			for (Tool tool : tools) {
+				newToolButton(tool);
+			}
+			if (toolSelected == null && tools.size() > 0) {
+				setToolSelected(tools.get(0));
+			}
+		}
 	}
 	private ToggleButton newToolButton(Tool tool) {
 		ToggleButton toolButton = new ToggleButton(tool.getName());
 		toolButton.setToggleGroup(toggleGroup);
 		toolButton.setOnAction(event -> {
 			setToolSelected(tool);
-			PixelApp.getController().getToolSizeSpinner().getValueFactory().setValue(tool.getSize());
+			toolSizeSpinner.getValueFactory().setValue(tool.getSize());
 		});
-		parent.getChildren().add(toolButton);
-		if (parent.getChildren().size() == 1) {
+		pane.getChildren().add(toolButton);
+		if (pane.getChildren().size() == 1) {
 			toolButton.setSelected(true);
 		}
 		return toolButton;
+	}
+	public void setPane(Pane pane) {
+		if (pane != null) {
+			pane.getChildren().clear();
+		}
+		this.pane = pane;
+		update();
+	}
+	public void setToolSizeSpinner(Spinner<Integer> spinner) {
+		this.toolSizeSpinner = spinner;
 	}
 	public void setToolSelected(Tool toolSelected) {
 		this.toolSelected = toolSelected;
@@ -52,9 +74,8 @@ public class Toolbar implements PaletteListener {
 	public Tool getToolSelected() {
 		return toolSelected;
 	}
-	public void useToolSelected(Sprite sprite, MouseEvent event) {
-		toolSelected.use(sprite, event);
-		sprite.updateGui();
+	public void useToolSelected(SpriteGui spriteGui, MouseEvent event) {
+		toolSelected.use(spriteGui, event);
 	}
 	public void updateToolColor(int color) {
 		for (Tool tool : tools) {
@@ -65,7 +86,7 @@ public class Toolbar implements PaletteListener {
 		toolSelected.setSize(size);
 	}
 	@Override
-	public void paletteIndexChanged(Palette palette, int color) {
-		updateToolColor(color);
+	public void paletteChanged(Palette palette) {
+		updateToolColor(palette.getIndex());
 	}
 }

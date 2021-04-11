@@ -9,60 +9,45 @@ import javafx.scene.image.WritableImage;
  * 
  */
 public class Sprite implements Iterable<SpriteLayer> {
+	private ArrayList<SpriteListener> listeners = new ArrayList<>();
 	private ArrayList<SpriteLayer> spriteLayers = new ArrayList<>();
 	private int spriteLayerIndex = -1;
 	private String name = "untitled";
 	private String path;
-	private SpriteGui spriteGui;
 	private int width;
 	private int height;
 	
 	public Sprite(int width, int height) {
 		this.width = width;
 		this.height = height;
-		updateGui();
-	}
-	
-	public void updateGui() {
-		if (spriteGui != null) {
-			spriteGui.update();
-		}
-	}
-	
-	public SpriteGui getSpriteGui() {
-		return spriteGui;
-	}
-	
-	public SpriteGui buildGui() {
-		if (spriteGui == null) {
-			spriteGui = new SpriteGui(this);
-		}
-		updateGui();
-		return spriteGui;
 	}
 	
 	public void fillRect(int x, int y, int width, int height, int color) {
+		fillRect(x, y, width, height, color, true);
+	}
+	public void fillRect(int x, int y, int width, int height, int color, boolean notify) {
 		if (!isSpriteLayerEditable()) {
 			return;
 		}
 		getSpriteLayer().fillRect(x, y, width, height, color);
+		if (notify) {
+			notifyListeners();
+		}
 	}
 	
 	public void clearRect(int x, int y, int width, int height) {
+		clearRect(x, y, width, height, true);
+	}
+	public void clearRect(int x, int y, int width, int height, boolean notify) {
 		if (!isSpriteLayerEditable()) {
 			return;
 		}
 		getSpriteLayer().clearRect(x, y, width, height);
+		notifyListeners();
 	}
 	
 	public boolean isSpriteLayerEditable() {
 		return (getSpriteLayer() != null && getSpriteLayer().isVisible());
-	}
-	
-	public SpriteLayer addSpriteLayerWithGui() {
-		SpriteLayer spriteLayer = new SpriteLayer(this);
-		spriteLayer.buildGui();
-		return addSpriteLayer(spriteLayer);
 	}
 	
 	public SpriteLayer addSpriteLayer() {
@@ -71,21 +56,24 @@ public class Sprite implements Iterable<SpriteLayer> {
 	}
 	
 	public SpriteLayer addSpriteLayer(SpriteLayer spriteLayer) {
-		if (spriteLayer.getSprite() != this) {
-			throw new IllegalStateException("Cannot add a SpriteLayer from a different Sprite!");
-		}
 		spriteLayers.add(spriteLayer);
-		offsetSelectedSpriteLayer(0);
+		offsetSpriteLayerIndex(0);
+		notifyListeners();
 		return spriteLayer;
 	}
-	
+	public void removeSpriteLayer() {
+		SpriteLayer spriteLayer = getSpriteLayer();
+		if (spriteLayer != null) {
+			removeSpriteLayer(spriteLayer);
+		}
+	}
 	public void removeSpriteLayer(SpriteLayer spriteLayer) {
 		if (!spriteLayers.contains(spriteLayer)) {
 			return;
 		}
 		spriteLayers.remove(spriteLayer);
-		offsetSelectedSpriteLayer(-1);
-		updateGui();
+		offsetSpriteLayerIndex(-1);
+		notifyListeners();
 	}
 	
 	public SpriteLayer getSpriteLayer() {
@@ -95,14 +83,14 @@ public class Sprite implements Iterable<SpriteLayer> {
 		return null;
 	}
 	
-	public void offsetSelectedSpriteLayer(int offset) {
+	public void offsetSpriteLayerIndex(int offset) {
 		if (spriteLayers.size() == 0) {
 			spriteLayerIndex = -1;
 		}
 		else {
 			spriteLayerIndex = Math.min(Math.max(0, spriteLayerIndex + offset), spriteLayers.size());
 		}
-		SpriteLayerGui.updateAll();
+		notifyListeners();
 	}
 	
 	public void selectSpriteLayer(SpriteLayer spriteLayer) {
@@ -110,7 +98,7 @@ public class Sprite implements Iterable<SpriteLayer> {
 			throw new IllegalArgumentException();
 		}
 		spriteLayerIndex = spriteLayers.indexOf(spriteLayer);
-		SpriteLayerGui.updateAll();
+		notifyListeners();
 	}
 	
 	public String getName() {
@@ -121,10 +109,6 @@ public class Sprite implements Iterable<SpriteLayer> {
 		this.name = name;
 	}
 	
-	public int getSpriteLayerCount() {
-		return spriteLayers.size();
-	}
-	
 	public int getWidth() {
 		return width;
 	}
@@ -132,17 +116,6 @@ public class Sprite implements Iterable<SpriteLayer> {
 		return height;
 	}
 	
-	public ArrayList<SpriteLayer> getSpriteLayers() {
-		return spriteLayers;
-	}
-	
-	public double getScale() {
-		if (spriteGui == null) {
-			return 1;
-		}
-		return spriteGui.getScale();
-	}
-
 	public String getPath() {
 		return path;
 	}
@@ -161,7 +134,7 @@ public class Sprite implements Iterable<SpriteLayer> {
 			spriteLayers.set(spriteLayerIndex - 1, spriteLayerB);
 			spriteLayers.set(spriteLayerIndex, spriteLayerA);
 			selectSpriteLayer(spriteLayerB);
-			updateGui();
+			notifyListeners();
 		}
 	}
 	
@@ -172,7 +145,7 @@ public class Sprite implements Iterable<SpriteLayer> {
 			spriteLayers.set(spriteLayerIndex, spriteLayerB);
 			spriteLayers.set(spriteLayerIndex + 1, spriteLayerA);
 			selectSpriteLayer(spriteLayerA);
-			updateGui();
+			notifyListeners();
 		}
 	}
 
@@ -180,10 +153,19 @@ public class Sprite implements Iterable<SpriteLayer> {
 	public Iterator<SpriteLayer> iterator() {
 		return spriteLayers.iterator();
 	}
+
+	public void addListener(SpriteListener listener) {
+		listeners.add(listener);
+	}
+	public void removeListener(SpriteListener listener) {
+		listeners.remove(listener);
+	}
+	public void notifyListeners() {
+		for (SpriteListener listener : listeners) {
+			listener.spriteChanged(this);
+		}
+	}
 }
-
-
-
 
 
 

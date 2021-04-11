@@ -5,6 +5,7 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import pixel.sprite.Sprite;
+import pixel.sprite.SpriteGui;
 
 public class LineTool implements Tool {
 	private String name = "Line";
@@ -28,15 +29,16 @@ public class LineTool implements Tool {
 	}
 
 	@Override
-	public void use(Sprite sprite, MouseEvent event) {
+	public void use(SpriteGui spriteGui, MouseEvent event) {
+		Sprite sprite = spriteGui.getSprite();
 		if (event.getButton() == MouseButton.PRIMARY) {
 			if (event.isPrimaryButtonDown()) {
 				if (startPos == null) {
-					startPos = point(event.getX(), event.getY(), sprite);
+					startPos = point(event.getX(), event.getY(), spriteGui);
 				}
 			}
 			else {
-				Point2D endPos = point(event.getX(), event.getY(), sprite);
+				Point2D endPos = point(event.getX(), event.getY(), spriteGui);
 				
 				double dx = endPos.getX() - startPos.getX();
 				double dy = endPos.getY() - startPos.getY();
@@ -46,15 +48,15 @@ public class LineTool implements Tool {
 				for (int i = 0; i <= length; i++) {
 					double x = startPos.getX() + i * Math.cos(angle);
 					double y = startPos.getY() + i * Math.sin(angle);
-					sprite.fillRect((int) (x - size / 2), (int) (y - size / 2), size, size, color);
+					sprite.fillRect((int) (x - size / 2), (int) (y - size / 2), size, size, color, false);
 				}
-				
+				sprite.notifyListeners();
 				startPos = null;
 			}
 		}
 	}
-	private Point2D point(double x, double y, Sprite sprite) {
-		return new Point2D(Math.floor(x/sprite.getScale()) + 0.5, Math.floor(y/sprite.getScale()) + 0.5);
+	private Point2D point(double x, double y, SpriteGui spriteGui) {
+		return new Point2D(Math.floor(x/spriteGui.getScale()) + 0.5, Math.floor(y/spriteGui.getScale()) + 0.5);
 	}
 	
 	@Override

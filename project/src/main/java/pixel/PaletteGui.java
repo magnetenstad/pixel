@@ -61,7 +61,7 @@ public class PaletteGui implements PaletteListener {
 	}
 
 	@Override
-	public void paletteIndexChanged(Palette palette, int index) {
+	public void paletteChanged(Palette palette) {
 		updateGui();
 	}
 }

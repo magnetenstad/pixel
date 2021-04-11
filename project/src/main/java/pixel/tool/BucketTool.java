@@ -5,6 +5,7 @@ import java.util.List;
 import javafx.geometry.Point2D;
 import javafx.scene.input.MouseEvent;
 import pixel.sprite.Sprite;
+import pixel.sprite.SpriteGui;
 import pixel.sprite.SpriteLayer;
 
 public class BucketTool implements Tool {
@@ -27,23 +28,24 @@ public class BucketTool implements Tool {
 	public void setSize(int size) {
 		this.size = size;
 	}
-
+	
 	@Override
-	public void use(Sprite sprite, MouseEvent event) {
+	public void use(SpriteGui spriteGui, MouseEvent event) {
+		Sprite sprite = spriteGui.getSprite();
 		if (event.isPrimaryButtonDown()) {
-			int x = (int) (event.getX() / sprite.getScale());
-			int y = (int) (event.getY() / sprite.getScale());
-			int colorMatch = sprite.getSpriteLayer().getPixel(x, y);
+			Integer[] pos = Tool.eventToPosition(spriteGui, event);
+			int colorMatch = sprite.getSpriteLayer().getPixel(pos[0], pos[1]);
 			if (color != colorMatch) {
-				fill(sprite, colorMatch, x, y);
+				fill(sprite, colorMatch, pos[0], pos[1]);
 			}
+			sprite.notifyListeners();
 		}
 	}
 	
 	private void fill(Sprite sprite, int colorMatch, int x, int y) {
 		SpriteLayer spriteLayer = sprite.getSpriteLayer();
 		if (spriteLayer.isPointInCanvas(x, y) && spriteLayer.getPixel(x, y) == colorMatch) {
-			sprite.fillRect(x, y, 1, 1, color);
+			sprite.fillRect(x, y, 1, 1, color, false);
 			for (Point2D neighbour : neighbours) {
 				fill(sprite, colorMatch, x + (int) neighbour.getX(), y + (int) neighbour.getY());
 			}

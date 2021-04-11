@@ -3,29 +3,29 @@ package pixel.sprite;
 import javafx.geometry.Pos;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import pixel.PixelApp;
 import pixel.ext.ZoomableScrollPane;
 
 public class SpriteTab extends Tab {
+	private static TabPane tabPane;
 	private SpriteGui spriteGui;
 	private StackPane pane = new StackPane();
 	
 	public SpriteTab() {
 		this(null);
-	}	
+	}
 	public SpriteTab(SpriteGui spriteGui) {
-		PixelApp.getController().getTabPane().getTabs().add(this);
-		PixelApp.getController().getTabPane().getSelectionModel().select(this);
+		tabPane.getTabs().add(this);
+		tabPane.getSelectionModel().select(this);
 		setContent(new ZoomableScrollPane(pane));
 		setOnSelectionChanged(event -> {
-			SpriteLayerGui.updateAll();
+			PixelApp.getController().updateSpriteGui();
 		});
 		if (spriteGui == null) {
 			Sprite sprite = new Sprite(32, 32);
-			setSpriteGui(sprite.buildGui());
-			sprite.addSpriteLayerWithGui();
+			setSpriteGui(new SpriteGui(sprite));
+			sprite.addSpriteLayer();
 		}
 	}
 	public void setSpriteGui(SpriteGui spriteGui) {
@@ -37,7 +37,10 @@ public class SpriteTab extends Tab {
 		StackPane.setAlignment(spriteGui.getImageView(), Pos.CENTER);
 		setText(spriteGui.getSprite().getName());
 	}
-	public Sprite getSprite() {
-		return spriteGui.getSprite();
+	public SpriteGui getSpriteGui() {
+		return spriteGui;
+	}
+	public static void setTabPane(TabPane tabPane) {
+		SpriteTab.tabPane = tabPane;
 	}
 }
