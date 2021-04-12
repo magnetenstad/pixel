@@ -9,11 +9,12 @@ import javafx.scene.control.Spinner;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.Pane;
+import pixel.SelectableList;
+import pixel.SelectableListListener;
 import pixel.tool.Tool;
 import pixel.tool.Toolbar;
-import pixel.tool.ToolbarListener;
 
-public class ToolbarGui extends ToolbarListener {
+public class ToolbarGui implements SelectableListListener {
 	private ToggleGroup toggleGroup = new ToggleGroup();
 	private Spinner<Integer> toolSizeSpinner;
 	private Pane pane;
@@ -49,7 +50,7 @@ public class ToolbarGui extends ToolbarListener {
 		}
 	}
 	
-	public void addButtonsToPane(Pane pane) {
+	private void addButtonsToPane(Pane pane) {
 		if (pane != null) {
 			for (ToggleButton toolButton : toolButtons) {
 				if (!pane.getChildren().contains(toolButton)) {
@@ -66,7 +67,7 @@ public class ToolbarGui extends ToolbarListener {
 			setText(tool.getName());
 			setToggleGroup(toggleGroup);
 			setOnAction(event -> {
-				toolbar.setToolSelected(tool);
+				toolbar.select(tool);
 				toolSizeSpinner.getValueFactory().setValue(tool.getSize());
 			});
 		}
@@ -74,32 +75,34 @@ public class ToolbarGui extends ToolbarListener {
 			return tool;
 		}
 	}
-	
+
 	@Override
-	public void toolbarAddedTool(Toolbar toolbar, Tool tool) {
-		ToolButton toolButton = new ToolButton(tool);
-		toolButtons.add(toolButton);
-		if (pane != null) {
-			pane.getChildren().add(toolButton);
+	public void listAddedElement(SelectableList<?> selectableList, Object element) {
+		if (element instanceof Tool) {
+			ToolButton toolButton = new ToolButton((Tool) element);
+			toolButtons.add(toolButton);
+			if (pane != null) {
+				pane.getChildren().add(toolButton);
+			}
 		}
-	};
+	}
 	
 	@Override
-	public void toolbarRemovedTool(Toolbar toolbar, Tool tool) {
+	public void listRemovedElement(SelectableList<?> selectableList, Object element) {
 		for (ToolButton toolButton : toolButtons) {
-			if (toolButton.getTool() == tool) {
+			if (toolButton.getTool() == element) {
 				toolButtons.remove(toolButton);
 				if (pane != null && pane.getChildren().contains(toolButton)) {
 					pane.getChildren().remove(toolButton);
 				}
 			}
 		}
-	};
-	
+	}
+
 	@Override
-	public void toolbarSelectedTool(Toolbar toolbar, Tool tool) {
+	public void listSetIndex(SelectableList<?> selectableList, int index) {
 		for (ToolButton toolButton : toolButtons) {
-			toolButton.setSelected(toolButton.getTool() == tool);
+			toolButton.setSelected(toolButton.getTool() == selectableList.get(index));
 		}
 	};
 }

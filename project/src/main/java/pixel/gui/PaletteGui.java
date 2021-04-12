@@ -5,10 +5,11 @@ import javafx.scene.control.ToggleGroup;
 import javafx.scene.control.Tooltip;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
+import pixel.SelectableList;
+import pixel.SelectableListListener;
 import pixel.palette.Palette;
-import pixel.palette.PaletteListener;
 
-public class PaletteGui implements PaletteListener {
+public class PaletteGui implements SelectableListListener {
 	private ToggleGroup toggleGroup = new ToggleGroup();
 	private final Palette palette;
 	private Pane pane;
@@ -35,7 +36,7 @@ public class PaletteGui implements PaletteListener {
 			pane.getChildren().clear();
 			if (palette != null)  {
 				for (int i = 0; i < palette.size(); i++) {
-					ToggleButton toggleButton = newColorButton(palette.getColor(i), i);
+					ToggleButton toggleButton = newColorButton(palette.get(i), i);
 					if (i == palette.getIndex()) {
 						toggleButton.setPrefWidth(64);
 						toggleButton.setText("Selected");
@@ -59,7 +60,18 @@ public class PaletteGui implements PaletteListener {
 	}
 
 	@Override
-	public void paletteChanged(Palette palette) {
+	public void listAddedElement(SelectableList<?> selectableList, Object element) {
 		updateGui();
 	}
+
+	@Override
+	public void listRemovedElement(SelectableList<?> selectableList, Object element) {
+		updateGui();
+	}
+
+	@Override
+	public void listSetIndex(SelectableList<?> selectableList, int index) {
+		updateGui();
+	}
+
 }

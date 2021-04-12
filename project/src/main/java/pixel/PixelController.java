@@ -126,10 +126,6 @@ public class PixelController {
 	// 1.2 Tool buttons
 	
 	@FXML
-	private void colorPickerOnAction(ActionEvent event) {
-		palette.setColor(colorPicker.getValue());
-	}
-	@FXML
 	private void toolSizeSpinnerOnMouseClicked(MouseEvent event) {
 		toolbarGui.getToolbar().updateToolSize((int) toolSizeSpinner.getValue());
 	}
@@ -141,7 +137,9 @@ public class PixelController {
 		Sprite sprite = new Sprite(32, 32);
 		sprite.addSpriteLayer();
 		SpriteGui spriteGui = new SpriteGui(sprite, palette);
-		toolbarGui.getToolbar().addListener(spriteGui);
+		Toolbar toolbar = toolbarGui.getToolbar();
+		toolbar.addListener(spriteGui);
+		toolbar.notifySetIndex();
 		SpriteTab spriteTab = new SpriteTab(spriteGui);
 		tabPane.getTabs().add(spriteTab);
 		tabPane.getSelectionModel().select(spriteTab);

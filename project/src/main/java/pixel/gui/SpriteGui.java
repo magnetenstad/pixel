@@ -11,17 +11,15 @@ import javafx.scene.image.WritableImage;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
-import pixel.PixelApp;
+import pixel.SelectableList;
+import pixel.SelectableListListener;
 import pixel.palette.Palette;
-import pixel.palette.PaletteListener;
 import pixel.sprite.Sprite;
 import pixel.sprite.SpriteLayer;
 import pixel.sprite.SpriteListener;
 import pixel.tool.Tool;
-import pixel.tool.Toolbar;
-import pixel.tool.ToolbarListener;
 
-public class SpriteGui extends ToolbarListener implements SpriteListener, PaletteListener {
+public class SpriteGui implements SpriteListener, SelectableListListener {
 	private static final SnapshotParameters snapshotParameters = new SnapshotParameters();
 	private ToggleGroup toggleGroup = new ToggleGroup();
 	private ImageView imageView = new ImageView();
@@ -34,11 +32,12 @@ public class SpriteGui extends ToolbarListener implements SpriteListener, Palett
 	private Palette palette;
 	
 	public SpriteGui(Sprite sprite, Palette palette) {
-		if (sprite == null) {
-			throw new NullPointerException("Cannot create SpriteGui from null.");
+		if (sprite == null || palette == null) {
+			throw new NullPointerException("Sprite and palette cannot be null!");
 		}
 		this.sprite = sprite;
 		sprite.addListener(this);
+		this.palette = palette;
 		palette.addListener(this);
 		
 		this.width = sprite.getWidth();
@@ -62,7 +61,7 @@ public class SpriteGui extends ToolbarListener implements SpriteListener, Palett
 		
 		spriteLayerGuiPane.getChildren().clear();
 		for (SpriteLayer spriteLayer : sprite) {
-			spriteLayerGuiPane.getChildren().add(buildSpriteLayerGui(spriteLayer));
+			spriteLayerGuiPane.getChildren().add(newSpriteLayerGui(spriteLayer));
 		}
 	}
 	
@@ -80,7 +79,7 @@ public class SpriteGui extends ToolbarListener implements SpriteListener, Palett
 			if (spriteLayer.isVisible()) {
 				for (int x = 0; x < sprite.getWidth(); x++) {
 					for (int y = 0; y < sprite.getHeight(); y++) {
-						graphics.setFill(palette.getColor(spriteLayer.getPixel(x, y)));
+						graphics.setFill(palette.get(spriteLayer.getPixel(x, y)));
 						graphics.fillRect(x * scale, y * scale, scale, scale);
 					}
 				}
@@ -97,7 +96,7 @@ public class SpriteGui extends ToolbarListener implements SpriteListener, Palett
 		return writableImage;
 	}
 	
-	private HBox buildSpriteLayerGui(SpriteLayer spriteLayer) {
+	private HBox newSpriteLayerGui(SpriteLayer spriteLayer) {
 		HBox gui = new HBox();
 		ToggleButton layerButton = new ToggleButton(spriteLayer.getName());
 		layerButton.setToggleGroup(toggleGroup);
@@ -142,16 +141,24 @@ public class SpriteGui extends ToolbarListener implements SpriteListener, Palett
 	}
 
 	@Override
-	public void paletteChanged(Palette palette) {
+	public void listAddedElement(SelectableList<?> selectableList, Object element) {
 		update();
 	}
 
 	@Override
-	public void toolbarSelectedTool(Toolbar toolbar, Tool tool) {
-		imageView.setOnMousePressed(event -> {
-			tool.use(this, event);
-		});
-		imageView.setOnMouseDragged(imageView.getOnMousePressed());
-		imageView.setOnMouseReleased(imageView.getOnMousePressed());
+	public void listRemovedElement(SelectableList<?> selectableList, Object element) {
+		update();
+	}
+	
+	@Override
+	public void listSetIndex(SelectableList<?> selectableList, int index) {
+		Object element = selectableList.get(index);
+		if (element instanceof Tool) {
+			imageView.setOnMousePressed(event -> {
+				((Tool) element).use(this, event);
+			});
+			imageView.setOnMouseDragged(imageView.getOnMousePressed());
+			imageView.setOnMouseReleased(imageView.getOnMousePressed());
+		}
 	}
 }
