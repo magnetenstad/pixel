@@ -4,17 +4,16 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 import javafx.scene.image.Image;
-import javafx.scene.image.WritableImage;
+import pixel.SelectableList;
+import pixel.SelectableListListener;
 import pixel.gui.SpriteGui;
 import pixel.palette.Palette;
 
 /*
  * 
  */
-public class Sprite implements Iterable<SpriteLayer> {
-	private ArrayList<SpriteListener> listeners = new ArrayList<>();
-	private ArrayList<SpriteLayer> spriteLayers = new ArrayList<>();
-	private int spriteLayerIndex = -1;
+public class Sprite extends SelectableList<SpriteLayer> {
+	protected ArrayList<SpriteListener> listeners = new ArrayList<>();
 	private String name = "untitled";
 	private String path;
 	private int width;
@@ -32,9 +31,9 @@ public class Sprite implements Iterable<SpriteLayer> {
 		if (!isSpriteLayerEditable()) {
 			return;
 		}
-		getSpriteLayer().fillRect(x, y, width, height, color);
+		getSelected().fillRect(x, y, width, height, color);
 		if (notify) {
-			notifyListeners();
+			spriteChanged();
 		}
 	}
 	
@@ -45,65 +44,27 @@ public class Sprite implements Iterable<SpriteLayer> {
 		if (!isSpriteLayerEditable()) {
 			return;
 		}
-		getSpriteLayer().clearRect(x, y, width, height);
-		notifyListeners();
+		getSelected().clearRect(x, y, width, height);
+		spriteChanged();
 	}
 	
 	public boolean isSpriteLayerEditable() {
-		return (getSpriteLayer() != null && getSpriteLayer().isVisible());
+		return (getSelected() != null && getSelected().isVisible());
 	}
 	
 	public SpriteLayer addSpriteLayer() {
 		SpriteLayer spriteLayer = new SpriteLayer(this);
-		return addSpriteLayer(spriteLayer);
-	}
-	
-	public SpriteLayer addSpriteLayer(SpriteLayer spriteLayer) {
-		spriteLayers.add(spriteLayer);
-		offsetSpriteLayerIndex(0);
-		notifyListeners();
+		add(spriteLayer);
 		return spriteLayer;
 	}
+
 	public void removeSpriteLayer() {
-		SpriteLayer spriteLayer = getSpriteLayer();
+		SpriteLayer spriteLayer = getSelected();
 		if (spriteLayer != null) {
-			removeSpriteLayer(spriteLayer);
+			remove(spriteLayer);
 		}
 	}
-	public void removeSpriteLayer(SpriteLayer spriteLayer) {
-		if (!spriteLayers.contains(spriteLayer)) {
-			return;
-		}
-		spriteLayers.remove(spriteLayer);
-		offsetSpriteLayerIndex(-1);
-		notifyListeners();
-	}
-	
-	public SpriteLayer getSpriteLayer() {
-		if (0 <= spriteLayerIndex && spriteLayerIndex < spriteLayers.size()) {
-			return spriteLayers.get(spriteLayerIndex);
-		}
-		return null;
-	}
-	
-	public void offsetSpriteLayerIndex(int offset) {
-		if (spriteLayers.size() == 0) {
-			spriteLayerIndex = -1;
-		}
-		else {
-			spriteLayerIndex = Math.min(Math.max(0, spriteLayerIndex + offset), spriteLayers.size());
-		}
-		notifyListeners();
-	}
-	
-	public void selectSpriteLayer(SpriteLayer spriteLayer) {
-		if (spriteLayer != null && !spriteLayers.contains(spriteLayer)) {
-			throw new IllegalArgumentException();
-		}
-		spriteLayerIndex = spriteLayers.indexOf(spriteLayer);
-		notifyListeners();
-	}
-	
+
 	public String getName() {
 		return name;
 	}
@@ -127,69 +88,44 @@ public class Sprite implements Iterable<SpriteLayer> {
 	}
 	
 	public void moveSpriteLayerUp() {
-		if (getSpriteLayer() != null && spriteLayerIndex != 0) {
-			SpriteLayer spriteLayerA = spriteLayers.get(spriteLayerIndex - 1);
-			SpriteLayer spriteLayerB = spriteLayers.get(spriteLayerIndex);
-			spriteLayers.set(spriteLayerIndex - 1, spriteLayerB);
-			spriteLayers.set(spriteLayerIndex, spriteLayerA);
-			selectSpriteLayer(spriteLayerB);
-			notifyListeners();
+		if (getSelected() != null && index != 0) {
+			SpriteLayer spriteLayerA = elements.get(index - 1);
+			SpriteLayer spriteLayerB = elements.get(index);
+			elements.set(index - 1, spriteLayerB);
+			elements.set(index, spriteLayerA);
+			select(spriteLayerB);
+			spriteChanged();
 		}
 	}
 	
 	public void moveSpriteLayerDown() {
-		if (getSpriteLayer() != null && spriteLayerIndex + 1 < spriteLayers.size()) {
-			SpriteLayer spriteLayerA = spriteLayers.get(spriteLayerIndex);
-			SpriteLayer spriteLayerB = spriteLayers.get(spriteLayerIndex + 1);
-			spriteLayers.set(spriteLayerIndex, spriteLayerB);
-			spriteLayers.set(spriteLayerIndex + 1, spriteLayerA);
-			selectSpriteLayer(spriteLayerA);
-			notifyListeners();
+		if (getSelected() != null && index + 1 < elements.size()) {
+			SpriteLayer spriteLayerA = elements.get(index);
+			SpriteLayer spriteLayerB = elements.get(index + 1);
+			elements.set(index, spriteLayerB);
+			elements.set(index + 1, spriteLayerA);
+			select(spriteLayerA);
+			spriteChanged();
 		}
 	}
-
-	@Override
-	public Iterator<SpriteLayer> iterator() {
-		return spriteLayers.iterator();
+	
+	public void spriteChanged() {
+		for (SpriteListener listener : listeners) {
+			listener.spriteChanged(this);
+		}
 	}
-
+	
 	public void addListener(SpriteListener listener) {
 		listeners.add(listener);
 	}
 	public void removeListener(SpriteListener listener) {
 		listeners.remove(listener);
 	}
-	public void notifyListeners() {
-		for (SpriteListener listener : listeners) {
-			listener.spriteChanged(this);
-		}
-	}
-
+	
 	public Image exportImage(Palette palette) {
-		// TODO Auto-generated method stub
-		return null;
+		return SpriteGui.exportImage(this, palette);
 	}
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

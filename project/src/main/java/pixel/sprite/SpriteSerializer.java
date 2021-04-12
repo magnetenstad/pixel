@@ -35,7 +35,7 @@ public class SpriteSerializer {
 		JSONArray spriteLayers = json.getJSONArray("data");
 		for (Object spriteLayerJSONObject : spriteLayers) {
 			SpriteLayer spriteLayer = deserializeSpriteLayer(sprite, (JSONObject) spriteLayerJSONObject);
-			sprite.addSpriteLayer(spriteLayer);
+			sprite.add(spriteLayer);
 		}
 		return sprite;
 	}

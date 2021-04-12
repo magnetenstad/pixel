@@ -19,7 +19,7 @@ import pixel.sprite.SpriteLayer;
 import pixel.sprite.SpriteListener;
 import pixel.tool.Tool;
 
-public class SpriteGui implements SpriteListener, SelectableListListener {
+public class SpriteGui implements SpriteListener {
 	private static final SnapshotParameters snapshotParameters = new SnapshotParameters();
 	private ToggleGroup toggleGroup = new ToggleGroup();
 	private ImageView imageView = new ImageView();
@@ -102,15 +102,15 @@ public class SpriteGui implements SpriteListener, SelectableListListener {
 		layerButton.setToggleGroup(toggleGroup);
 		gui.getChildren().add(layerButton);
 		layerButton.setOnAction(event -> {
-			sprite.selectSpriteLayer(spriteLayer);
+			sprite.select(spriteLayer);
 		});
-		layerButton.setSelected(sprite.getSpriteLayer() == spriteLayer);
+		layerButton.setSelected(sprite.getSelected() == spriteLayer);
 		CheckBox layerCheckBox = new CheckBox();
 		gui.getChildren().add(layerCheckBox);
 		layerCheckBox.setSelected(spriteLayer.isVisible());
 		layerCheckBox.setOnAction(event -> {
 			spriteLayer.setVisible(layerCheckBox.isSelected());
-			sprite.notifyListeners();
+			sprite.spriteChanged();
 		});
 		return gui;
 	}

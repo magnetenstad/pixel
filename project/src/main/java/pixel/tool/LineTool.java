@@ -50,7 +50,7 @@ public class LineTool implements Tool {
 					double y = startPos.getY() + i * Math.sin(angle);
 					sprite.fillRect((int) (x - size / 2), (int) (y - size / 2), size, size, color, false);
 				}
-				sprite.notifyListeners();
+				sprite.spriteChanged();
 				startPos = null;
 			}
 		}
