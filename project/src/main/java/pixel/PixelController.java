@@ -2,8 +2,15 @@ package pixel;
 
 import pixel.file.FileManager;
 import pixel.file.PixelFileManager;
+import pixel.gui.PaletteGui;
+import pixel.gui.SpriteGui;
+import pixel.gui.SpriteTab;
+import pixel.gui.ToolbarGui;
+import pixel.palette.Palette;
 import pixel.sprite.*;
 import pixel.tool.*;
+
+import java.util.List;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -21,10 +28,10 @@ import javafx.scene.layout.VBox;
  * Main app FXML controller.
  */
 public class PixelController {
-	private FileManager fileManager;
-	private Palette palette;
-	private PaletteGui paletteGui;
-	private Toolbar toolbar;
+	private static FileManager fileManager;
+	private static Palette palette;
+	private static PaletteGui paletteGui;
+	private static ToolbarGui toolbarGui;
 	
 	@FXML
 	private TabPane tabPane;
@@ -44,17 +51,20 @@ public class PixelController {
 	 */
 	@FXML
 	private void initialize() {
-		SpriteTab.setTabPane(tabPane);
 		SpriteGui.setSpriteLayerPane(layersVBox);
-		Tool[] tools = { new PencilTool(), new EraserTool(), new LineTool(), new BucketTool() };
-		toolbar = new Toolbar(tools);
-		toolbar.setPane(toolbarVBox);
-		toolbar.setToolSizeSpinner(toolSizeSpinner);
+		
+		Toolbar toolbar = new Toolbar();
+		toolbarGui = new ToolbarGui(toolbar);
+		toolbarGui.setPane(toolbarVBox);
+		toolbarGui.setToolSizeSpinner(toolSizeSpinner);
+		List<Tool> tools = List.of(new PencilTool(), new EraserTool(), new LineTool(), new BucketTool());
+		toolbar.addTools(tools);
+		
 		palette = Palette.fromHexFile("src/main/resources/endesga-16.hex");
 		palette.addListener(toolbar);
-		paletteGui = new PaletteGui();
-		paletteGui.setPalette(palette);
+		paletteGui = new PaletteGui(palette);
 		paletteGui.setPane(paletteVBox);
+		
 		fileManager = new PixelFileManager();
 		tabPane.setTabClosingPolicy(TabClosingPolicy.SELECTED_TAB);
 		toolSizeSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 40, 1));
@@ -85,15 +95,10 @@ public class PixelController {
 			spriteGui.update();
 		}
 	}
-	// 1 Getters for the FXML elements
 	
-	public Toolbar getToolbar() {
-		return toolbar;
-	}
-	
-	// 2 Methods for the FXML buttons
+	// 1 Methods for the FXML buttons
 
-	// 2.1 Layer buttons
+	// 1.1 Layer buttons
 	
 	@FXML
 	private void newLayerButtonOnAction(ActionEvent event) {
@@ -124,7 +129,7 @@ public class PixelController {
 		}
 	}
 	
-	// 2.2 Tool buttons
+	// 1.2 Tool buttons
 	
 	@FXML
 	private void colorPickerOnAction(ActionEvent event) {
@@ -132,15 +137,23 @@ public class PixelController {
 	}
 	@FXML
 	private void toolSizeSpinnerOnMouseClicked(MouseEvent event) {
-		toolbar.updateToolSize((int) toolSizeSpinner.getValue());
+		toolbarGui.getToolbar().updateToolSize((int) toolSizeSpinner.getValue());
 	}
 	
-	// 2.3 File buttons
+	// 1.3 File buttons
 	
 	@FXML
 	private void newFileOnAction(ActionEvent event) {
-		new SpriteTab();
+		Sprite sprite = new Sprite(32, 32);
+		sprite.addSpriteLayer();
+		SpriteGui spriteGui = new SpriteGui(sprite);
+		toolbarGui.getToolbar().addListener(spriteGui);
+		palette.addListener(spriteGui);
+		SpriteTab spriteTab = new SpriteTab(spriteGui);
+		tabPane.getTabs().add(spriteTab);
+		tabPane.getSelectionModel().select(spriteTab);
 	}
+	
 	@FXML
 	private void openFileOnAction(ActionEvent event) {
 		Sprite sprite = fileManager.loadSprite();
@@ -154,7 +167,6 @@ public class PixelController {
 			tabPane.getTabs().remove(tabPane.getSelectionModel().getSelectedItem());
 		}
 	}
-	
 	@FXML
 	private void saveFileOnAction(ActionEvent event) {
 		Sprite sprite = getSprite();

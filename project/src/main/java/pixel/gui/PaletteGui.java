@@ -1,27 +1,25 @@
-package pixel;
+package pixel.gui;
 
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.control.Tooltip;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
+import pixel.palette.Palette;
+import pixel.palette.PaletteListener;
 
 public class PaletteGui implements PaletteListener {
-	ToggleGroup toggleGroup = new ToggleGroup();
-	Palette palette;
-	Pane pane;
+	private ToggleGroup toggleGroup = new ToggleGroup();
+	private final Palette palette;
+	private Pane pane;
+	
+	public PaletteGui(Palette palette) {
+		this.palette = palette;
+		palette.addListener(this);
+	}
 	
 	public Palette getPalette() {
 		return palette;
-	}
-	
-	public void setPalette(Palette palette) {
-		if (palette != null) {
-			palette.removeListener(this);
-		}
-		this.palette = palette;
-		palette.addListener(this);
-		updateGui();
 	}
 	
 	public void setPane(Pane pane) {

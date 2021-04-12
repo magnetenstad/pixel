@@ -1,4 +1,4 @@
-package pixel;
+package pixel.palette;
 
 import java.io.FileReader;
 import java.util.ArrayList;

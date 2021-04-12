@@ -4,8 +4,8 @@ import java.util.List;
 
 import javafx.geometry.Point2D;
 import javafx.scene.input.MouseEvent;
+import pixel.gui.SpriteGui;
 import pixel.sprite.Sprite;
-import pixel.sprite.SpriteGui;
 import pixel.sprite.SpriteLayer;
 
 public class BucketTool implements Tool {

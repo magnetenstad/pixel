@@ -4,8 +4,8 @@ import javafx.geometry.Point2D;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
+import pixel.gui.SpriteGui;
 import pixel.sprite.Sprite;
-import pixel.sprite.SpriteGui;
 
 public class LineTool implements Tool {
 	private String name = "Line";

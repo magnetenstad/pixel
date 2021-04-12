@@ -1,81 +1,51 @@
 package pixel.tool;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
 
-import javafx.scene.control.Spinner;
-import javafx.scene.control.ToggleButton;
-import javafx.scene.control.ToggleGroup;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.Pane;
-import pixel.Palette;
-import pixel.PaletteListener;
-import pixel.sprite.SpriteGui;
+import pixel.palette.Palette;
+import pixel.palette.PaletteListener;
 
-public class Toolbar implements PaletteListener {
-	private Pane pane;
-	private Spinner<Integer> toolSizeSpinner;
+public class Toolbar implements Iterable<Tool>, PaletteListener {
 	private Tool toolSelected;
-	private ArrayList<Tool> tools = new ArrayList<Tool>();
-	private ToggleGroup toggleGroup = new ToggleGroup();
+	private ArrayList<Tool> tools = new ArrayList<>();
+	private ArrayList<ToolbarListener> listeners = new ArrayList<>();
 	
-	public Toolbar(Tool[] tools) {
-		checkToolsNotEmpty(tools);
+	public void addTool(Tool tool) {
+		tools.add(tool);
+		notifyAddedTool(tool);
+		if (toolSelected == null) {
+			setToolSelected(tool);
+		}
+	}
+	public void addTools(Collection<Tool> tools) {
 		for (Tool tool : tools) {
 			addTool(tool);
 		}
-		update();
 	}
-	private void checkToolsNotEmpty(Tool[] tools) {
-		if (tools.length == 0) {
-			throw new IllegalArgumentException("Tools is empty!");
+	public void removeTool(Tool tool) {
+		tools.remove(tool);
+		if (toolSelected == tool) {
+			toolSelected = null;
 		}
+		notifyRemovedTool(tool);
 	}
-	public void addTool(Tool tool) {
-		tools.add(tool);
-		update();
-	}
-	public void update() {
-		if (pane != null) {
-			pane.getChildren().clear();
-			for (Tool tool : tools) {
-				newToolButton(tool);
-			}
-			if (toolSelected == null && tools.size() > 0) {
-				setToolSelected(tools.get(0));
-			}
+	public void setToolSelected(Tool tool) {
+		if (!tools.contains(tool)) {
+			throw new IllegalArgumentException();
 		}
+		this.toolSelected = tool;
+		notifySelectedTool(tool);
 	}
-	private ToggleButton newToolButton(Tool tool) {
-		ToggleButton toolButton = new ToggleButton(tool.getName());
-		toolButton.setToggleGroup(toggleGroup);
-		toolButton.setOnAction(event -> {
-			setToolSelected(tool);
-			toolSizeSpinner.getValueFactory().setValue(tool.getSize());
-		});
-		pane.getChildren().add(toolButton);
-		if (pane.getChildren().size() == 1) {
-			toolButton.setSelected(true);
+	public void setToolSelected(int index) {
+		if (!(0 <= index && index < size())) {
+			throw new IllegalArgumentException();
 		}
-		return toolButton;
-	}
-	public void setPane(Pane pane) {
-		if (pane != null) {
-			pane.getChildren().clear();
-		}
-		this.pane = pane;
-		update();
-	}
-	public void setToolSizeSpinner(Spinner<Integer> spinner) {
-		this.toolSizeSpinner = spinner;
-	}
-	public void setToolSelected(Tool toolSelected) {
-		this.toolSelected = toolSelected;
+		setToolSelected(tools.get(index));
 	}
 	public Tool getToolSelected() {
 		return toolSelected;
-	}
-	public void useToolSelected(SpriteGui spriteGui, MouseEvent event) {
-		toolSelected.use(spriteGui, event);
 	}
 	public void updateToolColor(int color) {
 		for (Tool tool : tools) {
@@ -85,8 +55,36 @@ public class Toolbar implements PaletteListener {
 	public void updateToolSize(int size) {
 		toolSelected.setSize(size);
 	}
+	public int size() {
+		return tools.size();
+	}
 	@Override
 	public void paletteChanged(Palette palette) {
 		updateToolColor(palette.getIndex());
+	}
+	public void notifyAddedTool(Tool tool) {
+		for (ToolbarListener listener : listeners) {
+			listener.toolbarAddedTool(this, tool);
+		}
+	}
+	public void notifyRemovedTool(Tool tool) {
+		for (ToolbarListener listener : listeners) {
+			listener.toolbarRemovedTool(this, tool);
+		}
+	}
+	public void notifySelectedTool(Tool tool) {
+		for (ToolbarListener listener : listeners) {
+			listener.toolbarSelectedTool(this, tool);
+		}
+	}
+	public void addListener(ToolbarListener listener) {
+		listeners.add(listener);
+	}
+	public void removeListener(ToolbarListener listener) {
+		listeners.remove(listener);
+	}
+	@Override
+	public Iterator<Tool> iterator() {
+		return tools.iterator();
 	}
 }

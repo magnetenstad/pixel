@@ -4,8 +4,8 @@ import java.util.Vector;
 
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
+import pixel.gui.SpriteGui;
 import pixel.sprite.Sprite;
-import pixel.sprite.SpriteGui;
 
 public interface Tool {
 	

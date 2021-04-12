@@ -1,4 +1,4 @@
-package pixel.sprite;
+package pixel.gui;
 
 import javafx.scene.SnapshotParameters;
 import javafx.scene.canvas.Canvas;
@@ -11,11 +11,17 @@ import javafx.scene.image.WritableImage;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
-import pixel.Palette;
-import pixel.PaletteListener;
 import pixel.PixelApp;
+import pixel.palette.Palette;
+import pixel.palette.PaletteListener;
+import pixel.sprite.Sprite;
+import pixel.sprite.SpriteLayer;
+import pixel.sprite.SpriteListener;
+import pixel.tool.Tool;
+import pixel.tool.Toolbar;
+import pixel.tool.ToolbarListener;
 
-public class SpriteGui implements SpriteListener, PaletteListener {
+public class SpriteGui extends ToolbarListener implements SpriteListener, PaletteListener {
 	private static final SnapshotParameters snapshotParameters = new SnapshotParameters();
 	private ToggleGroup toggleGroup = new ToggleGroup();
 	private ImageView imageView = new ImageView();
@@ -31,18 +37,14 @@ public class SpriteGui implements SpriteListener, PaletteListener {
 			throw new NullPointerException("Cannot create SpriteGui from null.");
 		}
 		this.sprite = sprite;
+		sprite.addListener(this);
+		
 		this.width = sprite.getWidth();
 		this.height = sprite.getHeight();
-		sprite.addListener(this);
 		
 		snapshotParameters.setFill(Color.TRANSPARENT);
 		writableImage = new WritableImage(width * scale, height * scale);
 		imageView.setImage(writableImage);
-		imageView.setOnMousePressed(event -> {
-			PixelApp.getController().getToolbar().useToolSelected(this, event);
-		});
-		imageView.setOnMouseDragged(imageView.getOnMousePressed());
-		imageView.setOnMouseReleased(imageView.getOnMousePressed());
 	}
 
 	public static void setSpriteLayerPane(Pane pane) {
@@ -141,5 +143,14 @@ public class SpriteGui implements SpriteListener, PaletteListener {
 	@Override
 	public void paletteChanged(Palette palette) {
 		update();
+	}
+
+	@Override
+	public void toolbarSelectedTool(Toolbar toolbar, Tool tool) {
+		imageView.setOnMousePressed(event -> {
+			tool.use(this, event);
+		});
+		imageView.setOnMouseDragged(imageView.getOnMousePressed());
+		imageView.setOnMouseReleased(imageView.getOnMousePressed());
 	}
 }

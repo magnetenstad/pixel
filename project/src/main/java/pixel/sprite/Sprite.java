@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 import javafx.scene.image.WritableImage;
+import pixel.gui.SpriteGui;
 
 /*
  * 

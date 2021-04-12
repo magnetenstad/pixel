@@ -2,8 +2,8 @@ package pixel.tool;
 
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
+import pixel.gui.SpriteGui;
 import pixel.sprite.Sprite;
-import pixel.sprite.SpriteGui;
 
 public class PencilTool implements Tool {
 	private String name = "Pencil";
