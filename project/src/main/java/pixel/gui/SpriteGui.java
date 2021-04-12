@@ -31,13 +31,15 @@ public class SpriteGui extends ToolbarListener implements SpriteListener, Palett
 	private int height;
 	private int width;
 	private final static int scale = 32;
+	private Palette palette;
 	
-	public SpriteGui(Sprite sprite) {
+	public SpriteGui(Sprite sprite, Palette palette) {
 		if (sprite == null) {
 			throw new NullPointerException("Cannot create SpriteGui from null.");
 		}
 		this.sprite = sprite;
 		sprite.addListener(this);
+		palette.addListener(this);
 		
 		this.width = sprite.getWidth();
 		this.height = sprite.getHeight();
@@ -55,7 +57,7 @@ public class SpriteGui extends ToolbarListener implements SpriteListener, Palett
 		Canvas combinedCanvas = new Canvas(getImageWidth(), getImageHeight());
 		GraphicsContext graphics = combinedCanvas.getGraphicsContext2D();
 		fillTransparentBackground(graphics);
-		drawSpriteLayersToGraphics(sprite, graphics, scale);
+		drawSpriteLayersToGraphics(sprite, graphics, palette, scale);
 		combinedCanvas.snapshot(snapshotParameters, writableImage);
 		
 		spriteLayerGuiPane.getChildren().clear();
@@ -73,8 +75,7 @@ public class SpriteGui extends ToolbarListener implements SpriteListener, Palett
 		}
 	}
 	
-	public static void drawSpriteLayersToGraphics(Sprite sprite, GraphicsContext graphics, double scale) {
-		Palette palette = PixelApp.getController().getPalette();
+	public static void drawSpriteLayersToGraphics(Sprite sprite, GraphicsContext graphics, Palette palette, double scale) {
 		for (SpriteLayer spriteLayer : sprite) {
 			if (spriteLayer.isVisible()) {
 				for (int x = 0; x < sprite.getWidth(); x++) {
@@ -87,11 +88,11 @@ public class SpriteGui extends ToolbarListener implements SpriteListener, Palett
 		}
 	}
 	
-	public static WritableImage exportImage(Sprite sprite) {
+	public static WritableImage exportImage(Sprite sprite, Palette palette) {
 		WritableImage writableImage = new WritableImage(sprite.getWidth(), sprite.getHeight());
 		Canvas canvas = new Canvas(sprite.getWidth(), sprite.getHeight());
 		GraphicsContext graphics = canvas.getGraphicsContext2D();
-		drawSpriteLayersToGraphics(sprite, graphics, 1);
+		drawSpriteLayersToGraphics(sprite, graphics, palette, 1);
 		canvas.snapshot(snapshotParameters, writableImage);
 		return writableImage;
 	}

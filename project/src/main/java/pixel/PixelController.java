@@ -89,12 +89,6 @@ public class PixelController {
 	public Palette getPalette() {
 		return palette;
 	}
-	public void updateSpriteGui() {
-		SpriteGui spriteGui = getSpriteGui();
-		if (spriteGui != null) {
-			spriteGui.update();
-		}
-	}
 	
 	// 1 Methods for the FXML buttons
 
@@ -146,9 +140,8 @@ public class PixelController {
 	private void newFileOnAction(ActionEvent event) {
 		Sprite sprite = new Sprite(32, 32);
 		sprite.addSpriteLayer();
-		SpriteGui spriteGui = new SpriteGui(sprite);
+		SpriteGui spriteGui = new SpriteGui(sprite, palette);
 		toolbarGui.getToolbar().addListener(spriteGui);
-		palette.addListener(spriteGui);
 		SpriteTab spriteTab = new SpriteTab(spriteGui);
 		tabPane.getTabs().add(spriteTab);
 		tabPane.getSelectionModel().select(spriteTab);
@@ -158,7 +151,7 @@ public class PixelController {
 	private void openFileOnAction(ActionEvent event) {
 		Sprite sprite = fileManager.loadSprite();
 		if (sprite != null) {
-			new SpriteTab(new SpriteGui(sprite));
+			new SpriteTab(new SpriteGui(sprite, palette));
 		}
 	}
 	@FXML
@@ -190,7 +183,7 @@ public class PixelController {
 	private void exportFileOnAction(ActionEvent event) {
 		Sprite sprite = getSprite();
 		if (sprite != null) {
-			fileManager.exportSprite(sprite);
+			fileManager.exportSprite(sprite, palette);
 		}
 	}
 }

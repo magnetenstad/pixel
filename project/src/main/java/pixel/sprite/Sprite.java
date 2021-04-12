@@ -3,8 +3,10 @@ package pixel.sprite;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import javafx.scene.image.Image;
 import javafx.scene.image.WritableImage;
 import pixel.gui.SpriteGui;
+import pixel.palette.Palette;
 
 /*
  * 
@@ -124,10 +126,6 @@ public class Sprite implements Iterable<SpriteLayer> {
 		this.path = path;
 	}
 	
-	public WritableImage exportImage() {
-		return SpriteGui.exportImage(this);
-	}
-	
 	public void moveSpriteLayerUp() {
 		if (getSpriteLayer() != null && spriteLayerIndex != 0) {
 			SpriteLayer spriteLayerA = spriteLayers.get(spriteLayerIndex - 1);
@@ -165,6 +163,11 @@ public class Sprite implements Iterable<SpriteLayer> {
 		for (SpriteListener listener : listeners) {
 			listener.spriteChanged(this);
 		}
+	}
+
+	public Image exportImage(Palette palette) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }
 

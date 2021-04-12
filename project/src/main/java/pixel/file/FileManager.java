@@ -3,6 +3,8 @@ package pixel.file;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+
+import pixel.palette.Palette;
 import pixel.sprite.Sprite;
 
 /*
@@ -50,10 +52,10 @@ public interface FileManager {
 	/*
 	 * Saves the given sprite to the given path as a PNG.
 	 */
-	public void exportSprite(String path, Sprite sprite);
+	public void exportSprite(String path, Sprite sprite, Palette palette);
 	
 	/*
 	 * Prompts the user to select a file and saves the given sprite to that file as a PNG.
 	 */
-	public void exportSprite(Sprite sprite);
+	public void exportSprite(Sprite sprite, Palette palette);
 }

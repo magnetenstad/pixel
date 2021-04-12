@@ -15,6 +15,7 @@ import javafx.embed.swing.SwingFXUtils;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 import pixel.PixelApp;
+import pixel.palette.Palette;
 import pixel.sprite.Sprite;
 import pixel.sprite.SpriteSerializer;
 
@@ -92,10 +93,10 @@ public class PixelFileManager implements FileManager {
 	}
 	
 	@Override
-	public void exportSprite(String path, Sprite sprite) {
+	public void exportSprite(String path, Sprite sprite, Palette palette) {
 		checkNotNull(sprite);
 		BufferedImage bufferedImage = new BufferedImage(sprite.getWidth(), sprite.getHeight(), BufferedImage.TYPE_INT_ARGB);
-		SwingFXUtils.fromFXImage(sprite.exportImage(), bufferedImage);
+		SwingFXUtils.fromFXImage(sprite.exportImage(palette), bufferedImage);
 		try {
 			ImageIO.write(bufferedImage, "png", new File(path));
 		} catch (IOException e) {
@@ -104,10 +105,10 @@ public class PixelFileManager implements FileManager {
 	}
 	
 	@Override
-	public void exportSprite(Sprite sprite) {
+	public void exportSprite(Sprite sprite, Palette palette) {
 		File file = showSaveDialog(new ExtensionFilter("Pixel Files", "*.png"));
 		if (file != null) {
-			exportSprite(file.getAbsolutePath(), sprite);
+			exportSprite(file.getAbsolutePath(), sprite, palette);
 		}
 	}
 	

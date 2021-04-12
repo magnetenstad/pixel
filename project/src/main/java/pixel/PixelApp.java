@@ -35,14 +35,6 @@ public class PixelApp extends Application {
 	}
 	
 	/*
-	 * Used for getting FXML UI elements.
-	 * @return The app FXML controller.
-	 */
-	public static PixelController getController() {
-		return (PixelController) loader.getController();
-	}
-	
-	/*
 	 * Some elements need the app window, e.g. FileChooser.
 	 * @return The app window.
 	 */

@@ -25,7 +25,7 @@ public class SpriteTab extends Tab {
 		
 		setContent(new ZoomableScrollPane(pane));
 		setOnSelectionChanged(event -> {
-			PixelApp.getController().updateSpriteGui();
+			spriteGui.update();
 		});
 	}
 	
