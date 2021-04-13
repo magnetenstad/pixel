@@ -58,6 +58,7 @@ public class CursorList<T> implements Iterable<T> {
 	
 	public void addListener(CursorListListener listener) {
 		listeners.add(listener);
+		notifySetIndex();
 	}
 	public void removeListener(CursorListListener listener) {
 		listeners.remove(listener);

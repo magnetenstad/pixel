@@ -16,6 +16,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ColorPicker;
+import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.Spinner;
 import javafx.scene.control.SpinnerValueFactory;
@@ -45,6 +46,8 @@ public class PixelController {
 	private Button newLayerButton, removeLayerButton, moveLayerUpButton, moveLayerDownButton;
 	@FXML
 	private MenuItem newFile, openFile, closeFile, saveFile, saveFileAs, exportFile;
+	@FXML
+	private Menu recentFiles;
 	
 	/*
 	 * Initializes FXML elements.
@@ -66,6 +69,7 @@ public class PixelController {
 		paletteGui.setPane(paletteVBox);
 		
 		fileManager = new PixelFileManager();
+		rebuildRecentFilesMenu();
 		tabPane.setTabClosingPolicy(TabClosingPolicy.SELECTED_TAB);
 		toolSizeSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 40, 1));
 	}
@@ -86,8 +90,26 @@ public class PixelController {
 		return (spriteGui != null ? spriteGui.getSprite() : null);
 	}
 	
-	public Palette getPalette() {
-		return palette;
+	public void newSpriteTab(Sprite sprite) {
+		if (sprite != null) {
+			SpriteGui spriteGui = new SpriteGui(sprite, palette);
+			Toolbar toolbar = toolbarGui.getToolbar();
+			toolbar.addListener(spriteGui);
+			SpriteTab spriteTab = new SpriteTab(spriteGui);
+			tabPane.getTabs().add(spriteTab);
+			tabPane.getSelectionModel().select(spriteTab);
+		}
+	}
+	
+	private void rebuildRecentFilesMenu() {
+		recentFiles.getItems().clear();
+		for (String path : fileManager.getRecentPaths()) {
+			MenuItem menuItem = new MenuItem(path);
+			recentFiles.getItems().add(menuItem);
+			menuItem.setOnAction(event -> {
+				newSpriteTab(fileManager.loadSprite(path));
+			});
+		}
 	}
 	
 	// 1 Methods for the FXML buttons
@@ -136,20 +158,14 @@ public class PixelController {
 	private void newFileOnAction(ActionEvent event) {
 		Sprite sprite = new Sprite(32, 32);
 		sprite.addSpriteLayer();
-		SpriteGui spriteGui = new SpriteGui(sprite, palette);
-		Toolbar toolbar = toolbarGui.getToolbar();
-		toolbar.addListener(spriteGui);
-		toolbar.notifySetIndex();
-		SpriteTab spriteTab = new SpriteTab(spriteGui);
-		tabPane.getTabs().add(spriteTab);
-		tabPane.getSelectionModel().select(spriteTab);
+		newSpriteTab(sprite);
 	}
-	
 	@FXML
 	private void openFileOnAction(ActionEvent event) {
 		Sprite sprite = fileManager.loadSprite();
 		if (sprite != null) {
-			new SpriteTab(new SpriteGui(sprite, palette));
+			newSpriteTab(sprite);
+			rebuildRecentFilesMenu();
 		}
 	}
 	@FXML
@@ -175,6 +191,7 @@ public class PixelController {
 		Sprite sprite = getSprite();
 		if (sprite != null) {
 			fileManager.saveSprite(sprite);
+			rebuildRecentFilesMenu();
 		}
 	}
 	@FXML

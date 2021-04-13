@@ -3,6 +3,7 @@ package pixel.file;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.Collection;
 
 import pixel.palette.Palette;
 import pixel.sprite.Sprite;
@@ -58,4 +59,9 @@ public interface FileManager {
 	 * Prompts the user to select a file and saves the given sprite to that file as a PNG.
 	 */
 	public void exportSprite(Sprite sprite, Palette palette);
+	
+	/*
+	 * @return A collection of recent paths.
+	 */
+	public Collection<String> getRecentPaths();
 }

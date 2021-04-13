@@ -57,6 +57,7 @@
           <items>
             <MenuItem fx:id="newFile" mnemonicParsing="false" onAction="#newFileOnAction" text="New" />
             <MenuItem fx:id="openFile" mnemonicParsing="false" onAction="#openFileOnAction" text="Open…" />
+                  <Menu fx:id="recentFiles" mnemonicParsing="false" text="Recent Files" />
             <SeparatorMenuItem mnemonicParsing="false" />
             <MenuItem fx:id="closeFile" mnemonicParsing="false" onAction="#closeFileOnAction" text="Close" />
             <MenuItem fx:id="saveFile" mnemonicParsing="false" onAction="#saveFileOnAction" text="Save" />
