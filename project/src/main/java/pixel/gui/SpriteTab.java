@@ -14,7 +14,7 @@ public class SpriteTab extends Tab {
 	
 	public SpriteTab(SpriteGui spriteGui) {
 		this.spriteGui = spriteGui;
-		setText(spriteGui.getSprite().getName());
+		setText(spriteGui.getSprite().getPath());
 
 		StackPane pane = new StackPane();
 		pane.setPrefWidth(spriteGui.getImageWidth()*2);

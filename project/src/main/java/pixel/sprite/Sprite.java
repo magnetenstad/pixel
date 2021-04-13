@@ -14,8 +14,7 @@ import pixel.palette.Palette;
  */
 public class Sprite extends CursorList<SpriteLayer> {
 	protected ArrayList<SpriteListener> listeners = new ArrayList<>();
-	private String name = "untitled";
-	private String path;
+	private String path = "new sprite";
 	private int width;
 	private int height;
 	
@@ -58,14 +57,6 @@ public class Sprite extends CursorList<SpriteLayer> {
 		return spriteLayer;
 	}
 
-	public String getName() {
-		return name;
-	}
-	
-	public void setName(String name) {
-		this.name = name;
-	}
-	
 	public int getWidth() {
 		return width;
 	}
@@ -78,6 +69,7 @@ public class Sprite extends CursorList<SpriteLayer> {
 	}
 	public void setPath(String path) {
 		this.path = path;
+		spriteChanged();
 	}
 	
 	public void moveSpriteLayerUp() {

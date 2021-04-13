@@ -57,9 +57,8 @@ public class PixelFileManager implements FileManager {
 	public void saveSprite(String path, Sprite sprite) {
 		checkNotNull(sprite);
 		try {
-			FileManager.writeString(path, SpriteSerializer.serializeToString(sprite));
 			sprite.setPath(path);
-			addToRecentPaths(path);
+			FileManager.writeString(path, SpriteSerializer.serializeToString(sprite));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -78,7 +77,10 @@ public class PixelFileManager implements FileManager {
 	public Sprite loadSprite(String path) {
 		try {
 			String string = FileManager.readString(path);
-			return SpriteSerializer.deserializeFromString(string);
+			Sprite sprite = SpriteSerializer.deserializeFromString(string);
+			sprite.setPath(path);
+			addToRecentPaths(path);
+			return sprite;
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -89,7 +91,6 @@ public class PixelFileManager implements FileManager {
 	public Sprite loadSprite() {
 		File file = showOpenDialog(new ExtensionFilter("Pixel Files", "*.pixel"));
 		if (file != null) {
-			addToRecentPaths(file.getAbsolutePath());
 			return loadSprite(file.getAbsolutePath());
 		}
 		return null;
@@ -126,7 +127,7 @@ public class PixelFileManager implements FileManager {
 			try {
 				JSONObject json = new JSONObject();
 				JSONArray recentPathsJSON = new JSONArray();
-				json.put(FilePath.Recent.toString(), recentPathsJSON);
+				json.put(MetaData.Recent.toString(), recentPathsJSON);
 				FileManager.writeString(METADATA.getAbsolutePath(), json.toString(2));
 			} catch (IOException e) {
 				e.printStackTrace();
@@ -142,13 +143,13 @@ public class PixelFileManager implements FileManager {
 			String string = FileManager.readString(METADATA.getAbsolutePath());
 			JSONObject json = new JSONObject(string);
 			
-			if (!json.has(FilePath.Recent.toString())) {
+			if (!json.has(MetaData.Recent.toString())) {
 				METADATA.delete();
 				readFromMetaData();
 				return;
 			}
 			
-			JSONArray recentPathsJSON = json.getJSONArray(FilePath.Recent.toString());
+			JSONArray recentPathsJSON = json.getJSONArray(MetaData.Recent.toString());
 			
 			for (Object path : recentPathsJSON) {
 				recentPaths.add((String) path);
@@ -171,7 +172,7 @@ public class PixelFileManager implements FileManager {
 				recentPathsJSON.put(path);
 			}
 			
-			json.put(FilePath.Recent.toString(),  recentPathsJSON);
+			json.put(MetaData.Recent.toString(),  recentPathsJSON);
 			FileManager.writeString(METADATA.getAbsolutePath(), json.toString(2));
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -179,7 +180,15 @@ public class PixelFileManager implements FileManager {
 	}
 	
 	public void addToRecentPaths(String path) {
+		for (String recentPath : recentPaths) {
+			if (recentPath.equals(path)) {
+				return;
+			}
+		}
 		recentPaths.add(0, path);
+		if (recentPaths.size() > 5) {
+			recentPaths.remove(recentPaths.size()-1);
+		}
 		writeToMetaData();
 	}
 

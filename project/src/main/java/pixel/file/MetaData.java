@@ -1,11 +1,11 @@
 package pixel.file;
 
-public enum FilePath {
-	Recent("recent.txt");
+public enum MetaData {
+	Recent("recent");
 	
 	private String path;
 	
-	FilePath(String path) {
+	MetaData(String path) {
 		this.path = path;
 	}
 	

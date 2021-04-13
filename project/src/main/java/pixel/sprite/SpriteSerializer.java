@@ -15,7 +15,6 @@ public class SpriteSerializer {
 	
 	public static JSONObject serializeSprite(Sprite sprite) {
 		JSONObject json = new JSONObject();
-		json.put("name", sprite.getName());
 		json.put("width", sprite.getWidth());
 		json.put("height", sprite.getHeight());
 		JSONArray spriteLayers = new JSONArray();
@@ -31,7 +30,6 @@ public class SpriteSerializer {
 		int width = json.getInt("width");
 		int height = json.getInt("height");
 		Sprite sprite = new Sprite(width, height);
-		sprite.setName(json.getString("name"));
 		JSONArray spriteLayers = json.getJSONArray("data");
 		for (Object spriteLayerJSONObject : spriteLayers) {
 			SpriteLayer spriteLayer = deserializeSpriteLayer(sprite, (JSONObject) spriteLayerJSONObject);
