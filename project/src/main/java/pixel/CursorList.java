@@ -3,72 +3,79 @@ package pixel;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-public class SelectableList<T> implements Iterable<T> {
-	protected ArrayList<SelectableListListener> listeners = new ArrayList<>();
+public class CursorList<T> implements Iterable<T> {
+	protected ArrayList<CursorListListener> listeners = new ArrayList<>();
 	protected ArrayList<T> elements = new ArrayList<>();
-	protected int index = -1;
+	protected int cursor = -1;
 	
-	public T get(int index) {
-		return elements.get(index);
+	public T get(int cursor) {
+		return elements.get(cursor);
 	}
-	public void set(int index, T element) {
-		elements.set(index, element);
+	public void set(int cursor, T element) {
+		elements.set(cursor, element);
 	}
 	public void add(T element) {
 		elements.add(element);
 		notifyAddedElement(element);
-		if (index == -1) {
+		if (cursor == -1) {
 			select(element);
 		}
 	}
 	public void remove(T element) {
 		if (getSelected() == element) {
-			setIndex(-1);
+			setCursor(-1);
 		}
 		elements.remove(element);
 		notifyRemovedElement(element);		
 	}
+
+	public void removeSelected() {
+		T element = getSelected();
+		if (element != null) {
+			remove(element);
+		}
+	}
+	
 	public int size() {
 		return elements.size();
 	}
 	public void select(T element) {
-		setIndex(elements.indexOf(element));
+		setCursor(elements.indexOf(element));
 	}
-	public int getIndex() {
-		return index;
+	public int getCursor() {
+		return cursor;
 	}
 	public T getSelected() {
-		return elements.get(index);
+		return elements.get(cursor);
 	}
-	public void setIndex(int index) {
-		if (!(0 <= index && index < size())) {
+	public void setCursor(int cursor) {
+		if (!(0 <= cursor && cursor < size())) {
 			throw new IllegalArgumentException();
 		}
-		this.index = index;
+		this.cursor = cursor;
 		notifySetIndex();
 	}
 	
-	public void addListener(SelectableListListener listener) {
+	public void addListener(CursorListListener listener) {
 		listeners.add(listener);
 	}
-	public void removeListener(SelectableListListener listener) {
+	public void removeListener(CursorListListener listener) {
 		listeners.remove(listener);
 	}
 	
 	public void notifyAddedElement(T element) {
-		for (SelectableListListener listener : listeners) {
+		for (CursorListListener listener : listeners) {
 			listener.listAddedElement(this, element);
 		}
 	}
-	
 	public void notifyRemovedElement(T element) {
-		for (SelectableListListener listener : listeners) {
+		for (CursorListListener listener : listeners) {
 			listener.listRemovedElement(this, element);
 		}
 	}
 	public void notifySetIndex() {
-		for (SelectableListListener listener : listeners) {
-			listener.listSetIndex(this, index);
+		for (CursorListListener listener : listeners) {
+			listener.listSetCursor(this, cursor);
 		}
 	}
 	

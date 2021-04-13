@@ -9,12 +9,12 @@ import javafx.scene.control.Spinner;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.Pane;
-import pixel.SelectableList;
-import pixel.SelectableListListener;
+import pixel.CursorList;
+import pixel.CursorListListener;
 import pixel.tool.Tool;
 import pixel.tool.Toolbar;
 
-public class ToolbarGui implements SelectableListListener {
+public class ToolbarGui implements CursorListListener {
 	private ToggleGroup toggleGroup = new ToggleGroup();
 	private Spinner<Integer> toolSizeSpinner;
 	private Pane pane;
@@ -77,7 +77,7 @@ public class ToolbarGui implements SelectableListListener {
 	}
 
 	@Override
-	public void listAddedElement(SelectableList<?> selectableList, Object element) {
+	public void listAddedElement(CursorList<?> selectableList, Object element) {
 		if (element instanceof Tool) {
 			ToolButton toolButton = new ToolButton((Tool) element);
 			toolButtons.add(toolButton);
@@ -88,7 +88,7 @@ public class ToolbarGui implements SelectableListListener {
 	}
 	
 	@Override
-	public void listRemovedElement(SelectableList<?> selectableList, Object element) {
+	public void listRemovedElement(CursorList<?> selectableList, Object element) {
 		for (ToolButton toolButton : toolButtons) {
 			if (toolButton.getTool() == element) {
 				toolButtons.remove(toolButton);
@@ -100,7 +100,7 @@ public class ToolbarGui implements SelectableListListener {
 	}
 
 	@Override
-	public void listSetIndex(SelectableList<?> selectableList, int index) {
+	public void listSetCursor(CursorList<?> selectableList, int index) {
 		for (ToolButton toolButton : toolButtons) {
 			toolButton.setSelected(toolButton.getTool() == selectableList.get(index));
 		}

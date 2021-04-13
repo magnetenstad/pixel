@@ -3,9 +3,9 @@ package pixel.palette;
 import java.io.FileReader;
 import java.util.Scanner;
 import javafx.scene.paint.Color;
-import pixel.SelectableList;
+import pixel.CursorList;
 
-public class Palette extends SelectableList<Color> {
+public class Palette extends CursorList<Color> {
 	public static Color Color(String hex) {
 		hex = hex.toLowerCase();
 		if (!hex.matches("#?(\\d|a|b|c|d|e|f){6}")) {

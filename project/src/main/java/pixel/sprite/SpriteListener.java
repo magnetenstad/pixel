@@ -1,8 +1,8 @@
 package pixel.sprite;
 
-import pixel.SelectableListListener;
+import pixel.CursorListListener;
 
-public interface SpriteListener extends SelectableListListener {
+public interface SpriteListener extends CursorListListener {
 	
 	public void spriteChanged(Sprite sprite);
 	

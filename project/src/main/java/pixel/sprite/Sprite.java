@@ -4,15 +4,15 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 import javafx.scene.image.Image;
-import pixel.SelectableList;
-import pixel.SelectableListListener;
+import pixel.CursorList;
+import pixel.CursorListListener;
 import pixel.gui.SpriteGui;
 import pixel.palette.Palette;
 
 /*
  * 
  */
-public class Sprite extends SelectableList<SpriteLayer> {
+public class Sprite extends CursorList<SpriteLayer> {
 	protected ArrayList<SpriteListener> listeners = new ArrayList<>();
 	private String name = "untitled";
 	private String path;
@@ -58,13 +58,6 @@ public class Sprite extends SelectableList<SpriteLayer> {
 		return spriteLayer;
 	}
 
-	public void removeSpriteLayer() {
-		SpriteLayer spriteLayer = getSelected();
-		if (spriteLayer != null) {
-			remove(spriteLayer);
-		}
-	}
-
 	public String getName() {
 		return name;
 	}
@@ -88,22 +81,22 @@ public class Sprite extends SelectableList<SpriteLayer> {
 	}
 	
 	public void moveSpriteLayerUp() {
-		if (getSelected() != null && index != 0) {
-			SpriteLayer spriteLayerA = elements.get(index - 1);
-			SpriteLayer spriteLayerB = elements.get(index);
-			elements.set(index - 1, spriteLayerB);
-			elements.set(index, spriteLayerA);
+		if (getSelected() != null && cursor != 0) {
+			SpriteLayer spriteLayerA = elements.get(cursor - 1);
+			SpriteLayer spriteLayerB = elements.get(cursor);
+			elements.set(cursor - 1, spriteLayerB);
+			elements.set(cursor, spriteLayerA);
 			select(spriteLayerB);
 			spriteChanged();
 		}
 	}
 	
 	public void moveSpriteLayerDown() {
-		if (getSelected() != null && index + 1 < elements.size()) {
-			SpriteLayer spriteLayerA = elements.get(index);
-			SpriteLayer spriteLayerB = elements.get(index + 1);
-			elements.set(index, spriteLayerB);
-			elements.set(index + 1, spriteLayerA);
+		if (getSelected() != null && cursor + 1 < elements.size()) {
+			SpriteLayer spriteLayerA = elements.get(cursor);
+			SpriteLayer spriteLayerB = elements.get(cursor + 1);
+			elements.set(cursor, spriteLayerB);
+			elements.set(cursor + 1, spriteLayerA);
 			select(spriteLayerA);
 			spriteChanged();
 		}
@@ -116,9 +109,11 @@ public class Sprite extends SelectableList<SpriteLayer> {
 	}
 	
 	public void addListener(SpriteListener listener) {
+		super.addListener(listener);
 		listeners.add(listener);
 	}
 	public void removeListener(SpriteListener listener) {
+		super.removeListener(listener);
 		listeners.remove(listener);
 	}
 	

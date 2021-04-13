@@ -11,8 +11,8 @@ import javafx.scene.image.WritableImage;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
-import pixel.SelectableList;
-import pixel.SelectableListListener;
+import pixel.CursorList;
+import pixel.CursorListListener;
 import pixel.palette.Palette;
 import pixel.sprite.Sprite;
 import pixel.sprite.SpriteLayer;
@@ -141,18 +141,18 @@ public class SpriteGui implements SpriteListener {
 	}
 
 	@Override
-	public void listAddedElement(SelectableList<?> selectableList, Object element) {
+	public void listAddedElement(CursorList<?> selectableList, Object element) {
 		update();
 	}
 
 	@Override
-	public void listRemovedElement(SelectableList<?> selectableList, Object element) {
+	public void listRemovedElement(CursorList<?> selectableList, Object element) {
 		update();
 	}
 	
 	@Override
-	public void listSetIndex(SelectableList<?> selectableList, int index) {
-		Object element = selectableList.get(index);
+	public void listSetCursor(CursorList<?> selectableList, int cursor) {
+		Object element = selectableList.get(cursor);
 		if (element instanceof Tool) {
 			imageView.setOnMousePressed(event -> {
 				((Tool) element).use(this, event);

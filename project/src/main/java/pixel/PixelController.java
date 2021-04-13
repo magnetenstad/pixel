@@ -105,7 +105,7 @@ public class PixelController {
 	private void removeLayerButtonOnAction(ActionEvent event) {
 		Sprite sprite = getSprite();
 		if (sprite != null) {
-			sprite.removeSpriteLayer();
+			sprite.removeSelected();
 		}
 	}
 	@FXML

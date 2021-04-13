@@ -5,11 +5,11 @@ import javafx.scene.control.ToggleGroup;
 import javafx.scene.control.Tooltip;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
-import pixel.SelectableList;
-import pixel.SelectableListListener;
+import pixel.CursorList;
+import pixel.CursorListListener;
 import pixel.palette.Palette;
 
-public class PaletteGui implements SelectableListListener {
+public class PaletteGui implements CursorListListener {
 	private ToggleGroup toggleGroup = new ToggleGroup();
 	private final Palette palette;
 	private Pane pane;
@@ -37,7 +37,7 @@ public class PaletteGui implements SelectableListListener {
 			if (palette != null)  {
 				for (int i = 0; i < palette.size(); i++) {
 					ToggleButton toggleButton = newColorButton(palette.get(i), i);
-					if (i == palette.getIndex()) {
+					if (i == palette.getCursor()) {
 						toggleButton.setPrefWidth(64);
 						toggleButton.setText("Selected");
 					}
@@ -54,23 +54,23 @@ public class PaletteGui implements SelectableListListener {
 		toggleButton.setTooltip(new Tooltip(color.toString()));
 		toggleButton.setStyle("-fx-border-color: #111111; -fx-border-width: 1px; -fx-background-color: #" + color.toString().replaceFirst("0x", ""));
 		toggleButton.setOnAction(event -> {
-			getPalette().setIndex(index);
+			getPalette().setCursor(index);
 		});
 		return toggleButton;
 	}
 
 	@Override
-	public void listAddedElement(SelectableList<?> selectableList, Object element) {
+	public void listAddedElement(CursorList<?> selectableList, Object element) {
 		updateGui();
 	}
 
 	@Override
-	public void listRemovedElement(SelectableList<?> selectableList, Object element) {
+	public void listRemovedElement(CursorList<?> selectableList, Object element) {
 		updateGui();
 	}
 
 	@Override
-	public void listSetIndex(SelectableList<?> selectableList, int index) {
+	public void listSetCursor(CursorList<?> selectableList, int cursor) {
 		updateGui();
 	}
 

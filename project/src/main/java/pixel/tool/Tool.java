@@ -1,11 +1,7 @@
 package pixel.tool;
 
-import java.util.Vector;
-
 import javafx.scene.input.MouseEvent;
-import javafx.scene.paint.Color;
 import pixel.gui.SpriteGui;
-import pixel.sprite.Sprite;
 
 public interface Tool {
 	

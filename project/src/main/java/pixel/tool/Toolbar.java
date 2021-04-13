@@ -2,10 +2,10 @@ package pixel.tool;
 
 import java.util.Collection;
 
-import pixel.SelectableList;
-import pixel.SelectableListListener;
+import pixel.CursorList;
+import pixel.CursorListListener;
 
-public class Toolbar extends SelectableList<Tool> implements SelectableListListener {
+public class Toolbar extends CursorList<Tool> implements CursorListListener {
 
 	public void addTools(Collection<Tool> tools) {
 		for (Tool tool : tools) {
@@ -23,17 +23,17 @@ public class Toolbar extends SelectableList<Tool> implements SelectableListListe
 	}
 
 	@Override
-	public void listAddedElement(SelectableList<?> selectableList, Object element) {
+	public void listAddedElement(CursorList<?> selectableList, Object element) {
 		// TODO Auto-generated method stub
 		
 	}
 	@Override
-	public void listRemovedElement(SelectableList<?> selectableList, Object element) {
+	public void listRemovedElement(CursorList<?> selectableList, Object element) {
 		// TODO Auto-generated method stub
 		
 	}
 	@Override
-	public void listSetIndex(SelectableList<?> selectableList, int index) {
-		updateToolColor(index);
+	public void listSetCursor(CursorList<?> selectableList, int cursor) {
+		updateToolColor(cursor);
 	}
 }
