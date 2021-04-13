@@ -5,27 +5,13 @@ import javafx.scene.input.MouseEvent;
 import pixel.gui.SpriteGui;
 import pixel.sprite.Sprite;
 
-public class LineTool implements Tool {
-	private String name = "Line";
-	private int size = 1;
-	private int color = 1;
+public class LineTool extends Tool {
 	private Integer[] startPos;
 	
-	@Override
-	public void setName(String name) {
-		this.name = name;
+	public LineTool() {
+		super("Line");
 	}
 	
-	@Override
-	public String getName() {
-		return name;
-	}
-	
-	@Override
-	public void setSize(int size) {
-		this.size = size;
-	}
-
 	@Override
 	public void use(SpriteGui spriteGui, MouseEvent event) {
 		Sprite sprite = spriteGui.getSprite();
@@ -53,14 +39,5 @@ public class LineTool implements Tool {
 				startPos = null;
 			}
 		}
-	}
-	@Override
-	public void setColor(int color) {
-		this.color = color;
-	}
-
-	@Override
-	public int getSize() {
-		return size;
 	}
 }

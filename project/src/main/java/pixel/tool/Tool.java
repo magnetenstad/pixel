@@ -3,19 +3,36 @@ package pixel.tool;
 import javafx.scene.input.MouseEvent;
 import pixel.gui.SpriteGui;
 
-public interface Tool {
+public abstract class Tool {
+	protected String name;
+	protected int size = 1;
+	protected int color = 0;
 	
-	public void setName(String name);
+	public Tool(String name) {
+		setName(name);
+	}
 	
-	public String getName();
+	public void setName(String name) {
+		this.name = name;
+	}
 	
-	public void setSize(int size);
+	public String getName() {
+		return name;
+	}
 	
-	public int getSize();
+	public void setSize(int size) {
+		this.size = size;
+	}
 	
-	public void use(SpriteGui spriteGui, MouseEvent event);
+	public int getSize() {
+		return size;
+	}
 	
-	public void setColor(int color);
+	public abstract void use(SpriteGui spriteGui, MouseEvent event);
+	
+	public void setColor(int color) {
+		this.color = color;
+	}
 	
 	public static Integer[] eventToPosition(SpriteGui spriteGui, MouseEvent event) {
 		Integer[] pos = new Integer[2];

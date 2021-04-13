@@ -8,25 +8,11 @@ import pixel.gui.SpriteGui;
 import pixel.sprite.Sprite;
 import pixel.sprite.SpriteLayer;
 
-public class BucketTool implements Tool {
-	private String name = "Bucket";
-	private int size = 1;
-	private int color = 1;
+public class BucketTool extends Tool {
 	private List<Point2D> neighbours = List.of(new Point2D(1, 0), new Point2D(0, -1), new Point2D(-1, 0), new Point2D(0, 1));
-	
-	@Override
-	public void setName(String name) {
-		this.name = name;
-	}
-	
-	@Override
-	public String getName() {
-		return name;
-	}
-	
-	@Override
-	public void setSize(int size) {
-		this.size = size;
+
+	public BucketTool() {
+		super("Bucket");
 	}
 	
 	@Override
@@ -50,15 +36,5 @@ public class BucketTool implements Tool {
 				fill(sprite, colorMatch, x + (int) neighbour.getX(), y + (int) neighbour.getY());
 			}
 		}
-	}
-	
-	@Override
-	public void setColor(int color) {
-		this.color = color;
-	}
-
-	@Override
-	public int getSize() {
-		return size;
 	}
 }
