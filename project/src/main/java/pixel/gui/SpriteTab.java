@@ -6,14 +6,18 @@ import javafx.scene.control.TabPane;
 import javafx.scene.layout.StackPane;
 import pixel.PixelApp;
 import pixel.PixelController;
+import pixel.cursorlist.CursorList;
+import pixel.cursorlist.CursorListEvent;
 import pixel.ext.ZoomableScrollPane;
 import pixel.sprite.Sprite;
+import pixel.sprite.SpriteListener;
 
-public class SpriteTab extends Tab {
+public class SpriteTab extends Tab implements SpriteListener {
 	private final SpriteGui spriteGui;
 	
 	public SpriteTab(SpriteGui spriteGui) {
 		this.spriteGui = spriteGui;
+		spriteGui.getSprite().addListener(this);
 		setText(spriteGui.getSprite().getPath());
 
 		StackPane pane = new StackPane();
@@ -31,5 +35,16 @@ public class SpriteTab extends Tab {
 	
 	public SpriteGui getSpriteGui() {
 		return spriteGui;
+	}
+
+	@Override
+	public void cursorListChanged(CursorList<?> cursorList, CursorListEvent event, Object element) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void spriteChanged(Sprite sprite) {
+		setText(sprite.getPath());
 	}
 }
