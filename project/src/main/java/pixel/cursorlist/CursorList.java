@@ -9,7 +9,7 @@ public class CursorList<T> implements Iterable<T> {
 	protected int cursor = -1;
 	
 	public T get(int cursor) {
-		if (isIndexValid(cursor)) {
+		if (isValidIndex(cursor)) {
 			return elements.get(cursor);
 		}
 		return null;
@@ -49,20 +49,20 @@ public class CursorList<T> implements Iterable<T> {
 		return cursor;
 	}
 	public T getSelected() {
-		if (isIndexValid(cursor)) {
+		if (isValidIndex(cursor)) {
 			return elements.get(cursor);			
 		}
 		return null;
 	}
 	public void setCursor(int cursor) {
-		if (!isIndexValid(cursor)) {
+		if (!isValidIndex(cursor)) {
 			throw new IllegalArgumentException();
 		}
 		this.cursor = cursor;
 		notifyListeners(CursorListEvent.CursorChanged);
 	}
 	
-	public boolean isIndexValid(int index) {
+	public boolean isValidIndex(int index) {
 		return 0 <= index && index < size();
 	}
 	

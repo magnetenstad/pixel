@@ -139,9 +139,11 @@ public class SpriteGui implements SpriteListener {
 		return (double) scale;
 	}
 	
+	/*
+	 * Listens to Sprite, ToolbarGui and PaletteGui
+	 */
 	@Override
 	public void cursorListChanged(CursorList<?> cursorList, CursorListEvent event, Object element) {
-		System.out.println(toString() + " notified by " + cursorList.toString());
 		if (event == CursorListEvent.CursorChanged || event == CursorListEvent.ListenerAdded) {
 			Object selected = cursorList.getSelected();
 			if (selected instanceof Tool) {
@@ -151,7 +153,7 @@ public class SpriteGui implements SpriteListener {
 				imageView.setOnMouseDragged(imageView.getOnMousePressed());
 				imageView.setOnMouseReleased(imageView.getOnMousePressed());
 			}
-			if (cursorList instanceof PaletteGui) {
+			if (cursorList == paletteGui) {
 				update();
 			}
 		}

@@ -83,11 +83,13 @@ public class PaletteGui extends CursorList<Palette> implements CursorListListene
 		}
 	}
 	
+	/*
+	 * Listens to the selected palette, and notifies listeners (SpriteGui, ToolbarGui) about changes.
+	 */
 	@Override
 	public void cursorListChanged(CursorList<?> cursorList, CursorListEvent event, Object element) {
-		rebuild();
-		System.out.println(toString() + " notified by " + cursorList.toString());
-		if (cursorList instanceof Palette) {
+		if (cursorList == getSelected()) {
+			rebuild();
 			notifyListeners(CursorListEvent.CursorChanged, (Palette) element);
 		}
 	}

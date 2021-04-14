@@ -36,10 +36,13 @@ public class SpriteTab extends Tab implements SpriteListener {
 	public SpriteGui getSpriteGui() {
 		return spriteGui;
 	}
-
+	
+	/*
+	 * Listens to Sprite
+	 */
 	@Override
 	public void cursorListChanged(CursorList<?> cursorList, CursorListEvent event, Object element) {
-		System.out.println(toString() + " notified by " + cursorList.toString());
+
 	}
 
 	@Override

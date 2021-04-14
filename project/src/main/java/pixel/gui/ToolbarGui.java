@@ -78,9 +78,11 @@ public class ToolbarGui implements CursorListListener {
 		}
 	}
 	
+	/*
+	 * Listens to toolbar and PaletteGui.
+	 */
 	@Override
 	public void cursorListChanged(CursorList<?> cursorList, CursorListEvent event, Object element) {
-		System.out.println(toString() + " notified by " + cursorList.toString());
 		if (cursorList instanceof PaletteGui) {
 			Palette palette = ((PaletteGui) cursorList).getSelected();
 			if (palette != null && palette.getCursor() != -1) {
