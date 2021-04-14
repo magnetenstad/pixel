@@ -12,6 +12,7 @@ import javafx.scene.layout.Pane;
 import pixel.cursorlist.CursorList;
 import pixel.cursorlist.CursorListEvent;
 import pixel.cursorlist.CursorListListener;
+import pixel.palette.Palette;
 import pixel.tool.Tool;
 import pixel.tool.Toolbar;
 
@@ -79,33 +80,42 @@ public class ToolbarGui implements CursorListListener {
 	
 	@Override
 	public void cursorListChanged(CursorList<?> cursorList, CursorListEvent event, Object element) {
-		switch (event) {
-		case ElementAdded:
-			if (element instanceof Tool) {
-				ToolButton toolButton = new ToolButton((Tool) element);
-				toolButtons.add(toolButton);
-				if (pane != null) {
-					pane.getChildren().add(toolButton);
-				}
+		System.out.println(toString() + " notified by " + cursorList.toString());
+		if (cursorList instanceof PaletteGui) {
+			Palette palette = ((PaletteGui) cursorList).getSelected();
+			if (palette != null && palette.getCursor() != -1) {
+				toolbar.updateToolColor(palette.getCursor());
 			}
-			break;
-		case CursorChanged:
-			for (ToolButton toolButton : toolButtons) {
-				toolButton.setSelected(toolButton.getTool() == cursorList.getSelected());
-			}
-			break;
-		case ElementRemoved:
-			for (ToolButton toolButton : toolButtons) {
-				if (toolButton.getTool() == element) {
-					toolButtons.remove(toolButton);
-					if (pane != null && pane.getChildren().contains(toolButton)) {
-						pane.getChildren().remove(toolButton);
+		}
+		else if (cursorList == toolbar) {
+			switch (event) {
+			case ElementAdded:
+				if (element instanceof Tool) {
+					ToolButton toolButton = new ToolButton((Tool) element);
+					toolButtons.add(toolButton);
+					if (pane != null) {
+						pane.getChildren().add(toolButton);
 					}
 				}
+				break;
+			case CursorChanged:
+				for (ToolButton toolButton : toolButtons) {
+					toolButton.setSelected(toolButton.getTool() == cursorList.getSelected());
+				}
+				break;
+			case ElementRemoved:
+				for (ToolButton toolButton : toolButtons) {
+					if (toolButton.getTool() == element) {
+						toolButtons.remove(toolButton);
+						if (pane != null && pane.getChildren().contains(toolButton)) {
+							pane.getChildren().remove(toolButton);
+						}
+					}
+				}
+				break;
+			default:
+				break;
 			}
-			break;
-		default:
-			break;
 		}
 	}
 }

@@ -30,7 +30,6 @@ import javafx.scene.layout.VBox;
  */
 public class PixelController {
 	private static FileManager fileManager;
-	private static Palette palette;
 	private static PaletteGui paletteGui;
 	private static ToolbarGui toolbarGui;
 	
@@ -65,10 +64,12 @@ public class PixelController {
 		toolbar.addTools(tools);
 		toolSizeSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 40, 1));
 		
-		palette = Palette.fromHexFile("src/main/resources/endesga-16.hex");
-		palette.addListener(toolbar);
-		paletteGui = new PaletteGui(palette);
+		paletteGui = new PaletteGui();
 		paletteGui.setPane(paletteVBox);
+		paletteGui.addListener(toolbarGui);
+		paletteGui.add(Palette.fromHexFile("src/main/resources/endesga-16.hex"));
+		paletteGui.add(Palette.fromHexFile("src/main/resources/curiosities.hex"));
+		paletteGui.add(Palette.fromHexFile("src/main/resources/vinik24.hex"));
 		
 		fileManager = new PixelFileManager();
 		rebuildRecentFilesMenu();
@@ -103,7 +104,7 @@ public class PixelController {
 	
 	public void newSpriteTab(Sprite sprite) {
 		if (sprite != null) {
-			SpriteGui spriteGui = new SpriteGui(sprite, palette);
+			SpriteGui spriteGui = new SpriteGui(sprite, paletteGui);
 			Toolbar toolbar = toolbarGui.getToolbar();
 			toolbar.addListener(spriteGui);
 			SpriteTab spriteTab = new SpriteTab(spriteGui);
@@ -203,7 +204,7 @@ public class PixelController {
 	private void exportFileOnAction(ActionEvent event) {
 		Sprite sprite = getSprite();
 		if (sprite != null) {
-			fileManager.exportSprite(sprite, palette);
+			fileManager.exportSprite(sprite, paletteGui.getSelected());
 		}
 	}
 }

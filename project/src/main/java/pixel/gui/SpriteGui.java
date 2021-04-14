@@ -30,25 +30,25 @@ public class SpriteGui implements SpriteListener {
 	private int height;
 	private int width;
 	private final static int scale = 32;
-	private Palette palette;
+	private PaletteGui paletteGui;
 	
-	public SpriteGui(Sprite sprite, Palette palette) {
-		if (sprite == null || palette == null) {
+	public SpriteGui(Sprite sprite, PaletteGui paletteGui) {
+		if (sprite == null || paletteGui == null) {
 			throw new NullPointerException("Sprite and palette cannot be null!");
 		}
-		this.sprite = sprite;
-		sprite.addListener(this);
-		this.palette = palette;
-		palette.addListener(this);
-		
 		this.width = sprite.getWidth();
 		this.height = sprite.getHeight();
 		
 		snapshotParameters.setFill(Color.TRANSPARENT);
 		writableImage = new WritableImage(width * scale, height * scale);
 		imageView.setImage(writableImage);
+		
+		this.sprite = sprite;
+		sprite.addListener(this);
+		this.paletteGui = paletteGui;
+		paletteGui.addListener(this);
 	}
-
+	
 	public static void setSpriteLayerPane(Pane pane) {
 		SpriteGui.spriteLayerGuiPane = pane;
 	}
@@ -57,7 +57,7 @@ public class SpriteGui implements SpriteListener {
 		Canvas combinedCanvas = new Canvas(getImageWidth(), getImageHeight());
 		GraphicsContext graphics = combinedCanvas.getGraphicsContext2D();
 		fillTransparentBackground(graphics);
-		drawSpriteLayersToGraphics(sprite, graphics, palette, scale);
+		drawSpriteLayersToGraphics(sprite, graphics, paletteGui.getSelected(), scale);
 		combinedCanvas.snapshot(snapshotParameters, writableImage);
 		
 		spriteLayerGuiPane.getChildren().clear();
@@ -80,8 +80,11 @@ public class SpriteGui implements SpriteListener {
 			if (spriteLayer.isVisible()) {
 				for (int x = 0; x < sprite.getWidth(); x++) {
 					for (int y = 0; y < sprite.getHeight(); y++) {
-						graphics.setFill(palette.get(spriteLayer.getPixel(x, y)));
-						graphics.fillRect(x * scale, y * scale, scale, scale);
+						Color color = palette.get(spriteLayer.getPixel(x, y));
+						if (color != null) {
+							graphics.setFill(color);
+							graphics.fillRect(x * scale, y * scale, scale, scale);
+						}
 					}
 				}
 			}
@@ -138,7 +141,8 @@ public class SpriteGui implements SpriteListener {
 	
 	@Override
 	public void cursorListChanged(CursorList<?> cursorList, CursorListEvent event, Object element) {
-		if (event == CursorListEvent.CursorChanged) {
+		System.out.println(toString() + " notified by " + cursorList.toString());
+		if (event == CursorListEvent.CursorChanged || event == CursorListEvent.ListenerAdded) {
 			Object selected = cursorList.getSelected();
 			if (selected instanceof Tool) {
 				imageView.setOnMousePressed(_event -> {
@@ -146,6 +150,9 @@ public class SpriteGui implements SpriteListener {
 				});
 				imageView.setOnMouseDragged(imageView.getOnMousePressed());
 				imageView.setOnMouseReleased(imageView.getOnMousePressed());
+			}
+			if (cursorList instanceof PaletteGui) {
+				update();
 			}
 		}
 	}

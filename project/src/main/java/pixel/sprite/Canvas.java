@@ -9,7 +9,7 @@ public class Canvas {
 		this.width = width;
 		this.height = height;
 		this.canvas = new Integer[width][height];
-		fillRect(0, 0, width, height, 0);
+		fillRect(0, 0, width, height, -1);
 	}
 	
 	public void fillRect(int x0, int y0, int width, int height, int color) {
@@ -39,7 +39,7 @@ public class Canvas {
 		if (!isPointInCanvas(x, y)) {
 			return;
 		}
-		canvas[x][y] = 0;
+		canvas[x][y] = -1;
 	}
 	
 	public boolean isPointInCanvas(int x, int y) {

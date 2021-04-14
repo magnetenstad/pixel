@@ -20,7 +20,6 @@ public class Palette extends CursorList<Color> {
 	
 	public static Palette fromHexFile(String path) {
 		Palette palette = new Palette();
-		palette.add(Color.TRANSPARENT);
 		try {
 			Scanner in = new Scanner(new FileReader(path));
 			while(in.hasNext()){

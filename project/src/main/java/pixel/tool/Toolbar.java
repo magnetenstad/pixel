@@ -5,8 +5,9 @@ import java.util.Collection;
 import pixel.cursorlist.CursorList;
 import pixel.cursorlist.CursorListEvent;
 import pixel.cursorlist.CursorListListener;
+import pixel.gui.PaletteGui;
 
-public class Toolbar extends CursorList<Tool> implements CursorListListener {
+public class Toolbar extends CursorList<Tool> {
 
 	public void addTools(Collection<Tool> tools) {
 		for (Tool tool : tools) {
@@ -21,10 +22,5 @@ public class Toolbar extends CursorList<Tool> implements CursorListListener {
 	}
 	public void updateToolSize(int size) {
 		getSelected().setSize(size);
-	}
-	
-	@Override
-	public void cursorListChanged(CursorList<?> cursorList, CursorListEvent event, Object element) {
-		updateToolColor(cursorList.getCursor());
 	}
 }

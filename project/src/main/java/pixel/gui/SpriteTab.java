@@ -39,8 +39,7 @@ public class SpriteTab extends Tab implements SpriteListener {
 
 	@Override
 	public void cursorListChanged(CursorList<?> cursorList, CursorListEvent event, Object element) {
-		// TODO Auto-generated method stub
-		
+		System.out.println(toString() + " notified by " + cursorList.toString());
 	}
 
 	@Override
