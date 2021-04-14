@@ -25,6 +25,6 @@ public class Toolbar extends CursorList<Tool> implements CursorListListener {
 	
 	@Override
 	public void cursorListChanged(CursorList<?> cursorList, CursorListEvent event, Object element) {
-		updateToolColor(cursor);
+		updateToolColor(cursorList.getCursor());
 	}
 }

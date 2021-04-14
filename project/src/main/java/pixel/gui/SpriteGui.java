@@ -138,16 +138,18 @@ public class SpriteGui implements SpriteListener {
 	
 	@Override
 	public void cursorListChanged(CursorList<?> cursorList, CursorListEvent event, Object element) {
-		Object selected = cursorList.getSelected();
-		if (selected instanceof Tool) {
-			imageView.setOnMousePressed(_event -> {
-				((Tool) selected).use(this, _event);
-			});
-			imageView.setOnMouseDragged(imageView.getOnMousePressed());
-			imageView.setOnMouseReleased(imageView.getOnMousePressed());
+		if (event == CursorListEvent.CursorChanged) {
+			Object selected = cursorList.getSelected();
+			if (selected instanceof Tool) {
+				imageView.setOnMousePressed(_event -> {
+					((Tool) selected).use(this, _event);
+				});
+				imageView.setOnMouseDragged(imageView.getOnMousePressed());
+				imageView.setOnMouseReleased(imageView.getOnMousePressed());
+			}
 		}
 	}
-
+	
 	@Override
 	public void spriteChanged(Sprite sprite) {
 		update();

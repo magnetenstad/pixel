@@ -104,6 +104,7 @@ public class Sprite extends CursorList<SpriteLayer> {
 		super.addListener(listener);
 		listeners.add(listener);
 	}
+	
 	public void removeListener(SpriteListener listener) {
 		super.removeListener(listener);
 		listeners.remove(listener);

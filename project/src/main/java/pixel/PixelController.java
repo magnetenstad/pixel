@@ -45,9 +45,9 @@ public class PixelController {
 	@FXML
 	private Button newLayerButton, removeLayerButton, moveLayerUpButton, moveLayerDownButton;
 	@FXML
-	private MenuItem newFile, openFile, closeFile, saveFile, saveFileAs, exportFile;
+	private MenuItem openFile, closeFile, saveFile, saveFileAs, exportFile;
 	@FXML
-	private Menu recentFiles;
+	private Menu newFile, recentFiles;
 	
 	/*
 	 * Initializes FXML elements.
@@ -55,6 +55,7 @@ public class PixelController {
 	@FXML
 	private void initialize() {
 		SpriteGui.setSpriteLayerPane(layersVBox);
+		tabPane.setTabClosingPolicy(TabClosingPolicy.SELECTED_TAB);
 		
 		Toolbar toolbar = new Toolbar();
 		toolbarGui = new ToolbarGui(toolbar);
@@ -62,6 +63,7 @@ public class PixelController {
 		toolbarGui.setToolSizeSpinner(toolSizeSpinner);
 		List<Tool> tools = List.of(new PencilTool(), new EraserTool(), new LineTool(), new BucketTool());
 		toolbar.addTools(tools);
+		toolSizeSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 40, 1));
 		
 		palette = Palette.fromHexFile("src/main/resources/endesga-16.hex");
 		palette.addListener(toolbar);
@@ -70,8 +72,17 @@ public class PixelController {
 		
 		fileManager = new PixelFileManager();
 		rebuildRecentFilesMenu();
-		tabPane.setTabClosingPolicy(TabClosingPolicy.SELECTED_TAB);
-		toolSizeSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 40, 1));
+		
+		for (int i = 2; i < 8; i++) {
+			int size = (int) Math.pow(2, i);
+			MenuItem menuItem = new MenuItem("" + size + "x" + size);
+			menuItem.setOnAction(event -> {
+				Sprite sprite = new Sprite(size, size);
+				sprite.addSpriteLayer();
+				newSpriteTab(sprite);
+			});
+			newFile.getItems().add(menuItem);
+		}
 	}
 	
 	/*
@@ -153,13 +164,7 @@ public class PixelController {
 	}
 	
 	// 1.3 File buttons
-	
-	@FXML
-	private void newFileOnAction(ActionEvent event) {
-		Sprite sprite = new Sprite(32, 32);
-		sprite.addSpriteLayer();
-		newSpriteTab(sprite);
-	}
+
 	@FXML
 	private void openFileOnAction(ActionEvent event) {
 		Sprite sprite = fileManager.loadSprite();
