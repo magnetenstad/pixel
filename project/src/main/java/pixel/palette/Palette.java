@@ -3,7 +3,7 @@ package pixel.palette;
 import java.io.FileReader;
 import java.util.Scanner;
 import javafx.scene.paint.Color;
-import pixel.CursorList;
+import pixel.cursorlist.CursorList;
 
 public class Palette extends CursorList<Color> {
 	public static Color Color(String hex) {

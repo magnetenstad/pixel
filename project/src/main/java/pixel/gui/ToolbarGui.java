@@ -9,8 +9,9 @@ import javafx.scene.control.Spinner;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.Pane;
-import pixel.CursorList;
-import pixel.CursorListListener;
+import pixel.cursorlist.CursorList;
+import pixel.cursorlist.CursorListEvent;
+import pixel.cursorlist.CursorListListener;
 import pixel.tool.Tool;
 import pixel.tool.Toolbar;
 
@@ -75,34 +76,36 @@ public class ToolbarGui implements CursorListListener {
 			return tool;
 		}
 	}
-
-	@Override
-	public void listAddedElement(CursorList<?> selectableList, Object element) {
-		if (element instanceof Tool) {
-			ToolButton toolButton = new ToolButton((Tool) element);
-			toolButtons.add(toolButton);
-			if (pane != null) {
-				pane.getChildren().add(toolButton);
-			}
-		}
-	}
 	
 	@Override
-	public void listRemovedElement(CursorList<?> selectableList, Object element) {
-		for (ToolButton toolButton : toolButtons) {
-			if (toolButton.getTool() == element) {
-				toolButtons.remove(toolButton);
-				if (pane != null && pane.getChildren().contains(toolButton)) {
-					pane.getChildren().remove(toolButton);
+	public void cursorListChanged(CursorList<?> cursorList, CursorListEvent event, Object element) {
+		switch (event) {
+		case ElementAdded:
+			if (element instanceof Tool) {
+				ToolButton toolButton = new ToolButton((Tool) element);
+				toolButtons.add(toolButton);
+				if (pane != null) {
+					pane.getChildren().add(toolButton);
 				}
 			}
+			break;
+		case CursorChanged:
+			for (ToolButton toolButton : toolButtons) {
+				toolButton.setSelected(toolButton.getTool() == cursorList.getSelected());
+			}
+			break;
+		case ElementRemoved:
+			for (ToolButton toolButton : toolButtons) {
+				if (toolButton.getTool() == element) {
+					toolButtons.remove(toolButton);
+					if (pane != null && pane.getChildren().contains(toolButton)) {
+						pane.getChildren().remove(toolButton);
+					}
+				}
+			}
+			break;
+		default:
+			break;
 		}
 	}
-
-	@Override
-	public void listSetCursor(CursorList<?> selectableList, int index) {
-		for (ToolButton toolButton : toolButtons) {
-			toolButton.setSelected(toolButton.getTool() == selectableList.get(index));
-		}
-	};
 }

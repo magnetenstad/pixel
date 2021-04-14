@@ -2,8 +2,9 @@ package pixel.tool;
 
 import java.util.Collection;
 
-import pixel.CursorList;
-import pixel.CursorListListener;
+import pixel.cursorlist.CursorList;
+import pixel.cursorlist.CursorListEvent;
+import pixel.cursorlist.CursorListListener;
 
 public class Toolbar extends CursorList<Tool> implements CursorListListener {
 
@@ -21,19 +22,9 @@ public class Toolbar extends CursorList<Tool> implements CursorListListener {
 	public void updateToolSize(int size) {
 		getSelected().setSize(size);
 	}
-
+	
 	@Override
-	public void listAddedElement(CursorList<?> selectableList, Object element) {
-		// TODO Auto-generated method stub
-		
-	}
-	@Override
-	public void listRemovedElement(CursorList<?> selectableList, Object element) {
-		// TODO Auto-generated method stub
-		
-	}
-	@Override
-	public void listSetCursor(CursorList<?> selectableList, int cursor) {
+	public void cursorListChanged(CursorList<?> cursorList, CursorListEvent event, Object element) {
 		updateToolColor(cursor);
 	}
 }

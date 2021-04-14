@@ -5,8 +5,9 @@ import javafx.scene.control.ToggleGroup;
 import javafx.scene.control.Tooltip;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
-import pixel.CursorList;
-import pixel.CursorListListener;
+import pixel.cursorlist.CursorList;
+import pixel.cursorlist.CursorListEvent;
+import pixel.cursorlist.CursorListListener;
 import pixel.palette.Palette;
 
 public class PaletteGui implements CursorListListener {
@@ -60,18 +61,7 @@ public class PaletteGui implements CursorListListener {
 	}
 
 	@Override
-	public void listAddedElement(CursorList<?> selectableList, Object element) {
+	public void cursorListChanged(CursorList<?> cursorList, CursorListEvent event, Object element) {
 		updateGui();
 	}
-
-	@Override
-	public void listRemovedElement(CursorList<?> selectableList, Object element) {
-		updateGui();
-	}
-
-	@Override
-	public void listSetCursor(CursorList<?> selectableList, int cursor) {
-		updateGui();
-	}
-
 }

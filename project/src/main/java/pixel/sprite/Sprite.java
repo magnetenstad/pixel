@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 import javafx.scene.image.Image;
-import pixel.CursorList;
-import pixel.CursorListListener;
+import pixel.cursorlist.CursorList;
+import pixel.cursorlist.CursorListListener;
 import pixel.gui.SpriteGui;
 import pixel.palette.Palette;
 

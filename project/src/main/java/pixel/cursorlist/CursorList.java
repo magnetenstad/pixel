@@ -1,4 +1,4 @@
-package pixel;
+package pixel.cursorlist;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -16,7 +16,7 @@ public class CursorList<T> implements Iterable<T> {
 	}
 	public void add(T element) {
 		elements.add(element);
-		notifyAddedElement(element);
+		notifyListeners(CursorListEvent.ElementAdded, element);	
 		if (cursor == -1) {
 			select(element);
 		}
@@ -26,7 +26,7 @@ public class CursorList<T> implements Iterable<T> {
 			setCursor(-1);
 		}
 		elements.remove(element);
-		notifyRemovedElement(element);		
+		notifyListeners(CursorListEvent.ElementRemoved, element);		
 	}
 
 	public void removeSelected() {
@@ -53,30 +53,24 @@ public class CursorList<T> implements Iterable<T> {
 			throw new IllegalArgumentException();
 		}
 		this.cursor = cursor;
-		notifySetIndex();
+		notifyListeners(CursorListEvent.CursorChanged);
 	}
 	
 	public void addListener(CursorListListener listener) {
 		listeners.add(listener);
-		notifySetIndex();
+		notifyListeners(CursorListEvent.ListenerAdded);
 	}
 	public void removeListener(CursorListListener listener) {
 		listeners.remove(listener);
 	}
 	
-	public void notifyAddedElement(T element) {
-		for (CursorListListener listener : listeners) {
-			listener.listAddedElement(this, element);
-		}
+	public void notifyListeners(CursorListEvent event) {
+		notifyListeners(event, null);
 	}
-	public void notifyRemovedElement(T element) {
+	
+	public void notifyListeners(CursorListEvent event, T element) {
 		for (CursorListListener listener : listeners) {
-			listener.listRemovedElement(this, element);
-		}
-	}
-	public void notifySetIndex() {
-		for (CursorListListener listener : listeners) {
-			listener.listSetCursor(this, cursor);
+			listener.cursorListChanged(this, event, element);
 		}
 	}
 	

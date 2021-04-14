@@ -1,6 +1,6 @@
 package pixel.sprite;
 
-import pixel.CursorListListener;
+import pixel.cursorlist.CursorListListener;
 
 public interface SpriteListener extends CursorListListener {
 	

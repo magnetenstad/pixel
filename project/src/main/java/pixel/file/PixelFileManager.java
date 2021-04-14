@@ -110,7 +110,7 @@ public class PixelFileManager implements FileManager {
 	
 	@Override
 	public void exportSprite(Sprite sprite, Palette palette) {
-		File file = showSaveDialog(new ExtensionFilter("Pixel Files", "*.png"));
+		File file = showSaveDialog(new ExtensionFilter("PNG Files", "*.png"));
 		if (file != null) {
 			exportSprite(file.getAbsolutePath(), sprite, palette);
 		}
