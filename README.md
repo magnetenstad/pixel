@@ -14,3 +14,9 @@
 ## UML
 
 ![UML](UML.png "UML")
+
+## Todo
+
+- Choose size of new sprite
+- Import palettes
+- Edit layer names
