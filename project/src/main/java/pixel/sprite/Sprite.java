@@ -5,6 +5,7 @@ import java.util.Iterator;
 
 import javafx.scene.image.Image;
 import pixel.cursorlist.CursorList;
+import pixel.cursorlist.CursorListEvent;
 import pixel.cursorlist.CursorListListener;
 import pixel.gui.SpriteGui;
 import pixel.palette.Palette;
@@ -13,7 +14,7 @@ import pixel.palette.Palette;
  * 
  */
 public class Sprite extends CursorList<SpriteLayer> {
-	protected ArrayList<SpriteListener> listeners = new ArrayList<>();
+	protected ArrayList<CursorListListener> listeners = new ArrayList<>();
 	private String path = "new sprite";
 	private int width;
 	private int height;
@@ -32,7 +33,7 @@ public class Sprite extends CursorList<SpriteLayer> {
 		}
 		getSelected().fillRect(x, y, width, height, color);
 		if (notify) {
-			spriteChanged();
+			notifyListeners(CursorListEvent.ElementChanged, getSelected());
 		}
 	}
 	
@@ -44,17 +45,15 @@ public class Sprite extends CursorList<SpriteLayer> {
 			return;
 		}
 		getSelected().clearRect(x, y, width, height);
-		spriteChanged();
+		notifyListeners(CursorListEvent.ElementChanged, getSelected());
 	}
 	
 	public boolean isSpriteLayerEditable() {
 		return (getSelected() != null && getSelected().isVisible());
 	}
 	
-	public SpriteLayer addSpriteLayer() {
-		SpriteLayer spriteLayer = new SpriteLayer(this);
-		add(spriteLayer);
-		return spriteLayer;
+	public void addSpriteLayer() {
+		add(new SpriteLayer(this));
 	}
 
 	public int getWidth() {
@@ -69,7 +68,7 @@ public class Sprite extends CursorList<SpriteLayer> {
 	}
 	public void setPath(String path) {
 		this.path = path;
-		spriteChanged();
+		notifyListeners(CursorListEvent.ElementChanged);
 	}
 	
 	public void moveSpriteLayerUp() {
@@ -79,7 +78,7 @@ public class Sprite extends CursorList<SpriteLayer> {
 			elements.set(cursor - 1, spriteLayerB);
 			elements.set(cursor, spriteLayerA);
 			select(spriteLayerB);
-			spriteChanged();
+			notifyListeners(CursorListEvent.ElementsReordered);
 		}
 	}
 	
@@ -90,22 +89,16 @@ public class Sprite extends CursorList<SpriteLayer> {
 			elements.set(cursor, spriteLayerB);
 			elements.set(cursor + 1, spriteLayerA);
 			select(spriteLayerA);
-			spriteChanged();
+			notifyListeners(CursorListEvent.ElementsReordered);
 		}
 	}
 	
-	public void spriteChanged() {
-		for (SpriteListener listener : listeners) {
-			listener.spriteChanged(this);
-		}
-	}
-	
-	public void addListener(SpriteListener listener) {
+	public void addListener(CursorListListener listener) {
 		super.addListener(listener);
 		listeners.add(listener);
 	}
 	
-	public void removeListener(SpriteListener listener) {
+	public void removeListener(CursorListListener listener) {
 		super.removeListener(listener);
 		listeners.remove(listener);
 	}

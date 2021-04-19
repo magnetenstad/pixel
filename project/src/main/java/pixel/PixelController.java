@@ -75,7 +75,7 @@ public class PixelController {
 		fileManager = new PixelFileManager();
 		rebuildRecentFilesMenu();
 		
-		for (int i = 2; i < 8; i++) {
+		for (int i = 2; i < 7; i++) {
 			int size = (int) Math.pow(2, i);
 			MenuItem menuItem = new MenuItem("" + size + "x" + size);
 			menuItem.setOnAction(event -> {
@@ -105,10 +105,17 @@ public class PixelController {
 	
 	public void newSpriteTab(Sprite sprite) {
 		if (sprite != null) {
-			SpriteTab spriteTab = new SpriteTab(new SpriteGui(sprite, paletteGui, toolbarGui.getToolbar()));
+			SpriteGui spriteGui = newSpriteGui(sprite);
+			SpriteTab spriteTab = new SpriteTab(spriteGui);
 			tabPane.getTabs().add(spriteTab);
 			tabPane.getSelectionModel().select(spriteTab);
 		}
+	}
+	public SpriteGui newSpriteGui(Sprite sprite) {
+		SpriteGui spriteGui = new SpriteGui(sprite);
+		toolbarGui.getToolbar().addListener(spriteGui);
+		paletteGui.addListener(spriteGui);
+		return spriteGui;
 	}
 	
 	private void rebuildRecentFilesMenu() {
@@ -136,7 +143,7 @@ public class PixelController {
 	@FXML
 	private void removeLayerButtonOnAction(ActionEvent event) {
 		Sprite sprite = getSprite();
-		if (sprite != null) {
+		if (sprite != null && sprite.getSelected() != null) {
 			sprite.removeSelected();
 		}
 	}

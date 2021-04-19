@@ -27,7 +27,7 @@ public class CursorList<T> implements Iterable<T> {
 	}
 	
 	/*
-	 * Adds the given element to the end of the list.
+	 * Appends the given element to the end of the list.
 	 * Notifies listeners.
 	 * Selects the element if no element is selected.
 	 * @param element
@@ -36,7 +36,7 @@ public class CursorList<T> implements Iterable<T> {
 		elements.add(element);
 		notifyListeners(CursorListEvent.ElementAdded, element);	
 		if (cursor == -1) {
-			select(element);
+			setCursor(0);
 		}
 	}
 	

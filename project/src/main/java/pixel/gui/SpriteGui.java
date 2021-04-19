@@ -17,11 +17,10 @@ import pixel.cursorlist.CursorListListener;
 import pixel.palette.Palette;
 import pixel.sprite.Sprite;
 import pixel.sprite.SpriteLayer;
-import pixel.sprite.SpriteListener;
 import pixel.tool.Tool;
 import pixel.tool.Toolbar;
 
-public class SpriteGui implements SpriteListener {
+public class SpriteGui implements CursorListListener {
 	private static final SnapshotParameters snapshotParameters = new SnapshotParameters();
 	private ToggleGroup toggleGroup = new ToggleGroup();
 	private ImageView imageView = new ImageView();
@@ -33,8 +32,11 @@ public class SpriteGui implements SpriteListener {
 	private final static int scale = 32;
 	private PaletteGui paletteGui;
 	
-	public SpriteGui(Sprite sprite, PaletteGui paletteGui, Toolbar toolbar) {
-		if (sprite == null || paletteGui == null) {
+	/*
+	 * Listens to Sprite, toolbar and PaletteGui
+	 */
+	public SpriteGui(Sprite sprite) {
+		if (sprite == null) {
 			throw new NullPointerException("Sprite and palette cannot be null!");
 		}
 		this.width = sprite.getWidth();
@@ -46,22 +48,27 @@ public class SpriteGui implements SpriteListener {
 		
 		this.sprite = sprite;
 		sprite.addListener(this);
-		this.paletteGui = paletteGui;
-		paletteGui.addListener(this);
-		toolbar.addListener(this);
 	}
 	
 	public static void setSpriteLayerPane(Pane pane) {
 		SpriteGui.spriteLayerGuiPane = pane;
 	}
 	
-	public void update() {
+	public void rebuildSprite() {
+		if (paletteGui == null || paletteGui.getSelected() == null) {
+			throw new IllegalStateException("Needs palette to build sprite!");
+		}
 		Canvas combinedCanvas = new Canvas(getImageWidth(), getImageHeight());
 		GraphicsContext graphics = combinedCanvas.getGraphicsContext2D();
 		fillTransparentBackground(graphics);
 		drawSpriteLayersToGraphics(sprite, graphics, paletteGui.getSelected(), scale);
 		combinedCanvas.snapshot(snapshotParameters, writableImage);
-		
+	}
+	
+	public void rebuildLayers() {
+		if (spriteLayerGuiPane == null) {
+			throw new IllegalStateException("Needs spriteLayerGuiPane to build layers!");
+		}
 		spriteLayerGuiPane.getChildren().clear();
 		for (SpriteLayer spriteLayer : sprite) {
 			spriteLayerGuiPane.getChildren().add(newSpriteLayerGui(spriteLayer));
@@ -82,8 +89,9 @@ public class SpriteGui implements SpriteListener {
 			if (spriteLayer.isVisible()) {
 				for (int x = 0; x < sprite.getWidth(); x++) {
 					for (int y = 0; y < sprite.getHeight(); y++) {
-						Color color = palette.get(spriteLayer.getPixel(x, y));
-						if (color != null) {
+						int index = spriteLayer.getPixel(x, y);
+						if (palette.isValidIndex(index)) {
+							Color color = palette.get(index);
 							graphics.setFill(color);
 							graphics.fillRect(x * scale, y * scale, scale, scale);
 						}
@@ -116,7 +124,7 @@ public class SpriteGui implements SpriteListener {
 		layerCheckBox.setSelected(spriteLayer.isVisible());
 		layerCheckBox.setOnAction(event -> {
 			spriteLayer.setVisible(layerCheckBox.isSelected());
-			sprite.spriteChanged();
+			sprite.notifyListeners(CursorListEvent.ElementChanged, spriteLayer);
 		});
 		return gui;
 	}
@@ -146,23 +154,26 @@ public class SpriteGui implements SpriteListener {
 	 */
 	@Override
 	public void cursorListChanged(CursorList<?> cursorList, CursorListEvent event, Object element) {
-		if (event == CursorListEvent.CursorChanged || event == CursorListEvent.ListenerAdded) {
-			Object selected = cursorList.getSelected();
-			if (selected instanceof Tool) {
-				imageView.setOnMousePressed(_event -> {
-					((Tool) selected).use(this, _event);
-				});
-				imageView.setOnMouseDragged(imageView.getOnMousePressed());
-				imageView.setOnMouseReleased(imageView.getOnMousePressed());
-			}
-			if (cursorList == paletteGui) {
-				update();
-			}
+		if (cursorList instanceof Toolbar && (event == CursorListEvent.CursorChanged || event == CursorListEvent.ListenerAdded)) {
+			Tool tool = (Tool) cursorList.getSelected();
+			imageView.setOnMousePressed(_event -> {
+				((Tool) tool).use(this, _event);
+			});
+			imageView.setOnMouseDragged(imageView.getOnMousePressed());
+			imageView.setOnMouseReleased(imageView.getOnMousePressed());
 		}
-	}
-	
-	@Override
-	public void spriteChanged(Sprite sprite) {
-		update();
+		else if (cursorList instanceof PaletteGui) {
+			paletteGui = (PaletteGui) cursorList;
+			rebuildSprite();
+		}
+		else if (cursorList instanceof Sprite) {
+			if (paletteGui != null && paletteGui.getSelected() != null) {
+				rebuildSprite();
+			}
+			if (spriteLayerGuiPane != null) {
+				rebuildLayers();
+			}
+			
+		}
 	}
 }

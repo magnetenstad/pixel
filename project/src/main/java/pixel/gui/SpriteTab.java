@@ -2,17 +2,14 @@ package pixel.gui;
 
 import javafx.geometry.Pos;
 import javafx.scene.control.Tab;
-import javafx.scene.control.TabPane;
 import javafx.scene.layout.StackPane;
-import pixel.PixelApp;
-import pixel.PixelController;
 import pixel.cursorlist.CursorList;
 import pixel.cursorlist.CursorListEvent;
+import pixel.cursorlist.CursorListListener;
 import pixel.ext.ZoomableScrollPane;
 import pixel.sprite.Sprite;
-import pixel.sprite.SpriteListener;
 
-public class SpriteTab extends Tab implements SpriteListener {
+public class SpriteTab extends Tab implements CursorListListener {
 	private final SpriteGui spriteGui;
 	
 	public SpriteTab(SpriteGui spriteGui) {
@@ -29,7 +26,7 @@ public class SpriteTab extends Tab implements SpriteListener {
 		
 		setContent(new ZoomableScrollPane(pane));
 		setOnSelectionChanged(event -> {
-			spriteGui.update();
+			spriteGui.rebuildSprite();
 		});
 	}
 	
@@ -42,11 +39,8 @@ public class SpriteTab extends Tab implements SpriteListener {
 	 */
 	@Override
 	public void cursorListChanged(CursorList<?> cursorList, CursorListEvent event, Object element) {
-
-	}
-
-	@Override
-	public void spriteChanged(Sprite sprite) {
-		setText(sprite.getPath());
+		if (cursorList instanceof Sprite) {
+			setText(((Sprite) cursorList).getPath());
+		}
 	}
 }
