@@ -22,23 +22,26 @@ import pixel.sprite.SpriteLayer;
 import pixel.tool.Tool;
 import pixel.tool.Toolbar;
 
+/**
+ * A gui to interact with a sprite.
+ * Includes both the sprite image and the layers.
+ * Should listen to its sprite, a toolbar and a paletteGui.
+ * @author Magne Tenstad
+ */
 public class SpriteGui implements CursorListListener {
 	private static final SnapshotParameters snapshotParameters = new SnapshotParameters();
+	private static Pane spriteLayerGuiPane;
+	private final static int scale = 32;
 	private ToggleGroup toggleGroup = new ToggleGroup();
 	private ImageView imageView = new ImageView();
 	private WritableImage writableImage;
-	private static Pane spriteLayerGuiPane;
+	private PaletteGui paletteGui;
 	private final Sprite sprite;
 	private int height;
 	private int width;
-	private final static int scale = 32;
-	private PaletteGui paletteGui;
 	private int mouseXPrev;
 	private int mouseYPrev;
 	
-	/*
-	 * Listens to Sprite, toolbar and PaletteGui
-	 */
 	public SpriteGui(Sprite sprite) {
 		if (sprite == null) {
 			throw new NullPointerException("Sprite and palette cannot be null!");
@@ -54,10 +57,17 @@ public class SpriteGui implements CursorListListener {
 		sprite.addListener(this);
 	}
 	
+	/**
+	 * Sets the pane for building the layer gui.
+	 * @param pane
+	 */
 	public static void setSpriteLayerPane(Pane pane) {
 		SpriteGui.spriteLayerGuiPane = pane;
 	}
 	
+	/**
+	 * Rebuilds the sprite gui.
+	 */
 	public void rebuildSprite() {
 		if (paletteGui == null || paletteGui.getSelected() == null) {
 			throw new IllegalStateException("Needs palette to build sprite!");
@@ -69,6 +79,9 @@ public class SpriteGui implements CursorListListener {
 		combinedCanvas.snapshot(snapshotParameters, writableImage);
 	}
 	
+	/**
+	 * Rebuilds the sprite layers' guis.
+	 */
 	public void rebuildLayers() {
 		if (spriteLayerGuiPane == null) {
 			throw new IllegalStateException("Needs spriteLayerGuiPane to build layers!");
@@ -79,6 +92,10 @@ public class SpriteGui implements CursorListListener {
 		}
 	}
 	
+	/**
+	 * Fills the given graphics with a pattern to represent transparency.
+	 * @param graphics
+	 */
 	private void fillTransparentBackground(GraphicsContext graphics) {
 		for (int x = 0; x < width; x++) {
 			for (int y = 0; y < height; y++) {
@@ -88,6 +105,13 @@ public class SpriteGui implements CursorListListener {
 		}
 	}
 	
+	/**
+	 * Draws the layers of the given sprite to the given graphics using the given palette, at the given scale.
+	 * @param sprite
+	 * @param graphics
+	 * @param palette
+	 * @param scale
+	 */
 	public static void drawSpriteLayersToGraphics(Sprite sprite, GraphicsContext graphics, Palette palette, double scale) {
 		for (SpriteLayer spriteLayer : sprite) {
 			if (spriteLayer.isVisible()) {
@@ -105,6 +129,12 @@ public class SpriteGui implements CursorListListener {
 		}
 	}
 	
+	/**
+	 * Draws the layers of the given sprite to a WritableImage, at scale 1.
+	 * @param sprite
+	 * @param palette
+	 * @return writableImage
+	 */
 	public static WritableImage exportImage(Sprite sprite, Palette palette) {
 		WritableImage writableImage = new WritableImage(sprite.getWidth(), sprite.getHeight());
 		Canvas canvas = new Canvas(sprite.getWidth(), sprite.getHeight());
@@ -114,6 +144,11 @@ public class SpriteGui implements CursorListListener {
 		return writableImage;
 	}
 	
+	/**
+	 * Builds a gui for the given SpriteLayer.
+	 * @param spriteLayer
+	 * @return spriteLayerGui
+	 */
 	private HBox newSpriteLayerGui(SpriteLayer spriteLayer) {
 		HBox gui = new HBox();
 		ToggleButton layerButton = new ToggleButton(spriteLayer.getName());
@@ -133,28 +168,48 @@ public class SpriteGui implements CursorListListener {
 		return gui;
 	}
 	
+	/**
+	 * 
+	 * @return imageView
+	 */
 	public ImageView getImageView() {
 		return imageView;
 	}
 	
+	/**
+	 * Gets the height of the writableImage (sprite height * scale)
+	 * @return height
+	 */
 	public double getImageHeight() {
 		return writableImage.getHeight();
 	}
 	
+	/**
+	 * Gets the width of the writableImage (sprite width * scale)
+	 * @return width
+	 */
 	public double getImageWidth() {
 		return writableImage.getWidth();
 	}
-
+	
+	/**
+	 * 
+	 * @return sprite
+	 */
 	public Sprite getSprite() {
 		return sprite;
 	}
 	
+	/**
+	 * 
+	 * @return scale
+	 */
 	public double getScale() {
 		return scale;
 	}
 	
 	/*
-	 * Listens to Sprite, toolbar and PaletteGui
+	 * Listens to its sprite, Toolbar and PaletteGui.
 	 */
 	@Override
 	public void cursorListChanged(CursorList<?> cursorList, CursorListEvent event, Object element) {

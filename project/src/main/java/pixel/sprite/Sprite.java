@@ -1,21 +1,19 @@
 package pixel.sprite;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-
 import javafx.scene.image.Image;
 import pixel.cursorlist.CursorList;
 import pixel.cursorlist.CursorListEvent;
-import pixel.cursorlist.CursorListListener;
 import pixel.gui.SpriteGui;
 import pixel.palette.Palette;
 
-/*
- * 
+/**
+ * An extension of CursorList<SpriteLayer>,
+ * with methods to draw to the selected SpriteLayer.
+ * @author Magne Tenstad
+ *
  */
 public class Sprite extends CursorList<SpriteLayer> {
-	protected ArrayList<CursorListListener> listeners = new ArrayList<>();
-	private String path = "new sprite";
+	private String path = "New sprite";
 	private int width;
 	private int height;
 	
@@ -24,9 +22,30 @@ public class Sprite extends CursorList<SpriteLayer> {
 		this.height = height;
 	}
 	
+	/**
+	 * Fills the given rect of the selected SpriteLayer with the given integer,
+	 * if the spriteLayer is editable.
+	 * Notifies listeners.
+	 * @param x0
+	 * @param y0
+	 * @param width
+	 * @param height
+	 * @param color
+	 */
 	public void fillRect(int x, int y, int width, int height, int color) {
 		fillRect(x, y, width, height, color, true);
 	}
+	
+	/**
+	 * Fills the given rect of the selected SpriteLayer with the given integer,
+	 * if the spriteLayer is editable.
+	 * Notifies listeners if notify is true.
+	 * @param x0
+	 * @param y0
+	 * @param width
+	 * @param height
+	 * @param color
+	 */
 	public void fillRect(int x, int y, int width, int height, int color, boolean notify) {
 		if (!isSpriteLayerEditable()) {
 			return;
@@ -37,9 +56,30 @@ public class Sprite extends CursorList<SpriteLayer> {
 		}
 	}
 	
+	/**
+	 * Clears the given rect of the selected SpriteLayer with -1,
+	 * if the spriteLayer is editable.
+	 * Notifies listeners.
+	 * @param x0
+	 * @param y0
+	 * @param width
+	 * @param height
+	 * @param color
+	 */
 	public void clearRect(int x, int y, int width, int height) {
 		clearRect(x, y, width, height, true);
 	}
+	
+	/**
+	 * Clears the given rect of the selected SpriteLayer with -1,
+	 * if the spriteLayer is editable.
+	 * Notifies listeners if notify is true.
+	 * @param x0
+	 * @param y0
+	 * @param width
+	 * @param height
+	 * @param color
+	 */
 	public void clearRect(int x, int y, int width, int height, boolean notify) {
 		if (!isSpriteLayerEditable()) {
 			return;
@@ -50,51 +90,53 @@ public class Sprite extends CursorList<SpriteLayer> {
 		}
 	}
 	
+	/**
+	 * 
+	 * @return Whether or not the selected spriteLayer is editable.
+	 */
 	public boolean isSpriteLayerEditable() {
 		return getSelected() != null && getSelected().isVisible();
 	}
 	
-	public void addSpriteLayer() {
-		add(new SpriteLayer(this));
-	}
-
+	/**
+	 * 
+	 * @return width
+	 */
 	public int getWidth() {
 		return width;
 	}
+	
+	/**
+	 * 
+	 * @return height
+	 */
 	public int getHeight() {
 		return height;
 	}
 	
+	/**
+	 * Gets the last path this sprite was saved to.
+	 * Is also used for naming.
+	 * @return path
+	 */
 	public String getPath() {
 		return path;
 	}
+	
+	/**
+	 * Sets path.
+	 * @param path
+	 */
 	public void setPath(String path) {
 		this.path = path;
 		notifyListeners(CursorListEvent.ElementChanged);
 	}
 	
-	public void moveSpriteLayerUp() {
-		if (getSelected() != null && cursor != 0) {
-			SpriteLayer spriteLayerA = elements.get(cursor - 1);
-			SpriteLayer spriteLayerB = elements.get(cursor);
-			elements.set(cursor - 1, spriteLayerB);
-			elements.set(cursor, spriteLayerA);
-			select(spriteLayerB);
-			notifyListeners(CursorListEvent.ElementsReordered);
-		}
-	}
-	
-	public void moveSpriteLayerDown() {
-		if (getSelected() != null && cursor + 1 < elements.size()) {
-			SpriteLayer spriteLayerA = elements.get(cursor);
-			SpriteLayer spriteLayerB = elements.get(cursor + 1);
-			elements.set(cursor, spriteLayerB);
-			elements.set(cursor + 1, spriteLayerA);
-			select(spriteLayerA);
-			notifyListeners(CursorListEvent.ElementsReordered);
-		}
-	}
-	
+	/**
+	 * Exports the sprite to an Image, for saving to png.
+	 * @param palette
+	 * @return Image
+	 */
 	public Image exportImage(Palette palette) {
 		return SpriteGui.exportImage(this, palette);
 	}

@@ -25,8 +25,9 @@ import javafx.scene.control.TabPane.TabClosingPolicy;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
 
-/*
+/**
  * Main app FXML controller.
+ * @author: Magne Tenstad
  */
 public class PixelController {
 	private static FileManager fileManager;
@@ -48,7 +49,7 @@ public class PixelController {
 	@FXML
 	private Menu newFile, recentFiles;
 	
-	/*
+	/**
 	 * Initializes FXML elements.
 	 */
 	@FXML
@@ -80,14 +81,14 @@ public class PixelController {
 			MenuItem menuItem = new MenuItem("" + size + "x" + size);
 			menuItem.setOnAction(event -> {
 				Sprite sprite = new Sprite(size, size);
-				sprite.addSpriteLayer();
+				sprite.add(new SpriteLayer(sprite));
 				newSpriteTab(sprite);
 			});
 			newFile.getItems().add(menuItem);
 		}
 	}
 	
-	/*
+	/**
 	 * @return The SpriteGui that is currently visible in tabPane.
 	 */
 	public SpriteGui getSpriteGui() {
@@ -95,7 +96,7 @@ public class PixelController {
 		return (spriteTab != null) ? spriteTab.getSpriteGui() : null;
 	}
 	
-	/*
+	/**
 	 * @return The Sprite that is currently visible in tabPane.
 	 */
 	public Sprite getSprite() {
@@ -103,6 +104,10 @@ public class PixelController {
 		return (spriteGui != null ? spriteGui.getSprite() : null);
 	}
 	
+	/**
+	 * Instantiates a new SpriteTab with the given sprite.
+	 * @param sprite
+	 */
 	public void newSpriteTab(Sprite sprite) {
 		if (sprite != null) {
 			SpriteGui spriteGui = newSpriteGui(sprite);
@@ -111,6 +116,13 @@ public class PixelController {
 			tabPane.getSelectionModel().select(spriteTab);
 		}
 	}
+	
+	/**
+	 * Instantiates a new SpriteGui with the given sprite.
+	 * Makes sure spriteGui listens to the correct objects.
+	 * @param sprite
+	 * @return spriteGui
+	 */
 	public SpriteGui newSpriteGui(Sprite sprite) {
 		SpriteGui spriteGui = new SpriteGui(sprite);
 		toolbarGui.getToolbar().addListener(spriteGui);
@@ -137,7 +149,7 @@ public class PixelController {
 	private void newLayerButtonOnAction(ActionEvent event) {
 		Sprite sprite = getSprite();
 		if (sprite != null) {
-			sprite.addSpriteLayer();
+			sprite.add(new SpriteLayer(sprite));
 		}
 	}
 	@FXML
@@ -150,15 +162,15 @@ public class PixelController {
 	@FXML
 	private void moveLayerUpButtonOnAction(ActionEvent event) {
 		Sprite sprite = getSprite();
-		if (sprite != null) {
-			sprite.moveSpriteLayerUp();
+		if (sprite != null && sprite.getCursor() > 0) {
+			sprite.moveSelectedForward();
 		}
 	}
 	@FXML
 	private void moveLayerDownButtonOnAction(ActionEvent event) {
 		Sprite sprite = getSprite();
-		if (sprite != null) {
-			sprite.moveSpriteLayerDown();
+		if (sprite != null && sprite.getCursor() + 1 < sprite.size()) {
+			sprite.moveSelectedBackward();
 		}
 	}
 	

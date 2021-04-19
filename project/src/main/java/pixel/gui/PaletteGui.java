@@ -11,22 +11,37 @@ import pixel.cursorlist.CursorListEvent;
 import pixel.cursorlist.CursorListListener;
 import pixel.palette.Palette;
 
+/**
+ * A gui to manage multiple palettes.
+ * Should be listening to its palettes.
+ * @author Magne Tenstad
+ */
 public class PaletteGui extends CursorList<Palette> implements CursorListListener {
 	private ToggleGroup toggleGroup = new ToggleGroup();
 	private Pane pane;
 	
+	/**
+	 * Overrides the CursorList add method to also listen to the given palette.
+	 */
 	@Override
 	public void add(Palette palette) {
 		super.add(palette);
 		palette.addListener(this);
 	}
 	
+	/**
+	 * Overrides the CursorList remove method to also stop listening to the given palette.
+	 */
 	@Override
 	public void remove(Palette palette) {
 		super.remove(palette);
 		palette.removeListener(this);
 	}
 	
+	/**
+	 * Sets the pane where the gui is built.
+	 * @param pane
+	 */
 	public void setPane(Pane pane) {
 		if (this.pane != null) {
 			pane.getChildren().clear();
@@ -35,6 +50,9 @@ public class PaletteGui extends CursorList<Palette> implements CursorListListene
 		rebuild();
 	}
 	
+	/**
+	 * Rebuilds the gui, if pane is not null.
+	 */
 	public void rebuild() {
 		if (pane != null) {
 			pane.getChildren().clear();
@@ -70,6 +88,10 @@ public class PaletteGui extends CursorList<Palette> implements CursorListListene
 		}
 	}
 	
+	/**
+	 * An extension of ToggleButton, to represent a selectable color in a palette.
+	 * @author Magne Tenstad
+	 */
 	private class ColorButton extends ToggleButton {
 		public ColorButton(Color color, int index) {
 			setToggleGroup(toggleGroup);
@@ -83,8 +105,8 @@ public class PaletteGui extends CursorList<Palette> implements CursorListListene
 		}
 	}
 	
-	/*
-	 * Listens to the selected palette, and notifies listeners (SpriteGui, ToolbarGui) about changes.
+	/**
+	 * Listens to the selected palette, and notifies listeners (e.g. SpriteGui, ToolbarGui) about changes.
 	 */
 	@Override
 	public void cursorListChanged(CursorList<?> cursorList, CursorListEvent event, Object element) {

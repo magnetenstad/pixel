@@ -20,10 +20,10 @@ import pixel.palette.Palette;
 import pixel.sprite.Sprite;
 import pixel.sprite.SpriteSerializer;
 
-/*
+/**
  * An implementation of FileManager.
- * Saves files to a .PIXEL (JSON-based) format,
- * and exports to .PNG.
+ * Saves files to a .PIXEL (JSON-based) format, and exports to .PNG.
+ * @author Magne Tenstad
  */
 public class PixelFileManager implements FileManager {
 	private final static File METADATA = new File("src/main/resources/metadata.json");
@@ -33,7 +33,7 @@ public class PixelFileManager implements FileManager {
 		readFromMetaData();
 	}
 	
-	/*
+	/**
 	 * Prompts the user to save a file.
 	 * @return The selected file, or null!
 	 */
@@ -43,7 +43,7 @@ public class PixelFileManager implements FileManager {
 		return fileChooser.showSaveDialog(PixelApp.getWindow());
 	}
 	
-	/*
+	/**
 	 * Prompts the user to open a file.
 	 * @return The selected file, or null!
 	 */
@@ -192,12 +192,10 @@ public class PixelFileManager implements FileManager {
 		writeToMetaData();
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public Collection<String> getRecentPaths() {
-		return (Collection<String>) recentPaths.clone();
+		return new ArrayList<String>(recentPaths);
 	}
 }
-
 
 

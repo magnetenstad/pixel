@@ -16,6 +16,11 @@ import pixel.palette.Palette;
 import pixel.tool.Tool;
 import pixel.tool.Toolbar;
 
+/**
+ * A gui to interact with a Toolbar.
+ * Should listen to its Toolbar and a PaletteGui.
+ * @author Magne Tenstad
+ */
 public class ToolbarGui implements CursorListListener {
 	private ToggleGroup toggleGroup = new ToggleGroup();
 	private ArrayList<ToolButton> toolButtons = new ArrayList<>();
@@ -28,20 +33,36 @@ public class ToolbarGui implements CursorListListener {
 		toolbar.addListener(this);
 	}
 	
+	/**
+	 * 
+	 * @return toolbar
+	 */
 	public Toolbar getToolbar() {
 		return toolbar;
 	}
 	
+	/**
+	 * Sets the pane for building the toolbar.
+	 * @param pane
+	 */
 	public void setPane(Pane pane) {
 		clearButtonsFromPane(this.pane);
 		this.pane = pane;
 		addButtonsToPane(this.pane);
 	}
 	
+	/**
+	 * Sets the toolSizeSpinner, so it can be updated when changing tool.
+	 * @param spinner
+	 */
 	public void setToolSizeSpinner(Spinner<Integer> spinner) {
 		this.toolSizeSpinner = spinner;
 	}
 	
+	/**
+	 * Clears gui from the given pane.
+	 * @param pane
+	 */
 	private void clearButtonsFromPane(Pane pane) {
 		if (pane != null) {
 			for (ToggleButton toolButton : toolButtons) {
@@ -52,6 +73,10 @@ public class ToolbarGui implements CursorListListener {
 		}
 	}
 	
+	/**
+	 * Builds gui to the given pane.
+	 * @param pane
+	 */
 	private void addButtonsToPane(Pane pane) {
 		if (pane != null) {
 			for (ToggleButton toolButton : toolButtons) {
@@ -62,6 +87,10 @@ public class ToolbarGui implements CursorListListener {
 		}
 	}
 	
+	/**
+	 * An extension of ToggleButton to represent a selectable tool.
+	 * @author Magne Tenstad
+	 */
 	private class ToolButton extends ToggleButton {
 		private final Tool tool;
 		public ToolButton(Tool tool) {
@@ -78,7 +107,7 @@ public class ToolbarGui implements CursorListListener {
 		}
 	}
 	
-	/*
+	/**
 	 * Listens to toolbar and PaletteGui.
 	 */
 	@Override

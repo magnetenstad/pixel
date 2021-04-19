@@ -3,16 +3,37 @@ package pixel.sprite;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+/**
+ * A serializer for Sprite and SpriteLayer.
+ * @author Magne Tenstad
+ *
+ */
 public class SpriteSerializer {
 	private final static String newLine = "_\n";
-
+	
+	/**
+	 * Serializes the given Sprite to a String.
+	 * @param sprite
+	 * @return string
+	 */
 	public static String serializeToString(Sprite sprite) {
 		return serializeSprite(sprite).toString(2);
 	}
+	
+	/**
+	 * Deserializes the given String to a Sprite.
+	 * @param string
+	 * @return sprite
+	 */
 	public static Sprite deserializeFromString(String string) {
 		return deserializeSprite(new JSONObject(string));
 	}
 	
+	/**
+	 * Serializes the given Sprite to a JSONObject.
+	 * @param sprite
+	 * @return JSONObject
+	 */
 	public static JSONObject serializeSprite(Sprite sprite) {
 		JSONObject json = new JSONObject();
 		json.put("width", sprite.getWidth());
@@ -26,6 +47,11 @@ public class SpriteSerializer {
 		return json;
 	}
 	
+	/**
+	 * Deserializes the given JSONObject to a Sprite.
+	 * @param JSONObject
+	 * @return sprite
+	 */
 	public static Sprite deserializeSprite(JSONObject json) {
 		int width = json.getInt("width");
 		int height = json.getInt("height");
@@ -38,6 +64,11 @@ public class SpriteSerializer {
 		return sprite;
 	}
 	
+	/**
+	 * Serializes the given SpriteLayer to a JSONObject.
+	 * @param spriteLayer
+	 * @return JSONObject
+	 */
 	public static JSONObject serializeSpriteLayer(SpriteLayer spriteLayer) {
 		String string = "";
 		for (int y = 0; y < spriteLayer.getWidth(); y++) {
@@ -58,6 +89,11 @@ public class SpriteSerializer {
 		return json;
 	}
 	
+	/**
+	 * Deserializes the given JSONObject to a SpriteLayer.
+	 * @param JSONObject
+	 * @return spriteLayer
+	 */
 	public static SpriteLayer deserializeSpriteLayer(Sprite sprite, JSONObject json) {
 		String string = json.getString("data");
 		SpriteLayer spriteLayer = new SpriteLayer(sprite);

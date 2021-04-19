@@ -9,6 +9,11 @@ import pixel.cursorlist.CursorListListener;
 import pixel.ext.ZoomableScrollPane;
 import pixel.sprite.Sprite;
 
+/**
+ * An extension of Tab to hold a SpriteGui.
+ * Should listen to its spriteGui's sprite.
+ * @author Magne Tenstad
+ */
 public class SpriteTab extends Tab implements CursorListListener {
 	private final SpriteGui spriteGui;
 	
@@ -30,12 +35,16 @@ public class SpriteTab extends Tab implements CursorListListener {
 		});
 	}
 	
+	/**
+	 * 
+	 * @return spriteGui
+	 */
 	public SpriteGui getSpriteGui() {
 		return spriteGui;
 	}
 	
-	/*
-	 * Listens to Sprite
+	/**
+	 * Listens to its spriteGui's sprite, and updates text.
 	 */
 	@Override
 	public void cursorListChanged(CursorList<?> cursorList, CursorListEvent event, Object element) {

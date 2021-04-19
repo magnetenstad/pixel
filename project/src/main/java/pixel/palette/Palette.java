@@ -5,7 +5,18 @@ import java.util.Scanner;
 import javafx.scene.paint.Color;
 import pixel.cursorlist.CursorList;
 
+/**
+ * An extension of CursorList<Color>
+ * @author Magne Tenstad
+ */
 public class Palette extends CursorList<Color> {
+	
+	/**
+	 * Instantiaties a Color from the given hex string.
+	 * Throws an IllegalArgumentException if the hex is invalid.
+	 * @param hex
+	 * @return The corresponding color.
+	 */
 	public static Color Color(String hex) {
 		hex = hex.toLowerCase();
 		if (!hex.matches("#?(\\d|a|b|c|d|e|f){6}")) {
@@ -18,6 +29,12 @@ public class Palette extends CursorList<Color> {
 		return Color.color(r, g, b);
 	}
 	
+	/**
+	 * Instantiates a Palette from the given path.
+	 * Returns an empty palette if the path is invalid.
+	 * @param path
+	 * @return palette
+	 */
 	public static Palette fromHexFile(String path) {
 		Palette palette = new Palette();
 		try {
@@ -33,4 +50,3 @@ public class Palette extends CursorList<Color> {
 		return palette;
 	}
 }
-

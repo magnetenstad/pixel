@@ -29,6 +29,13 @@ public class BucketTool extends Tool {
 		}
 	}
 	
+	/**
+	 * A recursive method to apply a fill to a sprite.
+	 * @param sprite
+	 * @param colorMatch
+	 * @param x
+	 * @param y
+	 */
 	private void fill(Sprite sprite, int colorMatch, int x, int y) {
 		SpriteLayer spriteLayer = sprite.getSelected();
 		if (spriteLayer.isPointInCanvas(x, y) && spriteLayer.getPixel(x, y) == colorMatch) {
