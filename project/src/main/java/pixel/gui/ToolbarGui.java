@@ -18,9 +18,9 @@ import pixel.tool.Toolbar;
 
 public class ToolbarGui implements CursorListListener {
 	private ToggleGroup toggleGroup = new ToggleGroup();
+	private ArrayList<ToolButton> toolButtons = new ArrayList<>();
 	private Spinner<Integer> toolSizeSpinner;
 	private Pane pane;
-	private ArrayList<ToolButton> toolButtons = new ArrayList<>();
 	private final Toolbar toolbar;
 	
 	public ToolbarGui(Toolbar toolbar) {

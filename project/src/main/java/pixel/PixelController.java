@@ -67,6 +67,7 @@ public class PixelController {
 		paletteGui = new PaletteGui();
 		paletteGui.setPane(paletteVBox);
 		paletteGui.addListener(toolbarGui);
+		paletteGui.add(Palette.fromHexFile("src/main/resources/aap-64.hex"));
 		paletteGui.add(Palette.fromHexFile("src/main/resources/endesga-16.hex"));
 		paletteGui.add(Palette.fromHexFile("src/main/resources/curiosities.hex"));
 		paletteGui.add(Palette.fromHexFile("src/main/resources/vinik24.hex"));
@@ -104,10 +105,7 @@ public class PixelController {
 	
 	public void newSpriteTab(Sprite sprite) {
 		if (sprite != null) {
-			SpriteGui spriteGui = new SpriteGui(sprite, paletteGui);
-			Toolbar toolbar = toolbarGui.getToolbar();
-			toolbar.addListener(spriteGui);
-			SpriteTab spriteTab = new SpriteTab(spriteGui);
+			SpriteTab spriteTab = new SpriteTab(new SpriteGui(sprite, paletteGui, toolbarGui.getToolbar()));
 			tabPane.getTabs().add(spriteTab);
 			tabPane.getSelectionModel().select(spriteTab);
 		}

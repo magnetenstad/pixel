@@ -19,6 +19,7 @@ import pixel.sprite.Sprite;
 import pixel.sprite.SpriteLayer;
 import pixel.sprite.SpriteListener;
 import pixel.tool.Tool;
+import pixel.tool.Toolbar;
 
 public class SpriteGui implements SpriteListener {
 	private static final SnapshotParameters snapshotParameters = new SnapshotParameters();
@@ -32,7 +33,7 @@ public class SpriteGui implements SpriteListener {
 	private final static int scale = 32;
 	private PaletteGui paletteGui;
 	
-	public SpriteGui(Sprite sprite, PaletteGui paletteGui) {
+	public SpriteGui(Sprite sprite, PaletteGui paletteGui, Toolbar toolbar) {
 		if (sprite == null || paletteGui == null) {
 			throw new NullPointerException("Sprite and palette cannot be null!");
 		}
@@ -47,6 +48,7 @@ public class SpriteGui implements SpriteListener {
 		sprite.addListener(this);
 		this.paletteGui = paletteGui;
 		paletteGui.addListener(this);
+		toolbar.addListener(this);
 	}
 	
 	public static void setSpriteLayerPane(Pane pane) {
@@ -140,7 +142,7 @@ public class SpriteGui implements SpriteListener {
 	}
 	
 	/*
-	 * Listens to Sprite, ToolbarGui and PaletteGui
+	 * Listens to Sprite, toolbar and PaletteGui
 	 */
 	@Override
 	public void cursorListChanged(CursorList<?> cursorList, CursorListEvent event, Object element) {
