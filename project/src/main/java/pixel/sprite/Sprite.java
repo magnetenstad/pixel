@@ -45,11 +45,13 @@ public class Sprite extends CursorList<SpriteLayer> {
 			return;
 		}
 		getSelected().clearRect(x, y, width, height);
-		notifyListeners(CursorListEvent.ElementChanged, getSelected());
+		if (notify) {
+			notifyListeners(CursorListEvent.ElementChanged, getSelected());
+		}
 	}
 	
 	public boolean isSpriteLayerEditable() {
-		return (getSelected() != null && getSelected().isVisible());
+		return getSelected() != null && getSelected().isVisible();
 	}
 	
 	public void addSpriteLayer() {
@@ -91,16 +93,6 @@ public class Sprite extends CursorList<SpriteLayer> {
 			select(spriteLayerA);
 			notifyListeners(CursorListEvent.ElementsReordered);
 		}
-	}
-	
-	public void addListener(CursorListListener listener) {
-		super.addListener(listener);
-		listeners.add(listener);
-	}
-	
-	public void removeListener(CursorListListener listener) {
-		super.removeListener(listener);
-		listeners.remove(listener);
 	}
 	
 	public Image exportImage(Palette palette) {

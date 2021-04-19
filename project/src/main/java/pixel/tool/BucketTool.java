@@ -4,6 +4,7 @@ import java.util.List;
 
 import javafx.geometry.Point2D;
 import javafx.scene.input.MouseEvent;
+import pixel.cursorlist.CursorListEvent;
 import pixel.gui.SpriteGui;
 import pixel.sprite.Sprite;
 import pixel.sprite.SpriteLayer;
@@ -24,7 +25,7 @@ public class BucketTool extends Tool {
 			if (color != colorMatch) {
 				fill(sprite, colorMatch, pos[0], pos[1]);
 			}
-			sprite.spriteChanged();
+			sprite.notifyListeners(CursorListEvent.ElementChanged, sprite.getSelected());
 		}
 	}
 	

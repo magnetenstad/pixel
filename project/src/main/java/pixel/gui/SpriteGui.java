@@ -8,6 +8,8 @@ import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.WritableImage;
+import javafx.scene.input.MouseButton;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
@@ -31,6 +33,8 @@ public class SpriteGui implements CursorListListener {
 	private int width;
 	private final static int scale = 32;
 	private PaletteGui paletteGui;
+	private int mouseXPrev;
+	private int mouseYPrev;
 	
 	/*
 	 * Listens to Sprite, toolbar and PaletteGui
@@ -146,7 +150,7 @@ public class SpriteGui implements CursorListListener {
 	}
 	
 	public double getScale() {
-		return (double) scale;
+		return scale;
 	}
 	
 	/*
@@ -156,15 +160,29 @@ public class SpriteGui implements CursorListListener {
 	public void cursorListChanged(CursorList<?> cursorList, CursorListEvent event, Object element) {
 		if (cursorList instanceof Toolbar && (event == CursorListEvent.CursorChanged || event == CursorListEvent.ListenerAdded)) {
 			Tool tool = (Tool) cursorList.getSelected();
-			imageView.setOnMousePressed(_event -> {
-				((Tool) tool).use(this, _event);
-			});
-			imageView.setOnMouseDragged(imageView.getOnMousePressed());
-			imageView.setOnMouseReleased(imageView.getOnMousePressed());
+			if (tool != null) {
+				imageView.setOnMousePressed(_event -> {
+					tool.use(this, _event);
+				});
+				imageView.setOnMouseReleased(_event -> {
+					tool.use(this, _event);
+				});
+				imageView.setOnMouseDragged(_event -> {
+					int mouseX = (int) _event.getX() / scale;
+					int mouseY = (int) _event.getY() / scale;
+					if (mouseX != mouseXPrev || mouseY != mouseYPrev) {
+						mouseXPrev = mouseX;
+						mouseYPrev = mouseY;
+						tool.use(this, _event);
+					}
+				});
+			}
 		}
 		else if (cursorList instanceof PaletteGui) {
 			paletteGui = (PaletteGui) cursorList;
-			rebuildSprite();
+			if (paletteGui.getSelected() != null) {
+				rebuildSprite();
+			}
 		}
 		else if (cursorList instanceof Sprite) {
 			if (paletteGui != null && paletteGui.getSelected() != null) {

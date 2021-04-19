@@ -2,6 +2,7 @@ package pixel.tool;
 
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
+import pixel.cursorlist.CursorListEvent;
 import pixel.gui.SpriteGui;
 import pixel.sprite.Sprite;
 
@@ -35,7 +36,7 @@ public class LineTool extends Tool {
 					double y = startPos[1] + i * Math.sin(angle) + 0.5;
 					sprite.fillRect((int) (x - size / 2), (int) (y - size / 2), size, size, color, false);
 				}
-				sprite.spriteChanged();
+				sprite.notifyListeners(CursorListEvent.ElementChanged, sprite.getSelected());
 				startPos = null;
 			}
 		}

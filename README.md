@@ -13,10 +13,23 @@
 
 ## UML
 
-![UML](UML.png "UML")
+### pixel
+![Pixel](uml/pixel.png "pixel")
 
-## Todo
+### pixel.cursorlist
+![Pixel](uml/pixel_cursorlist.png "pixel.cursorlist")
 
-- Choose size of new sprite
-- Import palettes
-- Edit layer names
+### pixel.file
+![Pixel](uml/pixel_file.png "pixel.file")
+
+### pixel.gui
+![Pixel](uml/pixel_gui.png "pixel.gui")
+
+### pixel.palette
+![Pixel](uml/pixel_palette.png "pixel.palette")
+
+### pixel.sprite
+![Pixel](uml/pixel_sprite.png "pixel.sprite")
+
+### pixel.tool
+![Pixel](uml/pixel_tool.png "pixel.tool")
