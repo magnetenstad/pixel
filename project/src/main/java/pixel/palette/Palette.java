@@ -10,6 +10,19 @@ import pixel.cursorlist.CursorList;
  * @author Magne Tenstad
  */
 public class Palette extends CursorList<Color> {
+	private static final int maxSize = 255;
+	
+	
+	/**
+	 * Overrides the add method because Palette has a max size.
+	 */
+	@Override
+	public void add(Color element) {
+		if (size() >= maxSize) {
+			throw new IllegalStateException("Palette is at max size and cannot be added to!");
+		}
+		super.add(element);
+	}
 	
 	/**
 	 * Instantiaties a Color from the given hex string.

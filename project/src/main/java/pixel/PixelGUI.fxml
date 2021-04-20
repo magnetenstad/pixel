@@ -53,7 +53,7 @@
   <children>
     <MenuBar VBox.vgrow="NEVER">
       <menus>
-        <Menu mnemonicParsing="false" text="File">
+        <Menu fx:id="fileMenu" mnemonicParsing="false" text="File">
           <items>
                   <Menu fx:id="newFile" mnemonicParsing="false" text="New">
                     <items>

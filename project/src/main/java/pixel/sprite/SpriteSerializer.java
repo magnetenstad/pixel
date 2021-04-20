@@ -49,10 +49,14 @@ public class SpriteSerializer {
 	
 	/**
 	 * Deserializes the given JSONObject to a Sprite.
+	 * Throws an IllegalArgumentException is the JSONObject is invalid or null.
 	 * @param JSONObject
 	 * @return sprite
 	 */
 	public static Sprite deserializeSprite(JSONObject json) {
+		if (json == null || !(json.has("width") && json.has("height") && json.has("data"))) {
+			throw new IllegalArgumentException("Invalid json!");
+		}
 		int width = json.getInt("width");
 		int height = json.getInt("height");
 		Sprite sprite = new Sprite(width, height);
@@ -73,7 +77,8 @@ public class SpriteSerializer {
 		String string = "";
 		for (int y = 0; y < spriteLayer.getWidth(); y++) {
 			for (int x = 0; x < spriteLayer.getHeight(); x++) {
-				String hex = Integer.toHexString(spriteLayer.getPixel(x, y));
+				int color = spriteLayer.getPixel(x, y);
+				String hex = color == -1 ? "ff" : Integer.toHexString(color); // -1 (no color) is saved as ff
 				if (hex.length() < 2) {
 					hex = "0" + hex;
 				}
@@ -84,6 +89,7 @@ public class SpriteSerializer {
 		
 		JSONObject json = new JSONObject();
 		json.put("name", spriteLayer.getName());
+		json.put("visible", spriteLayer.isVisible());
 		json.put("data", string);
 		
 		return json;
@@ -91,24 +97,35 @@ public class SpriteSerializer {
 	
 	/**
 	 * Deserializes the given JSONObject to a SpriteLayer.
+	 * Throws an IllegalArgumentException is the JSONObject is null.
 	 * @param JSONObject
 	 * @return spriteLayer
 	 */
 	public static SpriteLayer deserializeSpriteLayer(Sprite sprite, JSONObject json) {
-		String string = json.getString("data");
+		if (json == null) {
+			throw new IllegalArgumentException("json cannot be null!");
+		}
 		SpriteLayer spriteLayer = new SpriteLayer(sprite);
-		spriteLayer.setName(json.getString("name"));
-		int x = 0;
-		int y = 0;
-		for (int i = 0; i < string.length() - 1; i += 2) {
-			String c = string.substring(i, i + 2);
-			if (!c.equals(newLine)) {
-				spriteLayer.fillPixel(x, y, Integer.parseInt(c, 16));
-				x++;
-			}
-			else {
-				y++;
-				x = 0;
+		if (json.has("name")) {
+			spriteLayer.setName(json.getString("name"));
+		}
+		if (json.has("visible")) {
+			spriteLayer.setVisible(json.getBoolean("visible"));
+		}
+		if (json.has("data")) {
+			String string = json.getString("data");
+			int x = 0;
+			int y = 0;
+			for (int i = 0; i < string.length() - 1; i += 2) {
+				String c = string.substring(i, i + 2);
+				if (!c.equals(newLine)) {
+					spriteLayer.fillPixel(x, y, c == "ff" ? -1 : Integer.parseInt(c, 16));
+					x++;
+				}
+				else {
+					y++;
+					x = 0;
+				}
 			}
 		}
 		return spriteLayer;

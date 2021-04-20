@@ -10,6 +10,7 @@ import java.util.Collection;
 import javax.imageio.ImageIO;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import javafx.embed.swing.SwingFXUtils;
@@ -83,6 +84,7 @@ public class PixelFileManager implements FileManager {
 			return sprite;
 		} catch (IOException e) {
 			e.printStackTrace();
+			removeFromRecentPaths(path);
 		}
 		return null;
 	}
@@ -141,19 +143,21 @@ public class PixelFileManager implements FileManager {
 		}
 		try {
 			String string = FileManager.readString(METADATA.getAbsolutePath());
-			JSONObject json = new JSONObject(string);
-			
-			if (!json.has(MetaData.Recent.toString())) {
+			try {
+				JSONObject json = new JSONObject(string);
+				
+				JSONArray recentPathsJSON = json.getJSONArray(MetaData.Recent.toString());
+				
+				for (Object path : recentPathsJSON) {
+					recentPaths.add((String) path);
+				}
+			}
+			catch (JSONException e) {
 				METADATA.delete();
 				readFromMetaData();
 				return;
 			}
 			
-			JSONArray recentPathsJSON = json.getJSONArray(MetaData.Recent.toString());
-			
-			for (Object path : recentPathsJSON) {
-				recentPaths.add((String) path);
-			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -172,7 +176,7 @@ public class PixelFileManager implements FileManager {
 				recentPathsJSON.put(path);
 			}
 			
-			json.put(MetaData.Recent.toString(),  recentPathsJSON);
+			json.put(MetaData.Recent.toString(), recentPathsJSON);
 			FileManager.writeString(METADATA.getAbsolutePath(), json.toString(2));
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -188,6 +192,15 @@ public class PixelFileManager implements FileManager {
 		recentPaths.add(0, path);
 		if (recentPaths.size() > 5) {
 			recentPaths.remove(recentPaths.size()-1);
+		}
+		writeToMetaData();
+	}
+	
+	public void removeFromRecentPaths(String path) {
+		for (String recentPath : recentPaths) {
+			if (recentPath.equals(path)) {
+				recentPaths.remove(recentPath);
+			}
 		}
 		writeToMetaData();
 	}

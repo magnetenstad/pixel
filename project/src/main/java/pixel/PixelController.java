@@ -15,7 +15,6 @@ import java.util.List;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
-import javafx.scene.control.ColorPicker;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.Spinner;
@@ -39,15 +38,13 @@ public class PixelController {
 	@FXML
 	private VBox toolbarVBox, layersVBox, paletteVBox;
 	@FXML
-	private ColorPicker colorPicker;
-	@FXML
 	private Spinner<Integer> toolSizeSpinner;
 	@FXML
 	private Button newLayerButton, removeLayerButton, moveLayerUpButton, moveLayerDownButton;
 	@FXML
 	private MenuItem openFile, closeFile, saveFile, saveFileAs, exportFile;
 	@FXML
-	private Menu newFile, recentFiles;
+	private Menu newFile, recentFiles, fileMenu;
 	
 	/**
 	 * Initializes FXML elements.
@@ -74,7 +71,9 @@ public class PixelController {
 		paletteGui.add(Palette.fromHexFile("src/main/resources/vinik24.hex"));
 		
 		fileManager = new PixelFileManager();
-		rebuildRecentFilesMenu();
+		fileMenu.setOnShowing(event -> {
+			rebuildRecentFilesMenu();
+		});
 		
 		for (int i = 2; i < 7; i++) {
 			int size = (int) Math.pow(2, i);
@@ -188,7 +187,6 @@ public class PixelController {
 		Sprite sprite = fileManager.loadSprite();
 		if (sprite != null) {
 			newSpriteTab(sprite);
-			rebuildRecentFilesMenu();
 		}
 	}
 	@FXML
@@ -214,7 +212,6 @@ public class PixelController {
 		Sprite sprite = getSprite();
 		if (sprite != null) {
 			fileManager.saveSprite(sprite);
-			rebuildRecentFilesMenu();
 		}
 	}
 	@FXML
