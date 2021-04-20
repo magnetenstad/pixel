@@ -150,21 +150,6 @@ public class Sprite extends CursorList<SpriteLayer> {
 	}
 	
 	/**
-	 * THIS VALUE IS ONLY USED TO NAME LAYERS.
-	 * @param totalLayerCount
-	 */
-	public void setTotalLayerCount(int totalLayerCount) {
-		this.totalLayerCount = totalLayerCount;
-	}
-	
-	/**
-	 * THIS VALUE IS ONLY USED TO NAME LAYERS.
-	 */
-	public int getTotalLayerCount() {
-		return totalLayerCount;
-	}
-	
-	/**
 	 * Exports the sprite to an Image, for saving to png.
 	 * @param palette
 	 * @return Image

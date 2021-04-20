@@ -21,6 +21,7 @@ public class PaletteTest {
 	}
 	
 	@Test
+	@DisplayName("Test for loading from file")
 	void testLoadPalette() {
 		Palette testPalette = null;
 		try {
@@ -36,16 +37,19 @@ public class PaletteTest {
 	}
 	
 	@Test
+	@DisplayName("Test for loading from non existing file")
 	void testLoadNonExistingPalette() {
 		assertThrows(FileNotFoundException.class, () -> Palette.fromHexFile("src/test/resources/nonExistingPalette.hex"));
 	}
 	
 	@Test
+	@DisplayName("Test for loading from invalid file")
 	void testLoadInvalidPalette() {
 		assertThrows(Exception.class, () -> Palette.fromHexFile("src/test/resources/invalidPalette.hex"));
 	}
 	
 	@Test
+	@DisplayName("Test for max size")
 	void testMaxSize() {
 		Palette palette2 = new Palette();
 		for (int i = 0; i < 255; i++) {			

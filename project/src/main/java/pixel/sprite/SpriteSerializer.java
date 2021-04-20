@@ -39,7 +39,6 @@ public class SpriteSerializer {
 		JSONObject json = new JSONObject();
 		json.put("width", sprite.getWidth());
 		json.put("height", sprite.getHeight());
-		json.put("totalLayerCount", sprite.getTotalLayerCount());
 		JSONArray spriteLayers = new JSONArray();
 		for (SpriteLayer spriteLayer : sprite) {
 			spriteLayers.put(serializeSpriteLayer(spriteLayer));
@@ -62,9 +61,6 @@ public class SpriteSerializer {
 		int width = json.getInt("width");
 		int height = json.getInt("height");
 		Sprite sprite = new Sprite(width, height);
-		if (json.has("totalLayerCount")) {
-			sprite.setTotalLayerCount(json.getInt("totalLayerCount"));
-		}
 		JSONArray spriteLayers = json.getJSONArray("data");
 		for (Object spriteLayerJSONObject : spriteLayers) {
 			try {
