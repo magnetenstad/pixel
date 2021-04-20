@@ -10,10 +10,20 @@ import pixel.sprite.Sprite;
 import pixel.sprite.SpriteLayer;
 
 public class BucketTool extends Tool {
-	private List<Point2D> neighbours = List.of(new Point2D(1, 0), new Point2D(0, -1), new Point2D(-1, 0), new Point2D(0, 1));
+	private List<Offset> offsets = List.of(new Offset(1, 0), new Offset(0, -1), new Offset(-1, 0), new Offset(0, 1));
 
 	public BucketTool() {
 		super("Bucket");
+	}
+	
+	private class Offset {
+		public final int x;
+		public final int y;
+		
+		public Offset(int x, int y) {
+			this.x = x;
+			this.y = y;
+		}
 	}
 	
 	@Override
@@ -40,8 +50,8 @@ public class BucketTool extends Tool {
 		SpriteLayer spriteLayer = sprite.getSelected();
 		if (spriteLayer.isPointInCanvas(x, y) && spriteLayer.getPixel(x, y) == colorMatch) {
 			sprite.fillRect(x, y, 1, 1, color, false);
-			for (Point2D neighbour : neighbours) {
-				fill(sprite, colorMatch, x + (int) neighbour.getX(), y + (int) neighbour.getY());
+			for (Offset offset : offsets) {
+				fill(sprite, colorMatch, x + offset.x, y + offset.y);
 			}
 		}
 	}
