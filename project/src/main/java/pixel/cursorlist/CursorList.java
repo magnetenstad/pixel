@@ -19,8 +19,9 @@ public class CursorList<T> implements Iterable<T> {
 	
 	/**
 	 * Gets the element at the given index.
+	 * Throws an IndexOutOfBoundsException if the index is not valid.
 	 * @param index
-	 * @return The element at the given index, or null.
+	 * @return The element at the given index.
 	 */
 	public T get(int index) {
 		checkValidIndex(index);
@@ -29,6 +30,7 @@ public class CursorList<T> implements Iterable<T> {
 	
 	/**
 	 * Sets the given element at the given index.
+	 * Throws an IndexOutOfBoundsException if the index is not valid.
 	 * Notifies listeners.
 	 * @param index
 	 * @param element
@@ -243,6 +245,7 @@ public class CursorList<T> implements Iterable<T> {
 	 * Notifies listeners about the given event.
 	 * Includes a relevant element.
 	 * @param event
+	 * @param element
 	 */
 	public void notifyListeners(CursorListEvent event, T element) {
 		for (CursorListListener listener : listeners) {

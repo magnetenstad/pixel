@@ -197,6 +197,30 @@ public class CursorListTest {
 	}
 	
 	@Test
+	@DisplayName("Test for .moveSelectedForward() and .moveSelectedBackward()")
+	void moveSelectedTest() {
+		cursorList.add(zero);
+		cursorList.add(one);
+		cursorList.add(two);
+		
+		assertThrows(IllegalStateException.class, () -> cursorList.moveSelectedForward());
+		
+		cursorList.moveSelectedBackward();
+		
+		checkCursorList(cursorList, List.of(one, zero, two));
+		
+		cursorList.moveSelectedBackward();
+		
+		checkCursorList(cursorList, List.of(one, two, zero));
+		
+		assertThrows(IllegalStateException.class, () -> cursorList.moveSelectedBackward());
+		
+		cursorList.moveSelectedForward();
+		
+		checkCursorList(cursorList, List.of(one, zero, two));
+	}
+	
+	@Test
 	@DisplayName("Test for CursorListEvent.ListenerAdded")
 	void listenerAddedListenerTest() {
 		int i = 0, j = 0;
@@ -255,6 +279,37 @@ public class CursorListTest {
 		assertNull(listenedObjects.get(j++));
 		assertEquals(CursorListEvent.ElementRemoved, listenedEvents.get(i++));
 		assertEquals(zero, listenedObjects.get(j++));
+	}
+	
+	@Test
+	@DisplayName("Test for CursorListEvent.ElementsReordered")
+	void elementsReorderedListenerTest() {
+		int i = 0, j = 0;
+		
+		cursorList.add(zero);
+		cursorList.add(one);
+		cursorList.add(two);
+		
+		cursorList.addListener(listener);
+		
+		assertEquals(CursorListEvent.ListenerAdded, listenedEvents.get(i++));
+		assertNull(listenedObjects.get(j++));
+		
+		assertThrows(IllegalStateException.class, () -> cursorList.moveSelectedForward());
+		
+		cursorList.moveSelectedBackward();
+		
+		assertEquals(CursorListEvent.CursorChanged, listenedEvents.get(i++));
+		assertNull(listenedObjects.get(j++));
+		assertEquals(CursorListEvent.ElementsReordered, listenedEvents.get(i++));
+		assertNull(listenedObjects.get(j++));
+		
+		cursorList.moveSelectedForward();
+		
+		assertEquals(CursorListEvent.CursorChanged, listenedEvents.get(i++));
+		assertNull(listenedObjects.get(j++));
+		assertEquals(CursorListEvent.ElementsReordered, listenedEvents.get(i++));
+		assertNull(listenedObjects.get(j++));
 	}
 }
 
