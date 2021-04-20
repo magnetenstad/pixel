@@ -1,8 +1,8 @@
 package pixel.cursorlist;
 
 /**
- * 
- * @author tenst
+ * Events used to notify CursorListListeners.
+ * @author MagneTenstad
  *
  */
 public enum CursorListEvent {

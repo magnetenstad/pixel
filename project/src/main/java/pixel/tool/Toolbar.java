@@ -3,9 +3,6 @@ package pixel.tool;
 import java.util.Collection;
 
 import pixel.cursorlist.CursorList;
-import pixel.cursorlist.CursorListEvent;
-import pixel.cursorlist.CursorListListener;
-import pixel.gui.PaletteGui;
 
 /**
  * An extension of CursorList<Tool>,

@@ -3,13 +3,12 @@ package pixel.cursorlist;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-import pixel.sprite.SpriteLayer;
-
 /**
  * CursorList is an extension of ArrayList, with a cursor.
  * The element at the cursor position is 'selected'.
  * Selection will occur automatically when adding or removing elements,
  * but may also be set explicitly.
+ * Additionally, CursorList is observable by CursorListListeners.
  * @author Magne Tenstad
  */
 public class CursorList<T> implements Iterable<T> {

@@ -2,7 +2,7 @@ package pixel.cursorlist;
 
 /**
  * Listener of a CursorList.
- * @author tenst
+ * @author Magne Tenstad
  */
 public interface CursorListListener {
 	
