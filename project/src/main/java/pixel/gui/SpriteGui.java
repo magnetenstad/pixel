@@ -1,5 +1,7 @@
 package pixel.gui;
 
+import java.util.ArrayList;
+
 import javafx.scene.SnapshotParameters;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -28,6 +30,7 @@ import pixel.tool.Toolbar;
  */
 public class SpriteGui implements CursorListListener {
 	private static final SnapshotParameters snapshotParameters = new SnapshotParameters();
+	private ArrayList<HBox> spriteLayerGuis = new ArrayList<>();
 	private static Pane spriteLayerGuiPane;
 	private final static int scale = 32;
 	private ToggleGroup toggleGroup = new ToggleGroup();
@@ -64,9 +67,9 @@ public class SpriteGui implements CursorListListener {
 	}
 	
 	/**
-	 * Rebuilds the sprite gui.
+	 * Redraws the sprite gui.
 	 */
-	public void rebuildSprite() {
+	public void redrawSprite() {
 		if (paletteGui == null || paletteGui.getSelected() == null) {
 			throw new IllegalStateException("Needs palette to build sprite!");
 		}
@@ -78,16 +81,35 @@ public class SpriteGui implements CursorListListener {
 	}
 	
 	/**
-	 * Rebuilds the sprite layers' guis.
+	 * Rebuilds the sprite layer gui's to spriteLayerGuiPane.
+	 * Throws an IllegalStateException if spriteLayerGuiPane is null.
 	 */
 	public void rebuildLayers() {
 		if (spriteLayerGuiPane == null) {
 			throw new IllegalStateException("Needs spriteLayerGuiPane to build layers!");
 		}
-		spriteLayerGuiPane.getChildren().clear();
+		clearLayers();
 		for (SpriteLayer spriteLayer : sprite) {
-			spriteLayerGuiPane.getChildren().add(newSpriteLayerGui(spriteLayer));
+			HBox spriteLayerGui = newSpriteLayerGui(spriteLayer);
+			spriteLayerGuis.add(spriteLayerGui);
+			spriteLayerGuiPane.getChildren().add(spriteLayerGui);
 		}
+	}
+	
+	/**
+	 * Clears spriteLayerGuiPane.
+	 * Throws an IllegalStateException if spriteLayerGuiPane is null.
+	 */
+	public void clearLayers() {
+		if (spriteLayerGuiPane == null) {
+			throw new IllegalStateException("Needs spriteLayerGuiPane to clear layers!");
+		}
+		for (HBox spriteLayerGui : spriteLayerGuis) {
+			if (spriteLayerGuiPane.getChildren().contains(spriteLayerGui)) {
+				spriteLayerGuiPane.getChildren().remove(spriteLayerGui);
+			}
+		}
+		spriteLayerGuis.clear();
 	}
 	
 	/**
@@ -234,12 +256,12 @@ public class SpriteGui implements CursorListListener {
 		else if (cursorList instanceof PaletteGui) {
 			paletteGui = (PaletteGui) cursorList;
 			if (paletteGui.getSelected() != null) {
-				rebuildSprite();
+				redrawSprite();
 			}
 		}
 		else if (cursorList instanceof Sprite) {
 			if (paletteGui != null && paletteGui.getSelected() != null) {
-				rebuildSprite();
+				redrawSprite();
 			}
 			if (spriteLayerGuiPane != null) {
 				rebuildLayers();

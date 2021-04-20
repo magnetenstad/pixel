@@ -11,9 +11,9 @@ public class EraserTool extends Tool {
 	}
 	
 	@Override
-	public void use(SpriteGui spriteGui, MouseEvent event) {
-		Integer[] pos = Tool.eventToPosition(spriteGui, event);
-		Sprite sprite = spriteGui.getSprite();
-		sprite.clearRect((int) (pos[0] - size / 2), (int) (pos[1] - size / 2), size, size);
+	public void use(Sprite sprite, ToolInputEvent event) {
+		int x = event.getX();
+		int y = event.getY();
+		sprite.clearRect((int) (x - size / 2), (int) (y - size / 2), size, size);
 	}
 }

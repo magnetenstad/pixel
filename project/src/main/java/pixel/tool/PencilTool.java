@@ -11,14 +11,14 @@ public class PencilTool extends Tool {
 	}
 	
 	@Override
-	public void use(SpriteGui spriteGui, MouseEvent event) {
-		Integer[] pos = Tool.eventToPosition(spriteGui, event);
-		Sprite sprite = spriteGui.getSprite();
+	public void use(Sprite sprite, ToolInputEvent event) {
+		int x = event.getX();
+		int y = event.getY();
 		if (event.isPrimaryButtonDown()) {
-			sprite.fillRect((int) (pos[0] - size / 2), (int) (pos[1] - size / 2), size, size, color);
+			sprite.fillRect((int) (x - size / 2), (int) (y - size / 2), size, size, color);
 		}
 		else if (event.isSecondaryButtonDown()) {
-			sprite.clearRect((int) (pos[0] - size / 2), (int) (pos[1] - size / 2), size, size);
+			sprite.clearRect((int) (x - size / 2), (int) (y - size / 2), size, size);
 		}
 	}
 }

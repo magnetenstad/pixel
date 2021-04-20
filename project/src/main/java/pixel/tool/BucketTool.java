@@ -17,13 +17,13 @@ public class BucketTool extends Tool {
 	}
 	
 	@Override
-	public void use(SpriteGui spriteGui, MouseEvent event) {
-		Sprite sprite = spriteGui.getSprite();
+	public void use(Sprite sprite, ToolInputEvent event) {
+		int x = event.getX();
+		int y = event.getY();
 		if (event.isPrimaryButtonDown()) {
-			Integer[] pos = Tool.eventToPosition(spriteGui, event);
-			int colorMatch = sprite.getSelected().getPixel(pos[0], pos[1]);
+			int colorMatch = sprite.getSelected().getPixel(x, y);
 			if (color != colorMatch) {
-				fill(sprite, colorMatch, pos[0], pos[1]);
+				fill(sprite, colorMatch, x, y);
 			}
 			sprite.notifyListeners(CursorListEvent.ElementChanged, sprite.getSelected());
 		}

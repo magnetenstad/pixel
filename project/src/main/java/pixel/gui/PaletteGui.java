@@ -4,6 +4,8 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.control.Tooltip;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import pixel.cursorlist.CursorList;
@@ -19,6 +21,7 @@ import pixel.palette.Palette;
 public class PaletteGui extends CursorList<Palette> implements CursorListListener {
 	private ToggleGroup toggleGroup = new ToggleGroup();
 	private Pane pane;
+	private int columnCount = 6;
 	
 	/**
 	 * Overrides the CursorList add method to also listen to the given palette.
@@ -57,6 +60,9 @@ public class PaletteGui extends CursorList<Palette> implements CursorListListene
 		if (pane != null) {
 			pane.getChildren().clear();
 			
+			HBox hBox = new HBox();
+			pane.getChildren().add(hBox);
+			
 			Button back = new Button("<");
 			back.setOnAction(event -> {
 				int index = (getCursor() - 1) % size();
@@ -71,18 +77,25 @@ public class PaletteGui extends CursorList<Palette> implements CursorListListene
 				rebuild();
 			});
 			
-			pane.getChildren().add(back);
-			pane.getChildren().add(forward);
+			hBox.getChildren().add(back);
+			hBox.getChildren().add(forward);
 			
 			Palette palette = getSelected();
 			if (palette != null)  {
+				ColorButton selectedColor = new ColorButton(palette.getSelected(), palette.getCursor());
+				selectedColor.setPrefSize(64, 64);
+				pane.getChildren().add(selectedColor);
+				
+				GridPane gridPane = new GridPane();
+				pane.getChildren().add(gridPane);
+				
 				for (int i = 0; i < palette.size(); i++) {
 					ColorButton colorButton = new ColorButton(palette.get(i), i);
 					if (i == palette.getCursor()) {
-						colorButton.setPrefWidth(64);
-						colorButton.setText("Selected");
+						//colorButton.setPrefWidth(64);
+						colorButton.setText("S");
 					}
-					pane.getChildren().add(colorButton);
+					gridPane.add(colorButton, i % columnCount, (int) (i / columnCount));
 				}
 			}
 		}

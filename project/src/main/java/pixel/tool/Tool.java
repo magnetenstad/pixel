@@ -2,6 +2,7 @@ package pixel.tool;
 
 import javafx.scene.input.MouseEvent;
 import pixel.gui.SpriteGui;
+import pixel.sprite.Sprite;
 
 /**
  * Tools are used to draw to sprites in specific ways.
@@ -22,7 +23,16 @@ public abstract class Tool {
 	 * @param spriteGui
 	 * @param event
 	 */
-	public abstract void use(SpriteGui spriteGui, MouseEvent event);
+	public abstract void use(Sprite sprite, ToolInputEvent event);
+	
+	/**
+	 * Applies some effect to the sprite of the given spriteGui.
+	 * @param spriteGui
+	 * @param event
+	 */
+	public void use(SpriteGui spriteGui, MouseEvent event) {
+		use(spriteGui.getSprite(), new ToolInputEvent(spriteGui, event));
+	}
 	
 	/**
 	 * 
@@ -54,18 +64,5 @@ public abstract class Tool {
 	 */
 	public void setColor(int color) {
 		this.color = color;
-	}
-	
-	/**
-	 * Calculates an integer position from a MouseEvent on a SpriteGui.
-	 * @param spriteGui
-	 * @param event
-	 * @return position
-	 */
-	public static Integer[] eventToPosition(SpriteGui spriteGui, MouseEvent event) {
-		Integer[] pos = new Integer[2];
-		pos[0] = (int) (event.getX() / spriteGui.getScale());
-		pos[1] = (int) (event.getY() / spriteGui.getScale());
-		return pos;
 	}
 }

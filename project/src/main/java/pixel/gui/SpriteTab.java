@@ -31,7 +31,18 @@ public class SpriteTab extends Tab implements CursorListListener {
 		
 		setContent(new ZoomableScrollPane(pane));
 		setOnSelectionChanged(event -> {
-			spriteGui.rebuildSprite();
+			try {
+				if (isSelected()) {
+					spriteGui.redrawSprite();
+					spriteGui.rebuildLayers();
+				}
+				else {
+					spriteGui.clearLayers();
+				}
+			}
+			catch (IllegalStateException e) {
+				e.printStackTrace();
+			}
 		});
 	}
 	

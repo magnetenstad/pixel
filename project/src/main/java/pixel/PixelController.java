@@ -68,8 +68,8 @@ public class PixelController {
 		paletteGui = new PaletteGui();
 		paletteGui.setPane(paletteVBox);
 		paletteGui.addListener(toolbarGui);
-		paletteGui.add(Palette.fromHexFile("src/main/resources/aap-64.hex"));
 		paletteGui.add(Palette.fromHexFile("src/main/resources/endesga-16.hex"));
+		paletteGui.add(Palette.fromHexFile("src/main/resources/aap-64.hex"));
 		paletteGui.add(Palette.fromHexFile("src/main/resources/curiosities.hex"));
 		paletteGui.add(Palette.fromHexFile("src/main/resources/vinik24.hex"));
 		
@@ -193,7 +193,7 @@ public class PixelController {
 	}
 	@FXML
 	private void closeFileOnAction(ActionEvent event) {
-		if (0 < tabPane.getTabs().size()) {
+		if (tabPane.getTabs().size() > 0) {
 			tabPane.getTabs().remove(tabPane.getSelectionModel().getSelectedItem());
 		}
 	}
