@@ -14,6 +14,7 @@ import pixel.palette.Palette;
  */
 public class Sprite extends CursorList<SpriteLayer> {
 	private String path = "New sprite";
+	private int totalLayerCount;
 	private int width;
 	private int height;
 	
@@ -130,6 +131,16 @@ public class Sprite extends CursorList<SpriteLayer> {
 	public void setPath(String path) {
 		this.path = path;
 		notifyListeners(CursorListEvent.ElementChanged);
+	}
+	
+	/**
+	 * Overrides the add method to also set name of spriteLayer.
+	 */
+	@Override
+	public void add(SpriteLayer spriteLayer) {
+		totalLayerCount++;
+		spriteLayer.setName("Layer " + totalLayerCount);
+		super.add(spriteLayer);
 	}
 	
 	/**

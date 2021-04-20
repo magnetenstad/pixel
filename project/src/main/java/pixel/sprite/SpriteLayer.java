@@ -6,7 +6,7 @@ package pixel.sprite;
  *
  */
 public class SpriteLayer extends Canvas {
-	private String name = "untitled";
+	private String name = "New layer";
 	private boolean visible = true;
 	
 	public SpriteLayer(Sprite sprite) {
