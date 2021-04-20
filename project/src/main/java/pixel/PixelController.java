@@ -11,11 +11,14 @@ import pixel.sprite.*;
 import pixel.tool.*;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.List;
+
+import org.json.JSONException;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.Spinner;
@@ -64,10 +67,15 @@ public class PixelController {
 		paletteGui = new PaletteGui();
 		paletteGui.setPane(paletteVBox);
 		paletteGui.addListener(toolbarGui);
-		paletteGui.add(Palette.fromHexFile("src/main/resources/endesga-16.hex"));
-		paletteGui.add(Palette.fromHexFile("src/main/resources/aap-64.hex"));
-		paletteGui.add(Palette.fromHexFile("src/main/resources/curiosities.hex"));
-		paletteGui.add(Palette.fromHexFile("src/main/resources/vinik24.hex"));
+		
+		try {
+			paletteGui.add(Palette.fromHexFile("src/main/resources/endesga-16.hex"));
+			paletteGui.add(Palette.fromHexFile("src/main/resources/aap-64.hex"));
+			paletteGui.add(Palette.fromHexFile("src/main/resources/curiosities.hex"));
+			paletteGui.add(Palette.fromHexFile("src/main/resources/vinik24.hex"));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		
 		fileManager = new PixelFileManager();
 		fileMenu.setOnShowing(event -> {
@@ -134,7 +142,11 @@ public class PixelController {
 			MenuItem menuItem = new MenuItem(path);
 			recentFiles.getItems().add(menuItem);
 			menuItem.setOnAction(event -> {
-				newSpriteTab(fileManager.loadSprite(path));
+				try {
+					newSpriteTab(fileManager.loadSprite(path));
+				} catch (JSONException | IOException e) {
+					e.printStackTrace();
+				}
 			});
 		}
 	}
@@ -187,11 +199,17 @@ public class PixelController {
 		fileChooser.getExtensionFilters().add(new ExtensionFilter("HEX Files", "*.hex"));
 		File file = fileChooser.showOpenDialog(PixelApp.getWindow());
 		if (file != null) {
-			Palette palette = Palette.fromHexFile(file.getAbsolutePath());
-			if (palette.size() != 0) {
-				paletteGui.add(palette);
-				paletteGui.select(palette);
+			Palette palette;
+			try {
+				palette = Palette.fromHexFile(file.getAbsolutePath());
+				if (palette.size() != 0) {
+					paletteGui.add(palette);
+					paletteGui.select(palette);
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
 			}
+			
 		}
 	}
 	
@@ -218,9 +236,13 @@ public class PixelController {
 
 	@FXML
 	private void openFileOnAction(ActionEvent event) {
-		Sprite sprite = fileManager.loadSprite();
-		if (sprite != null) {
-			newSpriteTab(sprite);
+		try {
+			Sprite sprite = fileManager.loadSprite();
+			if (sprite != null) {
+				newSpriteTab(sprite);
+			}
+		} catch (JSONException | IOException e) {
+			e.printStackTrace();
 		}
 	}
 	@FXML

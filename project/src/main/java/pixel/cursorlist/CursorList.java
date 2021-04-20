@@ -172,7 +172,7 @@ public class CursorList<T> implements Iterable<T> {
 	 * Sets the cursor to -1.
 	 * (Needed because -1 is not a valid argument for setCursor())
 	 */
-	private void deselect() {
+	public void deselect() {
 		this.cursor = -1;
 		notifyListeners(CursorListEvent.CursorChanged);
 	}

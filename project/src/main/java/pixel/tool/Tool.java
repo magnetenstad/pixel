@@ -12,7 +12,7 @@ import pixel.sprite.Sprite;
 public abstract class Tool {
 	protected final String name;
 	protected int size = 1;
-	protected int color = 0;
+	protected int color = -1;
 	
 	public Tool(String name) {
 		this.name = name;

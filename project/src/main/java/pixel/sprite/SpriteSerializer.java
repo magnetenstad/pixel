@@ -1,6 +1,7 @@
 package pixel.sprite;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 /**
@@ -9,7 +10,6 @@ import org.json.JSONObject;
  *
  */
 public class SpriteSerializer {
-	private final static String newLine = "_\n";
 	
 	/**
 	 * Serializes the given Sprite to a String.
@@ -22,10 +22,11 @@ public class SpriteSerializer {
 	
 	/**
 	 * Deserializes the given String to a Sprite.
+	 * Throws an JSONException if the string is invalid.
 	 * @param string
 	 * @return sprite
 	 */
-	public static Sprite deserializeFromString(String string) {
+	public static Sprite deserializeFromString(String string) throws JSONException {
 		return deserializeSprite(new JSONObject(string));
 	}
 	
@@ -38,6 +39,7 @@ public class SpriteSerializer {
 		JSONObject json = new JSONObject();
 		json.put("width", sprite.getWidth());
 		json.put("height", sprite.getHeight());
+		json.put("totalLayerCount", sprite.getTotalLayerCount());
 		JSONArray spriteLayers = new JSONArray();
 		for (SpriteLayer spriteLayer : sprite) {
 			spriteLayers.put(serializeSpriteLayer(spriteLayer));
@@ -49,21 +51,28 @@ public class SpriteSerializer {
 	
 	/**
 	 * Deserializes the given JSONObject to a Sprite.
-	 * Throws an IllegalArgumentException is the JSONObject is invalid or null.
+	 * Throws an JSONException if the JSONObject is invalid.
 	 * @param JSONObject
 	 * @return sprite
 	 */
-	public static Sprite deserializeSprite(JSONObject json) {
+	public static Sprite deserializeSprite(JSONObject json) throws JSONException {
 		if (json == null || !(json.has("width") && json.has("height") && json.has("data"))) {
-			throw new IllegalArgumentException("Invalid json!");
+			throw new JSONException("Invalid json!");
 		}
 		int width = json.getInt("width");
 		int height = json.getInt("height");
 		Sprite sprite = new Sprite(width, height);
+		if (json.has("totalLayerCount")) {
+			sprite.setTotalLayerCount(json.getInt("totalLayerCount"));
+		}
 		JSONArray spriteLayers = json.getJSONArray("data");
 		for (Object spriteLayerJSONObject : spriteLayers) {
-			SpriteLayer spriteLayer = deserializeSpriteLayer(sprite, (JSONObject) spriteLayerJSONObject);
-			sprite.add(spriteLayer);
+			try {
+				SpriteLayer spriteLayer = deserializeSpriteLayer(sprite, (JSONObject) spriteLayerJSONObject);
+				sprite.add(spriteLayer);
+			} catch (ClassCastException e) {
+				throw new JSONException("Invalid json!");
+			}
 		}
 		return sprite;
 	}
@@ -74,36 +83,23 @@ public class SpriteSerializer {
 	 * @return JSONObject
 	 */
 	public static JSONObject serializeSpriteLayer(SpriteLayer spriteLayer) {
-		String string = "";
-		for (int y = 0; y < spriteLayer.getWidth(); y++) {
-			for (int x = 0; x < spriteLayer.getHeight(); x++) {
-				int color = spriteLayer.getPixel(x, y);
-				String hex = color == -1 ? "ff" : Integer.toHexString(color); // -1 (no color) is saved as ff
-				if (hex.length() < 2) {
-					hex = "0" + hex;
-				}
-				string += hex;
-			}
-			string += newLine;
-		}
-		
 		JSONObject json = new JSONObject();
 		json.put("name", spriteLayer.getName());
 		json.put("visible", spriteLayer.isVisible());
-		json.put("data", string);
+		json.put("data", spriteLayer.toString());
 		
 		return json;
 	}
 	
 	/**
 	 * Deserializes the given JSONObject to a SpriteLayer.
-	 * Throws an IllegalArgumentException is the JSONObject is null.
+	 * Throws an JSONException if the JSONObject is invalid.
 	 * @param JSONObject
 	 * @return spriteLayer
 	 */
-	public static SpriteLayer deserializeSpriteLayer(Sprite sprite, JSONObject json) {
-		if (json == null) {
-			throw new IllegalArgumentException("json cannot be null!");
+	public static SpriteLayer deserializeSpriteLayer(Sprite sprite, JSONObject json) throws JSONException {
+		if (json == null || !json.has("data")) {
+			throw new JSONException("Invalid json!");
 		}
 		SpriteLayer spriteLayer = new SpriteLayer(sprite);
 		if (json.has("name")) {
@@ -114,20 +110,12 @@ public class SpriteSerializer {
 		}
 		if (json.has("data")) {
 			String string = json.getString("data");
-			int x = 0;
-			int y = 0;
-			for (int i = 0; i < string.length() - 1; i += 2) {
-				String c = string.substring(i, i + 2);
-				if (!c.equals(newLine)) {
-					spriteLayer.fillPixel(x, y, c == "ff" ? -1 : Integer.parseInt(c, 16));
-					x++;
-				}
-				else {
-					y++;
-					x = 0;
-				}
+			try {
+				spriteLayer.fromString(string);
+			} catch (NumberFormatException e) {
+				throw new JSONException("Invalid json!");
 			}
 		}
 		return spriteLayer;
-	}	
+	}
 }

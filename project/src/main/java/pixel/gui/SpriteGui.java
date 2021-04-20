@@ -237,18 +237,24 @@ public class SpriteGui implements CursorListListener {
 			Tool tool = (Tool) cursorList.getSelected();
 			if (tool != null) {
 				imageView.setOnMousePressed(_event -> {
-					tool.use(this, _event);
+					if (getSprite().isEditable()) {
+						tool.use(this, _event);
+					}
 				});
 				imageView.setOnMouseReleased(_event -> {
-					tool.use(this, _event);
+					if (getSprite().isEditable()) {
+						tool.use(this, _event);
+					}
 				});
 				imageView.setOnMouseDragged(_event -> {
-					int mouseX = (int) _event.getX() / scale;
-					int mouseY = (int) _event.getY() / scale;
-					if (mouseX != mouseXPrev || mouseY != mouseYPrev) {
-						mouseXPrev = mouseX;
-						mouseYPrev = mouseY;
-						tool.use(this, _event);
+					if (getSprite().isEditable()) {
+						int mouseX = (int) _event.getX() / scale;
+						int mouseY = (int) _event.getY() / scale;
+						if (mouseX != mouseXPrev || mouseY != mouseYPrev) {
+							mouseXPrev = mouseX;
+							mouseYPrev = mouseY;
+							tool.use(this, _event);
+						}
 					}
 				});
 			}

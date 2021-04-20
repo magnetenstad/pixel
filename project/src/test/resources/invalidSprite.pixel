@@ -1,0 +1,20 @@
+{
+  "data": [
+    {
+      "visible": true,
+      "data": "0000ffff_\n0000ffff_\nffffffff_\nffffffff_\n",
+      "name": "Layer 1"
+    },
+    {
+      "visible": true,
+      "data": "ffffffff_\nff0101ff_\nff0101ff_\nffffffff_\n",
+      "name": "Layer 2"
+    },
+    {
+      "visible": true,
+      "data": "ffffffff_\nffffffff_\nffff0202_\nffff0202_\n",
+      "name": "Layer 3"
+    }
+  ],
+  "width": 4,
+  "height": 4

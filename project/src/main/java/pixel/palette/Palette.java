@@ -10,8 +10,7 @@ import pixel.cursorlist.CursorList;
  * @author Magne Tenstad
  */
 public class Palette extends CursorList<Color> {
-	private static final int maxSize = 255;
-	
+	private static final int maxSize = 255; // Because color indices are saved as hexadecimals with two digits.
 	
 	/**
 	 * Overrides the add method because Palette has a max size.
@@ -30,7 +29,7 @@ public class Palette extends CursorList<Color> {
 	 * @param hex
 	 * @return The corresponding color.
 	 */
-	public static Color Color(String hex) {
+	public static Color Color(String hex) throws IllegalArgumentException {
 		hex = hex.toLowerCase();
 		if (!hex.matches("#?(\\d|a|b|c|d|e|f){6}")) {
 			throw new IllegalArgumentException("Invalid hex! " + hex);
@@ -47,19 +46,20 @@ public class Palette extends CursorList<Color> {
 	 * Returns an empty palette if the path is invalid.
 	 * @param path
 	 * @return palette
+	 * @throws Exception 
 	 */
-	public static Palette fromHexFile(String path) {
+	public static Palette fromHexFile(String path) throws Exception {
 		Palette palette = new Palette();
-		try {
-			Scanner in = new Scanner(new FileReader(path));
-			while(in.hasNext()){
-				String line = in.nextLine();
+		Scanner in = new Scanner(new FileReader(path));
+		while(in.hasNext()){
+			String line = in.nextLine();
+			try {
 				palette.add(Color(line));
+			} catch (IllegalArgumentException e) {
+				throw new Exception("Hex file is invalid!");
 			}
-			in.close();
-		} catch (Exception e) {
-			e.printStackTrace();
 		}
+		in.close();
 		return palette;
 	}
 }

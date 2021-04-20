@@ -48,9 +48,7 @@ public class Sprite extends CursorList<SpriteLayer> {
 	 * @param color
 	 */
 	public void fillRect(int x, int y, int width, int height, int color, boolean notify) {
-		if (!isSpriteLayerEditable()) {
-			return;
-		}
+		checkSpriteLayerEditable();
 		getSelected().fillRect(x, y, width, height, color);
 		if (notify) {
 			notifyListeners(CursorListEvent.ElementChanged, getSelected());
@@ -82,9 +80,7 @@ public class Sprite extends CursorList<SpriteLayer> {
 	 * @param color
 	 */
 	public void clearRect(int x, int y, int width, int height, boolean notify) {
-		if (!isSpriteLayerEditable()) {
-			return;
-		}
+		checkSpriteLayerEditable();
 		getSelected().clearRect(x, y, width, height);
 		if (notify) {
 			notifyListeners(CursorListEvent.ElementChanged, getSelected());
@@ -95,8 +91,18 @@ public class Sprite extends CursorList<SpriteLayer> {
 	 * 
 	 * @return Whether or not the selected spriteLayer is editable.
 	 */
-	public boolean isSpriteLayerEditable() {
+	public boolean isEditable() {
 		return getSelected() != null && getSelected().isVisible();
+	}
+	
+	/**
+	 * 
+	 * Throws an IllegalStateException if selected is null or not visible.
+	 */
+	public void checkSpriteLayerEditable() throws IllegalStateException {
+		if (!isEditable()) {
+			throw new IllegalStateException("Selected is null or not visible!");
+		}
 	}
 	
 	/**
@@ -141,6 +147,21 @@ public class Sprite extends CursorList<SpriteLayer> {
 		totalLayerCount++;
 		spriteLayer.setName("Layer " + totalLayerCount);
 		super.add(spriteLayer);
+	}
+	
+	/**
+	 * THIS VALUE IS ONLY USED TO NAME LAYERS.
+	 * @param totalLayerCount
+	 */
+	public void setTotalLayerCount(int totalLayerCount) {
+		this.totalLayerCount = totalLayerCount;
+	}
+	
+	/**
+	 * THIS VALUE IS ONLY USED TO NAME LAYERS.
+	 */
+	public int getTotalLayerCount() {
+		return totalLayerCount;
 	}
 	
 	/**

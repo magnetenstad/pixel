@@ -6,8 +6,8 @@ package pixel.sprite;
  */
 public class Canvas {
 	private Integer[][] canvas;
-	private int width;
-	private int height;
+	protected int width;
+	protected int height;
 	
 	public Canvas(int width, int height) {
 		this.width = width;
@@ -27,7 +27,9 @@ public class Canvas {
 	public void fillRect(int x0, int y0, int width, int height, int color) {
 		for (int x = x0; x < x0 + width; x++) {
 			for (int y = y0; y < y0 + height; y++) {
-				fillPixel(x, y, color);
+				if (isPointInCanvas(x, y)) {
+					fillPixel(x, y, color);
+				}
 			}
 		}
 	}
@@ -42,7 +44,9 @@ public class Canvas {
 	public void clearRect(int x0, int y0, int width, int height) {
 		for (int x = x0; x < x0 + width; x++) {
 			for (int y = y0; y < y0 + height; y++) {
-				clearPixel(x, y);
+				if (isPointInCanvas(x, y)) {
+					clearPixel(x, y);
+				}
 			}
 		}
 	}
@@ -54,9 +58,7 @@ public class Canvas {
 	 * @param color
 	 */
 	public void fillPixel(int x, int y, int color) {
-		if (!isPointInCanvas(x, y)) {
-			return;
-		}
+		checkPointInCanvas(x, y);
 		canvas[x][y] = color;
 	}
 	
@@ -66,9 +68,7 @@ public class Canvas {
 	 * @param y
 	 */
 	public void clearPixel(int x, int y) {
-		if (!isPointInCanvas(x, y)) {
-			return;
-		}
+		checkPointInCanvas(x, y);
 		canvas[x][y] = -1;
 	}
 	
@@ -80,6 +80,17 @@ public class Canvas {
 	 */
 	public boolean isPointInCanvas(int x, int y) {
 		return (0 <= x && x < width && 0 <= y && y < height);
+	}
+	
+	/**
+	 * Throws an IllegalArgumentException if the point is not within the canvas.
+	 * @param x
+	 * @param y
+	 */
+	private void checkPointInCanvas(int x, int y) {
+		if (!isPointInCanvas(x, y)) {
+			throw new IllegalArgumentException("Point (" + x + ", " + y + ") is not within canvas!");
+		}
 	}
 	
 	/**

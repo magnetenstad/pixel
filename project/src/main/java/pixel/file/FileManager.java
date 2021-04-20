@@ -1,9 +1,12 @@
 package pixel.file;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Collection;
+
+import org.json.JSONException;
 
 import pixel.palette.Palette;
 import pixel.sprite.Sprite;
@@ -41,15 +44,20 @@ public interface FileManager {
 	
 	/**
 	 * Loads a sprite from the given path.
-	 * @return The loaded sprite.
+	 * Throws an IOException if there is a problem with reading the file.
+	 * Throws a JSONException if there is a problem with serializing the contents of the file.
+	 * @return The loaded sprite, or null.
 	 */
-	public Sprite loadSprite(String path);
+	public Sprite loadSprite(String path) throws IOException, JSONException;
 	
 	/**
 	 * Prompts the user to select a file and loads a sprite from that file.
-	 * @return The loaded sprite.
+	 * Returns null if no file is selected.
+	 * Throws an IOException if there is a problem with reading the file.
+	 * Throws a JSONException if there is a problem with serializing the contents of the file.
+	 * @return The loaded sprite, or null.
 	 */
-	public Sprite loadSprite();
+	public Sprite loadSprite() throws IOException, JSONException;
 	
 	/**
 	 * Saves the given sprite to the given path as a PNG.

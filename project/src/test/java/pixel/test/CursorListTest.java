@@ -1,11 +1,10 @@
 package pixel.test;
 
 import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.*;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import org.junit.jupiter.api.*;
 
 import pixel.cursorlist.CursorList;
 import pixel.cursorlist.CursorListEvent;

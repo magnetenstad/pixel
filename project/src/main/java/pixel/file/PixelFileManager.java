@@ -75,22 +75,16 @@ public class PixelFileManager implements FileManager {
 	}
 	
 	@Override
-	public Sprite loadSprite(String path) {
-		try {
-			String string = FileManager.readString(path);
-			Sprite sprite = SpriteSerializer.deserializeFromString(string);
-			sprite.setPath(path);
-			addToRecentPaths(path);
-			return sprite;
-		} catch (IOException e) {
-			e.printStackTrace();
-			removeFromRecentPaths(path);
-		}
-		return null;
+	public Sprite loadSprite(String path) throws IOException, JSONException {
+		String string = FileManager.readString(path);
+		Sprite sprite = SpriteSerializer.deserializeFromString(string);
+		sprite.setPath(path);
+		addToRecentPaths(path);
+		return sprite;
 	}
 	
 	@Override
-	public Sprite loadSprite() {
+	public Sprite loadSprite() throws IOException, JSONException {
 		File file = showOpenDialog(new ExtensionFilter("Pixel Files", "*.pixel"));
 		if (file != null) {
 			return loadSprite(file.getAbsolutePath());
@@ -118,12 +112,19 @@ public class PixelFileManager implements FileManager {
 		}
 	}
 	
-	private void checkNotNull(Object obj) {
-		if (obj == null) {
+	/**
+	 * Throws a NullPointerException if the given object is null
+	 * @param object
+	 */
+	private void checkNotNull(Object object) {
+		if (object == null) {
 			throw new NullPointerException("This object cannot be null!");
 		}
 	}
 	
+	/**
+	 * Creates the METADATA file, if it does not already exists.
+	 */
 	private void initializeMetaData() {
 		if (!METADATA.exists()) {
 			try {
@@ -137,6 +138,10 @@ public class PixelFileManager implements FileManager {
 		}
 	}
 	
+	/**
+	 * Reads from the METADATA file.
+	 * Initializes it if it does not exists.
+	 */
 	private void readFromMetaData() {
 		if (!METADATA.exists()) {
 			initializeMetaData();
@@ -163,6 +168,10 @@ public class PixelFileManager implements FileManager {
 		}
 	}
 	
+	/**
+	 * Overwrites the METADATA file with new values.
+	 * Initializes it if it does not exists.
+	 */
 	private void writeToMetaData() {
 		if (!METADATA.exists()) {
 			initializeMetaData();
@@ -183,6 +192,11 @@ public class PixelFileManager implements FileManager {
 		}
 	}
 	
+	/**
+	 * Adds the given path to recentPaths,
+	 * and writes it to METADATA.
+	 * @param path
+	 */
 	public void addToRecentPaths(String path) {
 		for (String recentPath : recentPaths) {
 			if (recentPath.equals(path)) {
@@ -196,6 +210,11 @@ public class PixelFileManager implements FileManager {
 		writeToMetaData();
 	}
 	
+	/**
+	 * Removes the given path to recentPaths,
+	 * and updates METADATA.
+	 * @param path
+	 */
 	public void removeFromRecentPaths(String path) {
 		for (String recentPath : recentPaths) {
 			if (recentPath.equals(path)) {
@@ -205,6 +224,9 @@ public class PixelFileManager implements FileManager {
 		writeToMetaData();
 	}
 
+	/**
+	 * @return A collection of the recent paths.
+	 */
 	@Override
 	public Collection<String> getRecentPaths() {
 		return new ArrayList<String>(recentPaths);
