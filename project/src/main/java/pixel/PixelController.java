@@ -10,6 +10,7 @@ import pixel.palette.Palette;
 import pixel.sprite.*;
 import pixel.tool.*;
 
+import java.io.File;
 import java.util.List;
 
 import javafx.event.ActionEvent;
@@ -23,6 +24,8 @@ import javafx.scene.control.TabPane;
 import javafx.scene.control.TabPane.TabClosingPolicy;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
+import javafx.stage.FileChooser;
+import javafx.stage.FileChooser.ExtensionFilter;
 
 /**
  * Main app FXML controller.
@@ -39,10 +42,6 @@ public class PixelController {
 	private VBox toolbarVBox, layersVBox, paletteVBox;
 	@FXML
 	private Spinner<Integer> toolSizeSpinner;
-	@FXML
-	private Button newLayerButton, removeLayerButton, moveLayerUpButton, moveLayerDownButton;
-	@FXML
-	private MenuItem openFile, closeFile, saveFile, saveFileAs, exportFile;
 	@FXML
 	private Menu newFile, recentFiles, fileMenu;
 	
@@ -180,7 +179,42 @@ public class PixelController {
 		toolbarGui.getToolbar().updateToolSize((int) toolSizeSpinner.getValue());
 	}
 	
-	// 1.3 File buttons
+	// 1.3 Palette buttons
+	
+	@FXML
+	private void uploadPaletteButtonOnAction(ActionEvent event) {
+		FileChooser fileChooser = new FileChooser();
+		fileChooser.getExtensionFilters().add(new ExtensionFilter("HEX Files", "*.hex"));
+		File file = fileChooser.showOpenDialog(PixelApp.getWindow());
+		if (file != null) {
+			Palette palette = Palette.fromHexFile(file.getAbsolutePath());
+			if (palette.size() != 0) {
+				paletteGui.add(palette);
+				paletteGui.select(palette);
+			}
+		}
+	}
+	
+	@FXML
+	private void paletteBackwardButtonOnAction(ActionEvent event) {
+		if (paletteGui != null) {
+			int index = (paletteGui.getCursor() - 1) % paletteGui.size();
+			index += index < 0 ? paletteGui.size() : 0;			
+			paletteGui.select(paletteGui.get(index));
+			paletteGui.rebuild();
+		}
+	}
+	
+	@FXML
+	private void paletteForwardButtonOnAction(ActionEvent event) {
+		if (paletteGui != null) {
+			int index = (paletteGui.getCursor() + 1) % paletteGui.size();			
+			paletteGui.select(paletteGui.get(index));
+			paletteGui.rebuild();
+		}
+	}
+	
+	// 1.4 File buttons
 
 	@FXML
 	private void openFileOnAction(ActionEvent event) {

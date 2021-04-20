@@ -107,7 +107,17 @@
                   </TitledPane>
                   <TitledPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Palette">
                      <content>
-                        <VBox fx:id="paletteVBox" prefHeight="200.0" prefWidth="100.0" />
+                        <VBox prefHeight="200.0" prefWidth="100.0">
+                           <children>
+                              <Button fx:id="uploadPaletteButton" mnemonicParsing="false" onAction="#uploadPaletteButtonOnAction" text="Upload palette" />
+                              <HBox prefHeight="100.0" prefWidth="200.0">
+                                 <children>
+                                    <Button fx:id="paletteBackwardButton" mnemonicParsing="false" onAction="#paletteBackwardButtonOnAction" text="&lt;" />
+                                    <Button fx:id="paletteForwardButton" mnemonicParsing="false" onAction="#paletteForwardButtonOnAction" text="&gt;" />
+                                 </children>
+                              </HBox>
+                              <VBox fx:id="paletteVBox" prefHeight="200.0" prefWidth="100.0" />
+                           </children></VBox>
                      </content>
                   </TitledPane>
               </items>

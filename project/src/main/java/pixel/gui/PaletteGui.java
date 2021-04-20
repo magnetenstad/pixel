@@ -1,11 +1,9 @@
 package pixel.gui;
 
-import javafx.scene.control.Button;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.control.Tooltip;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import pixel.cursorlist.CursorList;
@@ -42,6 +40,15 @@ public class PaletteGui extends CursorList<Palette> implements CursorListListene
 	}
 	
 	/**
+	 * Overrides the CursorList setCursor method to also rebuild.
+	 */
+	@Override
+	public void setCursor(int index) {
+		super.setCursor(index);
+		rebuild();
+	}
+	
+	/**
 	 * Sets the pane where the gui is built.
 	 * @param pane
 	 */
@@ -60,26 +67,6 @@ public class PaletteGui extends CursorList<Palette> implements CursorListListene
 		if (pane != null) {
 			pane.getChildren().clear();
 			
-			HBox hBox = new HBox();
-			pane.getChildren().add(hBox);
-			
-			Button back = new Button("<");
-			back.setOnAction(event -> {
-				int index = (getCursor() - 1) % size();
-				index += index < 0 ? size() : 0;			
-				select(get(index));
-				rebuild();
-			});
-			Button forward = new Button(">");
-			forward.setOnAction(event -> {
-				int index = (getCursor() + 1) % size();			
-				select(get(index));
-				rebuild();
-			});
-			
-			hBox.getChildren().add(back);
-			hBox.getChildren().add(forward);
-			
 			Palette palette = getSelected();
 			if (palette != null)  {
 				ColorButton selectedColor = new ColorButton(palette.getSelected(), palette.getCursor());
@@ -92,7 +79,6 @@ public class PaletteGui extends CursorList<Palette> implements CursorListListene
 				for (int i = 0; i < palette.size(); i++) {
 					ColorButton colorButton = new ColorButton(palette.get(i), i);
 					if (i == palette.getCursor()) {
-						//colorButton.setPrefWidth(64);
 						colorButton.setText("S");
 					}
 					gridPane.add(colorButton, i % columnCount, (int) (i / columnCount));
