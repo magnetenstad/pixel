@@ -48,7 +48,7 @@ public class Sprite extends CursorList<SpriteLayer> {
 	 * @param color
 	 */
 	public void fillRect(int x, int y, int width, int height, int color, boolean notify) {
-		checkSpriteLayerEditable();
+		checkEditable();
 		getSelected().fillRect(x, y, width, height, color);
 		if (notify) {
 			notifyListeners(CursorListEvent.ElementChanged, getSelected());
@@ -80,7 +80,7 @@ public class Sprite extends CursorList<SpriteLayer> {
 	 * @param color
 	 */
 	public void clearRect(int x, int y, int width, int height, boolean notify) {
-		checkSpriteLayerEditable();
+		checkEditable();
 		getSelected().clearRect(x, y, width, height);
 		if (notify) {
 			notifyListeners(CursorListEvent.ElementChanged, getSelected());
@@ -99,7 +99,7 @@ public class Sprite extends CursorList<SpriteLayer> {
 	 * 
 	 * Throws an IllegalStateException if selected is null or not visible.
 	 */
-	public void checkSpriteLayerEditable() throws IllegalStateException {
+	public void checkEditable() throws IllegalStateException {
 		if (!isEditable()) {
 			throw new IllegalStateException("Selected is null or not visible!");
 		}

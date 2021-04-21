@@ -11,10 +11,10 @@ import pixel.gui.SpriteGui;
  * @author Magne Tenstad
  */
 public class ToolInputEvent {
-	private final int x;
-	private final int y;
-	private final boolean primaryButtonDown;
-	private final boolean secondaryButtonDown;
+	private int x;
+	private int y;
+	private boolean primaryButtonDown;
+	private boolean secondaryButtonDown;
 	private MouseButton button;
 	
 	public ToolInputEvent(int x, int y, MouseButton button, boolean primaryButtonDown, boolean secondaryButtonDown) {

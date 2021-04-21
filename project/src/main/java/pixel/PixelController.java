@@ -69,10 +69,10 @@ public class PixelController {
 		paletteGui.addListener(toolbarGui);
 		
 		try {
-			paletteGui.add(Palette.fromHexFile("src/main/resources/endesga-16.hex"));
-			paletteGui.add(Palette.fromHexFile("src/main/resources/aap-64.hex"));
-			paletteGui.add(Palette.fromHexFile("src/main/resources/curiosities.hex"));
-			paletteGui.add(Palette.fromHexFile("src/main/resources/vinik24.hex"));
+			paletteGui.add(Palette.fromHexFile("src/main/resources/palettes/endesga-32.hex"));
+			paletteGui.add(Palette.fromHexFile("src/main/resources/palettes/downgraded-32.hex"));
+			paletteGui.add(Palette.fromHexFile("src/main/resources/palettes/pineapple-32.hex"));
+			paletteGui.add(Palette.fromHexFile("src/main/resources/palettes/juice32.hex"));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
