@@ -30,7 +30,7 @@ public class BucketTool extends Tool {
 	public void use(Sprite sprite, ToolInputEvent event) {
 		int x = event.getX();
 		int y = event.getY();
-		if (event.isPrimaryButtonDown()) {
+		if (event.isPrimaryButtonDown() && sprite.getSelected() != null && sprite.getSelected().isPointInCanvas(x, y)) {
 			int colorMatch = sprite.getSelected().getPixel(x, y);
 			if (color != colorMatch) {
 				fill(sprite, colorMatch, x, y);
